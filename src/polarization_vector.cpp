@@ -1,4 +1,4 @@
-// Classes for operations involving Lorentz 4-vectors
+// Class for the polarization vector of vector particles
 // coded up independently to not require ROOT to be installed
 //
 // Dependencies: None
@@ -11,37 +11,12 @@
 #include "polarization_vector.hpp"
 
 // ---------------------------------------------------------------------------
-// Kinematic functions such that the polarization vector is the only class
-// needed to characterize the kinematics of the vector meson
-complex<double> polarization_vector::Kallen(double x, double y, double z)
-{
-    return x*x + y*y + z*z - 2.*(x*y + x*z + z*y);
-};
-
-// vector particle momentum
-complex<double> polarization_vector::E(double s)
-{
-  complex<double> result = (s + pow(mPro, 2.) - pow(mass, 2.));
-  result /= (2. * sqrt(s));
-  return result;
-}
-
-complex<double> polarization_vector::q(double s)
-{
-  complex<double> result = Kallen(s, mPro_sqr, mass*mass);
-  result /= 4. * s;
-
-  return sqrt(result);
-};
-
-// ---------------------------------------------------------------------------
 // Components
-
 complex<double> polarization_vector::p0(int lambda, double s, double zs)
 {
   if (abs(mass) > 0.01 && lambda == 0)
   {
-    return q(s) / mass;
+    return state.momentum(s, particle) / mass;
   }
   else
   {
@@ -67,7 +42,7 @@ complex<double> polarization_vector::p1(int lambda, double s, double zs)
   }
   else
   {
-    return (sqrt(s) - E(s)) * sqrt(1. - zs * zs) / mass;
+    return state.energy(s, particle) / mass;
   }
 };
 
@@ -110,6 +85,6 @@ complex<double> polarization_vector::p3(int lambda, double s, double zs)
   }
   else
   {
-    return (sqrt(s) - E(s)) * zs / mass;
+    return state.energy(s, particle) * zs / mass;
   }
 };
