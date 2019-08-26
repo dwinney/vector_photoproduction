@@ -13,4 +13,5 @@ include_directories("executables")
 add_executable(test
 executables/test.cpp
 src/polarization_vector.cpp
+src/two_body_state.cpp
 )
