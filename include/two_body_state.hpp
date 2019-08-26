@@ -41,13 +41,10 @@ public:
 
   double get_mass(string name);
 
-  complex<double> momentum(double s, string name);
-  complex<double> energy(double s, string name);
+  complex<double> momentum(string name, double s);
+  complex<double> energy(string name, double s);
 
-  complex<double> p0(double s, double zs, string name);
-  complex<double> p1(double s, double zs, string name);
-  complex<double> p2(double s, double zs, string name);
-  complex<double> p3(double s, double zs, string name);
+  complex<double> component(int i, string name, double s, double zs);
 };
 
 #endif

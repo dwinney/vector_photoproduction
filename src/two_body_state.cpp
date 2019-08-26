@@ -27,7 +27,7 @@ double two_body_state::get_mass(string name)
 };
 
 // ---------------------------------------------------------------------------
-complex<double> two_body_state::energy(double s, string name)
+complex<double> two_body_state::energy(string name, double s)
 {
   if (name == particle1)
   {
@@ -44,17 +44,17 @@ complex<double> two_body_state::energy(double s, string name)
   }
 };
 
-complex<double> two_body_state::momentum(double s, string name)
+complex<double> two_body_state::momentum(string name, double s)
 {
   if (name == particle1)
   {
-    complex<double> E1 = energy(s, name);
+    complex<double> E1 = energy(name, s);
     return sqrt(E1*E1 - m1*m1);
   }
   else if (name == particle2)
   {
-    complex<double> E2 = energy(s, name);
-    return sqrt(E2*E2 - m2*m2);
+    complex<double> E2 = energy(name, s);
+    return -sqrt(E2*E2 - m2*m2);
   }
   else
   {
@@ -65,23 +65,15 @@ complex<double> two_body_state::momentum(double s, string name)
 
 // ---------------------------------------------------------------------------
 // Three momenta components in the x-z plane
-
-complex<double> two_body_state::p0(double s, double zs, string name)
+complex<double> two_body_state::component(int i, string name, double s, double zs)
 {
-  return energy(s, name);
-};
-
-complex<double> two_body_state::p1(double s, double zs, string name)
-{
-  return momentum(s, name) * sqrt(1. - zs * zs);
-};
-
-complex<double> two_body_state::p2(double s, double zs, string name)
-{
-  return 0.;
-};
-
-complex<double> two_body_state::p3(double s, double zs, string name)
-{
-  return momentum(s, name) * zs;
+  switch (i)
+  {
+    case 0: return energy(name, s);
+    case 1: momentum(name, s) * sqrt(1. - zs * zs);
+    case 2: return 0.;
+    case 3: return momentum(name, s) * zs;
+    default: cout << "two_body_state: Invalid four vector component! Quiting...\n";
+             exit(0);
+  }
 };
