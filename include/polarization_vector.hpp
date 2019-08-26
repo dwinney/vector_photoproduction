@@ -37,10 +37,7 @@ public:
   ~polarization_vector(){};
 
   // Components
-  complex<double> p0(int lambda, double s, double zs);
-  complex<double> p1(int lambda, double s, double zs);
-  complex<double> p2(int lambda, double s, double zs);
-  complex<double> p3(int lambda, double s, double zs);
+  complex<double> component(int i, int lambda, double s, double zs);
 };
 
 #endif

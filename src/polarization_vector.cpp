@@ -12,79 +12,40 @@
 
 // ---------------------------------------------------------------------------
 // Components
-complex<double> polarization_vector::p0(int lambda, double s, double zs)
+complex<double> polarization_vector::component(int i, int lambda, double s, double zs)
 {
-  if (abs(mass) > 0.01 && lambda == 0)
+  if (abs(lambda) == 1)
   {
-    return state.momentum(s, particle) / mass;
+    switch (i)
+    {
+      case 0: return 0.;
+      case 1: return - double(lambda) * zs / sqrt(2.);
+      case 2: if (conj == true)
+              {
+                return xi / sqrt(2.);
+              }
+              else
+              {
+                return - xi / sqrt(2.);
+              }
+      case 3: return 0.;
+    }
+  }
+  else if (lambda == 0)
+  {
+    if (abs(mass) < 0.01) return 0.;
+
+    switch (i)
+    {
+      case 0: return state.momentum(particle, s) / mass;
+      case 1: return state.energy(particle, s) * sqrt(1. - zs*zs) / mass;
+      case 2: return 0.;
+      case 3: return state.energy(particle, s) * zs / mass;
+    }
   }
   else
-  {
-    return 0.;
-  }
-};
-
-complex<double> polarization_vector::p1(int lambda, double s, double zs)
-{
-  if (abs(lambda) > 1)
   {
     std::cout << "polarization_vector: Invalid helicity! Quitting... \n";
     exit(0);
-  }
-
-  if (abs(mass) < 0.01 && lambda == 0)
-  {
-    return 0.;
-  }
-  else if (abs(lambda) == 1)
-  {
-    return - double(lambda) * zs / sqrt(2.);
-  }
-  else
-  {
-    return state.energy(s, particle) / mass;
-  }
-};
-
-complex<double> polarization_vector::p2(int lambda, double s, double zs)
-{
-  if (abs(lambda) > 1)
-  {
-    std::cout << "polarization_vector: Invalid helicity! Quitting... \n";
-    exit(0);
-  }
-  if (lambda == 0)
-  {
-    return 0.;
-  }
-  else if (conj == true)
-  {
-    return xi / sqrt(2.);
-  }
-  else
-  {
-    return - xi / sqrt(2.);
-  }
-};
-
-complex<double> polarization_vector::p3(int lambda, double s, double zs)
-{
-  if (abs(lambda) > 1)
-  {
-    std::cout << "polarization_vector: Invalid helicity! Quitting... \n";
-    exit(0);
-  }
-
-  if (abs(mass) < 0.01 && lambda == 0)
-  {
-    return 0.;
-  }
-  else if (abs(lambda) == 1)
-  {
-    return double(lambda) * sqrt(1. - zs * zs) / sqrt(2.);
-  }
-  else
-  {
-    return state.energy(s, particle) * zs / mass;
   }
 };
