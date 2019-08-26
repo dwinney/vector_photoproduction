@@ -33,6 +33,7 @@ private:
   // inital and final state kinematics
   two_body_state initial, final;
   polarization_vector eps_vec_star, eps_gamma;
+  dirac_spinor target, recoil;
 
 public:
   reaction_kinematics(double vec_mass, string vec_name)
@@ -40,7 +41,8 @@ public:
     initial(0., mPro, "beam", "target"),
     final(vec_mass, mPro, vec_name, "recoil"),
     eps_vec_star(final, vec_name, true),
-    eps_gamma(initial, "beam")
+    eps_gamma(initial, "beam"),
+    target(initial, "target"), recoil(final, "recoil")
   {};
 
 };

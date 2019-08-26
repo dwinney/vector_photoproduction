@@ -9,9 +9,9 @@ include_directories("include")
 include_directories("src")
 include_directories("executables")
 
-
 add_executable(test
 executables/test.cpp
 src/polarization_vector.cpp
 src/two_body_state.cpp
+src/dirac_spinor.cpp
 )
