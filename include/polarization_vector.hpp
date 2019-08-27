@@ -33,6 +33,11 @@ public:
       conj(xconj)
   {};
 
+  // Copy Constructor
+  polarization_vector(const polarization_vector & old)
+    : state(old.state), particle(old.particle), mass(old.mass), conj(old.conj)
+  {};
+
   // Destructor
   ~polarization_vector(){};
 

@@ -35,8 +35,15 @@ private:
   const string particle1, particle2;
 
 public:
+  // Constructor
   two_body_state(double xm1, double xm2, string name1, string name2)
   : m1(xm1), m2(xm2), particle1(name1), particle2(name2)
+  {};
+
+  // Copy Constructor
+  two_body_state(const two_body_state & old)
+  : m1(old.m1), m2(old.m2),
+    particle1(old.particle1), particle2(old.particle2)
   {};
 
   double get_mass(string name);
