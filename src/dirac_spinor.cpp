@@ -32,7 +32,7 @@ complex<double> dirac_spinor::momentum(int sign, double s)
   return sqrt(E*E + sign * mass*mass);
 }
 // ---------------------------------------------------------------------------
-
+// Components for both the regular spinor or adjoint
 complex<double> dirac_spinor::component(int i, int lambda, double s, double zs)
 {
   if (lambda == 1)
@@ -64,4 +64,14 @@ complex<double> dirac_spinor::component(int i, int lambda, double s, double zs)
     cout << "dirac_spinor: Invalid helicity projection passed as argument. Quitting... \n";
     exit(0);
   }
+};
+
+complex<double> dirac_spinor::adjoint_component(int i, int lambda, double s, double zs)
+{
+  complex<double> result = 0.;
+  for (int j = 0; j < 4; j++)
+  {
+    result += component(j, lambda, s, zs) * gamma_matrices[0][j][i];
+  }
+  return result;
 };
