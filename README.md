@@ -1,5 +1,15 @@
 # vector-photoproduction
-Analytic model for vector meson photo-production off a proton by pomeron exchange. 
+Analytic model for vector meson photo-production off a proton by pomeron exchange.
+
+### Executables
+To build any example executable, for example `test.cpp`, use:
+
+```
+mkdir build
+cd build
+cmake ..
+make test
+````
 
 ### References
 
