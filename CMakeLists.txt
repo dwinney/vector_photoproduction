@@ -14,4 +14,5 @@ executables/test.cpp
 src/polarization_vector.cpp
 src/two_body_state.cpp
 src/dirac_spinor.cpp
+src/pomeron_exchange.cpp
 )
