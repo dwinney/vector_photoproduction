@@ -17,7 +17,7 @@
 using std::complex;
 
 // ---------------------------------------------------------------------------
-// The dirac_spinor object is exactly as it sounds.
+// The dirac_spinor object is exactly as it sounds. :)
 // ---------------------------------------------------------------------------
 
 class dirac_spinor

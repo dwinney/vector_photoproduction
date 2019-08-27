@@ -61,11 +61,13 @@ public:
 
   double t_man(double s, double zs)
   {
-    complex<double> ks = initial.momentum("beam", s) * final.momentum("vec_name", s);
-    return (2. * mPro * mPro + mVec * mVec  - s) / 2. + 2. * abs(ks) * zs;
+    complex<double> kq = initial.momentum("beam", s) * final.momentum(vector_particle, s);
+    complex<double> E1E3 = initial.energy("beam", s) * final.energy(vector_particle, s);
+    return mVec*mVec - 2. * abs(E1E3) + 2. * abs(kq) * zs;
   };
 
-  // Helicity configurations for Photon [0], Incoming Proton [1], vector m [2], Outgoing Proton [3]
+  // Helicity configurations
+  // Photon [0], Incoming Proton [1], Vector meson [2], Outgoing Proton [3]
   vector<vector<double>> helicities =
   {
     {  1., -1.,  1., -1. },

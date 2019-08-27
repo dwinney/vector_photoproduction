@@ -27,6 +27,8 @@ double two_body_state::get_mass(string name)
 };
 
 // ---------------------------------------------------------------------------
+// return the energy or momentum of a given particle
+
 complex<double> two_body_state::energy(string name, double s)
 {
   if (name == particle1)
@@ -64,7 +66,7 @@ complex<double> two_body_state::momentum(string name, double s)
 };
 
 // ---------------------------------------------------------------------------
-// Three momenta components in the x-z plane
+// The four momenta components in the x-z plane
 complex<double> two_body_state::component(int i, string name, double s, double zs)
 {
   switch (i)

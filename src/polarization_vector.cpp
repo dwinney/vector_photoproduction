@@ -28,7 +28,7 @@ complex<double> polarization_vector::component(int i, int lambda, double s, doub
               {
                 return - xi / sqrt(2.);
               }
-      case 3: return 0.;
+      case 3: return double(lambda) * sqrt(1. - zs*zs) / sqrt(2.);
     }
   }
   else if (lambda == 0)
