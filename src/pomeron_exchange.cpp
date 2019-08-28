@@ -16,12 +16,15 @@ complex<double> pomeron_exchange::bottom_vertex(int mu, int lam_targ, int lam_re
   {
     for (int j = 0; j < 4; j++)
     {
-    result = kinematics->recoil.adjoint_component(i, lam_rec, s, zs);
-    result *= gamma_matrices[mu][i][j];
-    result *= kinematics->target.component(j, lam_targ, s, 1.);
+    complex<double> temp;
+    temp = kinematics->recoil.adjoint_component(i, lam_rec, s, zs);
+    temp *= gamma_matrices[mu][i][j];
+    temp *= kinematics->target.component(j, lam_targ, s, 1.);
+
+    result += temp;
     }
   }
-  
+
   return result;
 };
 
