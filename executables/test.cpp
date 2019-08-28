@@ -40,11 +40,19 @@ int main( int argc, char** argv )
   vector<double> params = {0.379, 0.941, 0.364, 0.12};
   amp.set_params(params);
 
+  cout << std::right << setw(5) << " ";
+  cout << setw(10) << "lam_gam" << setw(10) << "lam_targ" << setw(10) << "lam_vec" << setw(10) << "lam_rec";
+  cout << setw(25) << "helicity_amplitude" << endl;
 
   double s = mPro * (2.l * egam + mPro);
   for (int i = 0; i < 24; i++)
   {
-    cout << std::left << setw(5) << i << setw(15) << amp.helicity_amplitude(ptr->helicities[i], s, zs) << endl;
+    cout << std::right << setw(5) << i;
+    cout << setw(10) << ptr->helicities[i][0];
+    cout << setw(10) << ptr->helicities[i][1];
+    cout << setw(10) << ptr->helicities[i][2];
+    cout << setw(10) << ptr->helicities[i][3];
+    cout << setw(25) << amp.helicity_amplitude(ptr->helicities[i], s, zs) << endl;
   }
 
   delete ptr;
