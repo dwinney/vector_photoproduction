@@ -24,18 +24,15 @@ private:
     const string particle;
     const double mass;
 
-    const bool conj = false; // whether or not this is a complex conjugate vector
-
 public:
   // Constructor
-  polarization_vector(two_body_state xstate, string name, bool xconj = false)
-    : state(xstate), particle(name), mass(state.get_mass(name)),
-      conj(xconj)
+  polarization_vector(two_body_state xstate, string name)
+    : state(xstate), particle(name), mass(state.get_mass(name))
   {};
 
   // Copy Constructor
   polarization_vector(const polarization_vector & old)
-    : state(old.state), particle(old.particle), mass(old.mass), conj(old.conj)
+    : state(old.state), particle(old.particle), mass(old.mass)
   {};
 
   // Destructor
@@ -43,6 +40,7 @@ public:
 
   // Components
   complex<double> component(int i, int lambda, double s, double zs);
+  complex<double> conjugate_component(int i, int lambda, double s, double zs);
 };
 
 #endif

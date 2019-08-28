@@ -20,14 +20,7 @@ complex<double> polarization_vector::component(int i, int lambda, double s, doub
     {
       case 0: return 0.;
       case 1: return - double(lambda) * zs / sqrt(2.);
-      case 2: if (conj == true)
-              {
-                return xi / sqrt(2.);
-              }
-              else
-              {
-                return - xi / sqrt(2.);
-              }
+      case 2: return - xi / sqrt(2.);
       case 3: return double(lambda) * sqrt(1. - zs*zs) / sqrt(2.);
     }
   }
@@ -48,4 +41,9 @@ complex<double> polarization_vector::component(int i, int lambda, double s, doub
     std::cout << "polarization_vector: Invalid helicity! Quitting... \n";
     exit(0);
   }
+};
+
+complex<double> polarization_vector::conjugate_component(int i, int lambda, double s, double zs)
+{
+  return conj(component(i, lambda, s, zs));
 };

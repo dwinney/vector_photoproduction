@@ -16,12 +16,12 @@ complex<double> pomeron_exchange::bottom_vertex(int mu, int lam_targ, int lam_re
   {
     for (int j = 0; j < 4; j++)
     {
-    complex<double> ufbar = kinematics->recoil.adjoint_component(i, lam_rec, s, zs);
-    complex<double> ui = kinematics->target.component(j, lam_targ, s, 1.);
-    result += ufbar * gamma_matrices[mu][i][j] * ui;
+    result = kinematics->recoil.adjoint_component(i, lam_rec, s, zs);
+    result *= gamma_matrices[mu][i][j];
+    result *= kinematics->target.component(j, lam_targ, s, 1.);
     }
   }
-
+  
   return result;
 };
 
@@ -36,12 +36,12 @@ complex<double> pomeron_exchange::top_vertex(int mu, int lam_gam, int lam_vec, d
 
     temp1 = kinematics->initial.component(nu, "beam", s, 1.);
     temp1 *= metric[nu];
-    temp1 *= kinematics->eps_vec_star.component(nu, lam_vec, s, zs);
+    temp1 *= kinematics->eps_vec.conjugate_component(nu, lam_vec, s, zs);
     sum1 += kinematics->eps_gamma.component(mu, lam_gam, s, 1.) * temp1;
 
     temp2 = kinematics->eps_gamma.component(nu, lam_gam, s, 1.);
     temp2 *= metric[nu];
-    temp2 *= kinematics->eps_vec_star.component(nu, lam_vec, s, zs);
+    temp2 *= kinematics->eps_vec.conjugate_component(nu, lam_vec, s, zs);
     sum2 += kinematics->initial.component(mu, "beam", s, 1.) * temp2;
   }
 

@@ -40,7 +40,7 @@ public:
   : mVec(vec_mass), vector_particle(vec_name),
     initial(0., mPro, "beam", "target"),
     final(vec_mass, mPro, vec_name, "recoil"),
-    eps_vec_star(final, vec_name, true),
+    eps_vec(final, vec_name),
     eps_gamma(initial, "beam"),
     target(initial, "target"), recoil(final, "recoil")
   {};
@@ -49,14 +49,14 @@ public:
   reaction_kinematics(const reaction_kinematics & old)
   : mVec(old.mVec), vector_particle(old.vector_particle),
     initial(old.initial), final(old.final),
-    eps_vec_star(old.eps_vec_star), eps_gamma(old.eps_gamma),
+    eps_vec(old.eps_vec), eps_gamma(old.eps_gamma),
     target(old.target), recoil(old.recoil)
   {};
 
   // inital and final state kinematics
   const double sth = (mVec + mPro) * (mVec + mPro);
   two_body_state initial, final;
-  polarization_vector eps_vec_star, eps_gamma;
+  polarization_vector eps_vec, eps_gamma;
   dirac_spinor target, recoil;
 
   double t_man(double s, double zs)

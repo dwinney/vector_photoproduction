@@ -15,6 +15,7 @@
 #include "reaction_kinematics.hpp"
 #include "pomeron_exchange.hpp"
 
+#include <cstring>
 #include <iostream>
 #include <iomanip>
 
@@ -25,12 +26,12 @@ using std::endl;
 int main( int argc, char** argv )
 {
   double egam = 10.;
-  double zs = 1.;
+  double zs = .7071;
 
-  for (int i=0; ii<argc; ii++)
+  for (int i = 0; i < argc; i++)
   {
-    if (strcmp(argv[i],"-e")==0) egam = atof(argv[i+1]);
-    if (strcmp(argv[i],"-c")==0) zs = atof(argv[i+1]);
+    if (std::strcmp(argv[i],"-e")==0) egam = atof(argv[i+1]);
+    if (std::strcmp(argv[i],"-c")==0) zs = atof(argv[i+1]);
   }
 
   reaction_kinematics * ptr = new reaction_kinematics(mJpsi, "jpsi");
@@ -43,7 +44,7 @@ int main( int argc, char** argv )
   double s = mPro * (2.l * egam + mPro);
   for (int i = 0; i < 24; i++)
   {
-    cout << std::left << setw(5) << i << setw(15) << amp.helicity_amplitude(ptr->helicities[i], s, 1.) << endl;
+    cout << std::left << setw(5) << i << setw(15) << amp.helicity_amplitude(ptr->helicities[i], s, zs) << endl;
   }
 
   delete ptr;
