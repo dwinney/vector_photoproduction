@@ -21,7 +21,7 @@ public:
 
   reaction_kinematics * kinematics;
 
-  virtual std::complex<double> helicity_amplitude(std::vector<double> helicities, double s, double zs) = 0;
+  virtual std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs) = 0;
 };
 
 #endif

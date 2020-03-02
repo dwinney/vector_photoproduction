@@ -73,12 +73,12 @@ std::complex<double> pomeron_exchange::regge_factor(double s, double zs)
 
 // ---------------------------------------------------------------------------
 // Given a set of helicities for each particle, assemble the helicity amplitude by contracting Lorentz indicies
-std::complex<double> pomeron_exchange::helicity_amplitude(std::vector<double> helicities, double s, double zs)
+std::complex<double> pomeron_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
 {
-  double lam_gam = helicities[0];
-  double lam_targ = helicities[1];
-  double lam_vec = helicities[2];
-  double lam_rec = helicities[3];
+  int lam_gam = helicities[0];
+  int lam_targ = helicities[1];
+  int lam_vec = helicities[2];
+  int lam_rec = helicities[3];
 
   std::complex<double> result = 0.;
   for (int mu = 0; mu < 4; mu++)

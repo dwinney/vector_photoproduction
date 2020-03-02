@@ -56,7 +56,7 @@ public:
   std::complex<double> regge_factor(double s, double zs);
 
   // Assemble the helicity amplitude by contracting the lorentz indices
-  std::complex<double> helicity_amplitude(std::vector<double> helicities, double s, double zs);
+  std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);
 };
 
 #endif
