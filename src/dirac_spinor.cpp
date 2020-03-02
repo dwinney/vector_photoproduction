@@ -21,19 +21,19 @@ double dirac_spinor::sin_half(double zs)
   return sqrt(result);
 };
 
-complex<double> dirac_spinor::momentum(int sign, double s)
+std::complex<double> dirac_spinor::momentum(int sign, double s)
 {
   if (ANTI_PARTICLE)
   {
     sign *= -1;
   }
 
-  complex<double> E = twobody.energy(particle, s);
+  std::complex<double> E = twobody.energy(particle, s);
   return sqrt(E + sign * mass);
 }
 // ---------------------------------------------------------------------------
 // Components for both the regular spinor or adjoint
-complex<double> dirac_spinor::component(int i, int lambda, double s, double zs)
+std::complex<double> dirac_spinor::component(int i, int lambda, double s, double zs)
 {
   if (lambda == 1)
   {
@@ -43,7 +43,7 @@ complex<double> dirac_spinor::component(int i, int lambda, double s, double zs)
       case 1: return momentum(+1, s) * cos_half(zs);
       case 2: return - momentum(-1, s) * sin_half(zs);
       case 3: return momentum(-1, s) * cos_half(zs);
-      default : cout << "dirac_spinor: Invalid component index " << i << " passed as argument. Quitting... \n";
+      default : std::cout << "dirac_spinor: Invalid component index " << i << " passed as argument. Quitting... \n";
                 exit(0);
     }
   }
@@ -55,20 +55,20 @@ complex<double> dirac_spinor::component(int i, int lambda, double s, double zs)
         case 1: return momentum(+1, s) * sin_half(zs);
         case 2: return - momentum(-1, s) * cos_half(zs);
         case 3: return - momentum(-1, s) * sin_half(zs);
-        default : cout << "dirac_spinor: Invalid component index " << i << " passed as argument. Quitting... \n";
+        default : std::cout << "dirac_spinor: Invalid component index " << i << " passed as argument. Quitting... \n";
                   exit(0);
       }
     }
   else
   {
-    cout << "dirac_spinor: Invalid helicity projection passed as argument. Quitting... \n";
+    std::cout << "dirac_spinor: Invalid helicity projection passed as argument. Quitting... \n";
     exit(0);
   }
 };
 
-complex<double> dirac_spinor::adjoint_component(int i, int lambda, double s, double zs)
+std::complex<double> dirac_spinor::adjoint_component(int i, int lambda, double s, double zs)
 {
-  complex<double> result = 0.;
+  std::complex<double> result = 0.;
   for (int j = 0; j < 4; j++)
   {
     result += conj(component(j, lambda, s, zs)) * gamma_matrices[0][j][i];

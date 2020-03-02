@@ -8,7 +8,7 @@
 #ifndef _POMERON_
 #define _POMERON_
 
-#include "reaction_kinematics.hpp"
+#include "amplitude.hpp"
 
 // ---------------------------------------------------------------------------
 // The pomeron_exchange class describes the amplitude correspinding to
@@ -23,16 +23,17 @@
 // a reaction_kinematics object containing the mass and name of the vector particle
 // being produced
 // ---------------------------------------------------------------------------
-class pomeron_exchange
+
+class pomeron_exchange : public amplitude
 {
 private:
-  reaction_kinematics * kinematics;
-  double norm, a0, aprime, b0;
+  double a0, aprime; // Regge trajectory intercept and slope
+  double norm, b0; // Regge factor parameters: normalization and t-slope
 
 public:
   // Constructor
   pomeron_exchange(reaction_kinematics * xkinem)
-  : kinematics(xkinem)
+  : amplitude(xkinem)
   {};
 
   // Usual (real) linear Regge trajectory
@@ -41,7 +42,7 @@ public:
     return a0 + aprime * s;
   };
 
-  void set_params(vector<double> params)
+  void set_params(std::vector<double> params)
   {
     norm = params[0];
     a0 = params[1];
@@ -50,12 +51,12 @@ public:
   };
 
   // Factorized amplitude into the two vertices with a regge factor
-  complex<double> top_vertex(int mu, int lam_gam, int lam_vec, double s, double zs);
-  complex<double> bottom_vertex(int mu, int lam_targ, int lam_rec, double s, double zs);
-  complex<double> regge_factor(double s, double zs);
+  std::complex<double> top_vertex(int mu, int lam_gam, int lam_vec, double s, double zs);
+  std::complex<double> bottom_vertex(int mu, int lam_targ, int lam_rec, double s, double zs);
+  std::complex<double> regge_factor(double s, double zs);
 
   // Assemble the helicity amplitude by contracting the lorentz indices
-  complex<double> helicity_amplitude(vector<double> helicities, double s, double zs);
+  std::complex<double> helicity_amplitude(std::vector<double> helicities, double s, double zs);
 };
 
 #endif

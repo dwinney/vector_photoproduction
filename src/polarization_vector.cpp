@@ -12,7 +12,7 @@
 
 // ---------------------------------------------------------------------------
 // Components
-complex<double> polarization_vector::component(int i, int lambda, double s, double zs)
+std::complex<double> polarization_vector::component(int i, int lambda, double s, double zs)
 {
   if (abs(lambda) == 1)
   {
@@ -43,7 +43,7 @@ complex<double> polarization_vector::component(int i, int lambda, double s, doub
   }
 };
 
-complex<double> polarization_vector::conjugate_component(int i, int lambda, double s, double zs)
+std::complex<double> polarization_vector::conjugate_component(int i, int lambda, double s, double zs)
 {
   return conj(component(i, lambda, s, zs));
 };

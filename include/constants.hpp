@@ -12,14 +12,11 @@
 #include <cmath>
 #include <complex>
 
-using std::complex;
-using std::abs;
-
 // ---------------------------------------------------------------------------
 const double deg2rad = (M_PI / 180.);
 const double EPS = 1.e-6;
-const complex<double> xr(1., 0.);
-const complex<double> xi(0., 1.);
+const std::complex<double> xr(1., 0.);
+const std::complex<double> xi(0., 1.);
 
 // Masses
 const double mPi = 3.14159265359;
@@ -37,7 +34,7 @@ const double sthPsiPro = (mJpsi + mPro) * (mJpsi + mPro);
 // Decay constants
 const double fJpsi = 0.278;
 // ---------------------------------------------------------------------------
-const complex<double> gamma_matrices[4][4][4] =
+const std::complex<double> gamma_matrices[4][4][4] =
 {
 //gamma0
 	{ { 1., 0., 0., 0. },
@@ -61,7 +58,7 @@ const complex<double> gamma_matrices[4][4][4] =
     { 0., 1., 0., 0. } }
 };
 
-const complex<double> gamma_5[4][4] =
+const std::complex<double> gamma_5[4][4] =
 {
   { 0., 0., 1., 0. },
   { 0., 0., 0., 1. },

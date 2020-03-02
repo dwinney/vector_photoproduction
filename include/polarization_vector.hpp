@@ -17,16 +17,17 @@
 // Polarization vectors for vector particles
 // in the s-channel center of mass frame
 // ---------------------------------------------------------------------------
+
 class polarization_vector
 {
 private:
     two_body_state state;
-    const string particle;
+    const std::string particle;
     const double mass;
 
 public:
   // Constructor
-  polarization_vector(two_body_state xstate, string name)
+  polarization_vector(two_body_state xstate, std::string name)
     : state(xstate), particle(name), mass(state.get_mass(name))
   {};
 
@@ -39,8 +40,8 @@ public:
   ~polarization_vector(){};
 
   // Components
-  complex<double> component(int i, int lambda, double s, double zs);
-  complex<double> conjugate_component(int i, int lambda, double s, double zs);
+  std::complex<double> component(int i, int lambda, double s, double zs);
+  std::complex<double> conjugate_component(int i, int lambda, double s, double zs);
 };
 
 #endif

@@ -37,7 +37,7 @@ int main( int argc, char** argv )
   reaction_kinematics * ptr = new reaction_kinematics(mJpsi, "jpsi");
   pomeron_exchange  amp(ptr);
 
-  vector<double> params = {0.379, 0.941, 0.364, 0.12};
+  std::vector<double> params = {0.379, 0.941, 0.364, 0.12};
   amp.set_params(params);
 
   cout << std::right << setw(5) << " ";

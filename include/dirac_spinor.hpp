@@ -14,8 +14,6 @@
 #include "constants.hpp"
 #include "two_body_state.hpp"
 
-using std::complex;
-
 // ---------------------------------------------------------------------------
 // The dirac_spinor object is exactly as it sounds. :)
 // ---------------------------------------------------------------------------
@@ -24,7 +22,7 @@ class dirac_spinor
 {
 private:
   two_body_state twobody;
-  const string particle;
+  const std::string particle;
   const double mass;
 
   //Whether its an anti-particle or not
@@ -32,11 +30,11 @@ private:
 
   double cos_half(double zs);
   double sin_half(double zs);
-  complex<double> momentum(int sign, double s);
+  std::complex<double> momentum(int sign, double s);
 
 public:
   // Constructor
-  dirac_spinor(two_body_state xstate, string name, bool if_anti = false)
+  dirac_spinor(two_body_state xstate, std::string name, bool if_anti = false)
   : twobody(xstate), particle(name), mass(xstate.get_mass(name)),
     ANTI_PARTICLE(if_anti)
   {};
@@ -51,7 +49,7 @@ public:
   ~dirac_spinor(){};
 
   // Components
-  complex<double> component(int i, int lambda, double s, double zs);
-	complex<double> adjoint_component(int i, int lambda, double s, double zs);
+  std::complex<double> component(int i, int lambda, double s, double zs);
+	std::complex<double> adjoint_component(int i, int lambda, double s, double zs);
 };
 #endif

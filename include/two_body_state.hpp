@@ -14,10 +14,6 @@
 #include <complex>
 #include <iostream>
 
-using std::cout;
-using std::complex;
-using std::string;
-
 // ---------------------------------------------------------------------------
 // The two_body_state is the base object for defining a reaction in the
 // s-channel center of mass scatering frame.
@@ -32,11 +28,11 @@ class two_body_state
 {
 private:
   const double m1, m2;
-  const string particle1, particle2;
+  const std::string particle1, particle2;
 
 public:
   // Constructor
-  two_body_state(double xm1, double xm2, string name1, string name2)
+  two_body_state(double xm1, double xm2, std::string name1, std::string name2)
   : m1(xm1), m2(xm2), particle1(name1), particle2(name2)
   {};
 
@@ -46,12 +42,12 @@ public:
     particle1(old.particle1), particle2(old.particle2)
   {};
 
-  double get_mass(string name);
+  double get_mass(std::string name);
 
-  complex<double> momentum(string name, double s);
-  complex<double> energy(string name, double s);
+  std::complex<double> momentum(std::string name, double s);
+  std::complex<double> energy(std::string name, double s);
 
-  complex<double> component(int i, string name, double s, double zs);
+  std::complex<double> component(int i, std::string name, double s, double zs);
 };
 
 #endif

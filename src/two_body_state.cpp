@@ -9,7 +9,7 @@
 
 #include "two_body_state.hpp"
 
-double two_body_state::get_mass(string name)
+double two_body_state::get_mass(std::string name)
 {
   if (name == particle1)
   {
@@ -21,7 +21,7 @@ double two_body_state::get_mass(string name)
   }
   else
   {
-    cout << "two_body_state: Unknown particle name passed as argument. Quiting... \n";
+    std::cout << "two_body_state: Unknown particle name passed as argument. Quiting... \n";
     exit(0);
   }
 };
@@ -29,7 +29,7 @@ double two_body_state::get_mass(string name)
 // ---------------------------------------------------------------------------
 // return the energy or momentum of a given particle
 
-complex<double> two_body_state::energy(string name, double s)
+std::complex<double> two_body_state::energy(std::string name, double s)
 {
   if (name == particle1)
   {
@@ -41,33 +41,33 @@ complex<double> two_body_state::energy(string name, double s)
   }
   else
   {
-    cout << "two_body_state: Unknown particle name passed as argument. Quiting... \n";
+    std::cout << "two_body_state: Unknown particle name passed as argument. Quiting... \n";
     exit(0);
   }
 };
 
-complex<double> two_body_state::momentum(string name, double s)
+std::complex<double> two_body_state::momentum(std::string name, double s)
 {
   if (name == particle1)
   {
-    complex<double> E1 = energy(name, s);
+    std::complex<double> E1 = energy(name, s);
     return sqrt(E1*E1 - m1*m1);
   }
   else if (name == particle2)
   {
-    complex<double> E2 = energy(name, s);
+    std::complex<double> E2 = energy(name, s);
     return -sqrt(E2*E2 - m2*m2);
   }
   else
   {
-    cout << "two_body_state: Unknown particle name passed as argument. Quiting... \n";
+    std::cout << "two_body_state: Unknown particle name passed as argument. Quiting... \n";
     exit(0);
   }
 };
 
 // ---------------------------------------------------------------------------
 // The four momenta components in the x-z plane
-complex<double> two_body_state::component(int i, string name, double s, double zs)
+std::complex<double> two_body_state::component(int i, std::string name, double s, double zs)
 {
   switch (i)
   {
@@ -75,7 +75,7 @@ complex<double> two_body_state::component(int i, string name, double s, double z
     case 1: momentum(name, s) * sqrt(1. - zs * zs);
     case 2: return 0.;
     case 3: return momentum(name, s) * zs;
-    default: cout << "two_body_state: Invalid four vector component! Quiting...\n";
+    default: std::cout << "two_body_state: Invalid four vector component! Quiting...\n";
              exit(0);
   }
 };

@@ -18,9 +18,6 @@
 #include <vector>
 #include <string>
 
-using std::vector;
-using std::string;
-
 template <typename T>
 T Kallen(T x, T y, T z)
 {
@@ -32,11 +29,11 @@ class reaction_kinematics
 private:
   // vector meson mass and identifier
   const double mVec;
-  const string vector_particle;
+  const std::string vector_particle;
 
 public:
   // Constructor
-  reaction_kinematics(double vec_mass, string vec_name)
+  reaction_kinematics(double vec_mass, std::string vec_name)
   : mVec(vec_mass), vector_particle(vec_name),
     initial(0., mPro, "beam", "target"),
     final(vec_mass, mPro, vec_name, "recoil"),
@@ -61,14 +58,14 @@ public:
 
   double t_man(double s, double zs)
   {
-    complex<double> kq = initial.momentum("beam", s) * final.momentum(vector_particle, s);
-    complex<double> E1E3 = initial.energy("beam", s) * final.energy(vector_particle, s);
+    std::complex<double> kq = initial.momentum("beam", s) * final.momentum(vector_particle, s);
+    std::complex<double> E1E3 = initial.energy("beam", s) * final.energy(vector_particle, s);
     return mVec*mVec - 2. * abs(E1E3) + 2. * abs(kq) * zs;
   };
 
   // Helicity configurations
   // Photon [0], Incoming Proton [1], Vector meson [2], Outgoing Proton [3]
-  vector<vector<double>> helicities =
+  std::vector< std::vector<double> > helicities =
   {
     {  1., -1.,  1., -1. },
     {  1., -1.,  1.,  1. },
