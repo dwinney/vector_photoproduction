@@ -5,7 +5,7 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#include "pomeron_exchange.hpp"
+#include "amplitudes/pomeron_exchange.hpp"
 
 // ---------------------------------------------------------------------------
 // Bottom vertex coupling the target and recoil proton spinors to the vector pomeron

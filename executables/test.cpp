@@ -13,7 +13,7 @@
 
 #include "constants.hpp"
 #include "reaction_kinematics.hpp"
-#include "pomeron_exchange.hpp"
+#include "amplitudes/pomeron_exchange.hpp"
 
 #include <cstring>
 #include <iostream>
