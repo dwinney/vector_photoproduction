@@ -6,7 +6,7 @@
 // example: ./test -e 12. -c 1.
 // for the forward amplitude at 12 GeV photon beam
 //
-// Author:       Daniel Winney (2019)
+// Author:       Daniel Winney (2020)
 // Affiliation:  Joint Physics Analysis Center (JPAC)
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
@@ -52,7 +52,7 @@ int main( int argc, char** argv )
     cout << setw(10) << ptr->helicities[i][1];
     cout << setw(10) << ptr->helicities[i][2];
     cout << setw(10) << ptr->helicities[i][3];
-    cout << setw(25) << amp.hadronic_decay(ptr->helicities[i], zs) << endl;
+    cout << setw(25) << amp.helicity_amplitude(ptr->helicities[i], s, zs) << endl;
   }
 
   delete ptr;
