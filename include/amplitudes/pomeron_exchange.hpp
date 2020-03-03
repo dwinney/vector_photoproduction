@@ -36,12 +36,19 @@ public:
   : amplitude(xkinem)
   {};
 
+  // Copy constructor
+  pomeron_exchange(const pomeron_exchange & old)
+  : amplitude(old),
+    a0(old.a0), aprime(old.aprime), norm(old.norm), b0(old.b0)
+  {};
+
   // Usual (real) linear Regge trajectory
   double trajectory(double s)
   {
     return a0 + aprime * s;
   };
 
+  // Setting utility
   void set_params(std::vector<double> params)
   {
     norm = params[0];
@@ -50,9 +57,13 @@ public:
     b0 = params[3];
   };
 
-  // Factorized amplitude into the two vertices with a regge factor
+  // Photon - J/Psi - Pomeron vertex
   std::complex<double> top_vertex(int mu, int lam_gam, int lam_vec, double s, double zs);
+
+  // Nucleon - Nucleon - Pomeron vertex
   std::complex<double> bottom_vertex(int mu, int lam_targ, int lam_rec, double s, double zs);
+
+  // Energy dependence from Pomeron propogator
   std::complex<double> regge_factor(double s, double zs);
 
   // Assemble the helicity amplitude by contracting the lorentz indices

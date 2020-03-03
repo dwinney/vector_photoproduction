@@ -44,6 +44,14 @@ public:
     naturality = P * pow(-1, (abs(j) - 1) / 2);
   };
 
+  // Copy Constructor
+  baryon_resonance(const baryon_resonance & old)
+  : amplitude(old),
+    mRes(old.mRes), gamRes(old.gamRes), J(old.J), P(old.P), naturality(old.naturality),
+    xBR(old.xBR), R_photo(old.R_photo), pi_bar(old.pi_bar), pf_bar(old.pf_bar)
+  {};
+
+  // Setting utility
   void set_params(std::vector<double> params)
   {
     xBR = params[0];
