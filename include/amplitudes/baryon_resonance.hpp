@@ -23,7 +23,7 @@
 class baryon_resonance : public amplitude
 {
 private:
-  int J, P; // (2xSpin) and parity of the resonance
+  int J, P, naturality; // (2xSpin) and parity of the resonance
   double mRes, gamRes; // Resonant mass and width
   double xBR; // Hadronic banching fraction to j/psi p
   double R_photo; // Photocoupling ratio
@@ -39,8 +39,9 @@ public:
     pi_bar = - real(kinematics->initial.momentum("target", mass * mass));
     pf_bar = - real(kinematics->final.momentum("recoil", mass * mass));
 
-    if (j < 0){P = -1;}
-    else {P = 1;}
+    (j < 0) ? (P = -1) : (P = 1);
+
+    naturality = P * pow(-1, (abs(j) - 1) / 2);
   };
 
   void set_params(std::vector<double> params)
@@ -50,10 +51,10 @@ public:
   };
 
   // Photoexcitation helicity amplitude for the process gamma p -> R
-  double photo_coupling(int lam_i, double s, double zs);
+  double photo_coupling(std::vector<int> helicities, double s);
 
   // Hadronic decay helicity amplitude for the R -> J/psi p process
-  double hadronic_decay(int lam_i, int lam_f, double zs);
+  double hadronic_decay(std::vector<int> helicities, double zs);
 
   // Ad-hoc threshold factor to kill the resonance at threshold
   double threshold_factor(double s, double beta);

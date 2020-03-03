@@ -10,10 +10,7 @@
 // Combined amplitude as a Breit-Wigner with the residue as the prodect of hadronic and photo-couplings
 std::complex<double> baryon_resonance::helicity_amplitude(std::vector<int> helicities, double s, double zs)
 {
-  int lam_i = 2 * helicities[0] - helicities[1];
-  int lam_f = 2 * helicities[2] - helicities[3];
-
-  double residue = photo_coupling(lam_i, s, zs) * hadronic_decay(lam_i, lam_f, zs);
+  double residue = photo_coupling(helicities, s) * hadronic_decay(helicities, zs);
   residue *= threshold_factor(s, 1.5);
 
   return residue / (s - mRes*mRes - xi * mRes * gamRes);
@@ -29,8 +26,10 @@ double baryon_resonance::threshold_factor(double s, double beta)
 };
 
 // Photoexcitation helicity amplitude for the process gamma p -> R
-double baryon_resonance::photo_coupling(int lam_i, double s, double zs)
+double baryon_resonance::photo_coupling(std::vector<int> helicities, double s)
 {
+  int lam_i = 2 * helicities[0] - helicities[1];
+
   int l_min; // lowest allowed relative angular momentum
   double P_t; // Combinatorial factor due to only transverse polarized J/psi contribute
   switch (J)
@@ -61,14 +60,8 @@ double baryon_resonance::photo_coupling(int lam_i, double s, double zs)
 
   // A_1/2 or A_3/2 depending on ratio R_photo
   double a;
-  if (lam_i == 1)
-  {
-    a = R_photo;
-  }
-  else
-  {
-    a = sqrt(1. - R_photo * R_photo);
-  }
+  (lam_i == 1) ? (a = R_photo) : (a = sqrt(1. - R_photo * R_photo));
+
 
   // Electromagnetic decay width given by VMD assumption
   double emGamma = (xBR * gamRes) * pow(fJpsi / mJpsi, 2.);
@@ -86,13 +79,23 @@ double baryon_resonance::photo_coupling(int lam_i, double s, double zs)
 };
 
 // Hadronic decay helicity amplitude for the R -> J/psi p process
-double baryon_resonance::hadronic_decay(int lam_i, int lam_f, double zs)
+double baryon_resonance::hadronic_decay(std::vector<int> helicities, double zs)
 {
+  int lam_i = 2 * helicities[0] - helicities[1];
+  int lam_f = 2 * helicities[2] - helicities[3];
+
   // Hadronic coupling constant g, given in terms of branching ratio xBR
   double g = 8. * M_PI * xBR * gamRes;
   g *= double(J + 1) / 6.;
   g *= mRes * mRes / pf_bar;
   g = sqrt(g);
+
+  // Check for extra phase from unnatural decays
+  if (naturality == -1)
+  {
+    if (helicities[0] < 0) {g *= -1.;}
+    if (lam_f < 0) {g *= -1.;}
+  }
 
   return g * wigner_d(J, lam_i, lam_f, zs);
 };
