@@ -9,6 +9,7 @@
 #define _POMERON_
 
 #include "amplitude.hpp"
+#include "regge_trajectory.hpp"
 
 // ---------------------------------------------------------------------------
 // The pomeron_exchange class describes the amplitude correspinding to
@@ -27,34 +28,27 @@
 class pomeron_exchange : public amplitude
 {
 private:
-  double a0, aprime; // Regge trajectory intercept and slope
+
   double norm, b0; // Regge factor parameters: normalization and t-slope
+  regge_trajectory * pomeron_traj;
 
 public:
   // Constructor
-  pomeron_exchange(reaction_kinematics * xkinem)
-  : amplitude(xkinem)
+  pomeron_exchange(reaction_kinematics * xkinem, regge_trajectory * alpha)
+  : amplitude(xkinem), pomeron_traj(alpha)
   {};
 
   // Copy constructor
   pomeron_exchange(const pomeron_exchange & old)
   : amplitude(old),
-    a0(old.a0), aprime(old.aprime), norm(old.norm), b0(old.b0)
+    norm(old.norm), b0(old.b0)
   {};
-
-  // Usual (real) linear Regge trajectory
-  double trajectory(double s)
-  {
-    return a0 + aprime * s;
-  };
 
   // Setting utility
   void set_params(std::vector<double> params)
   {
     norm = params[0];
-    a0 = params[1];
-    aprime = params[2];
-    b0 = params[3];
+    b0 = params[1];
   };
 
   // Photon - J/Psi - Pomeron vertex

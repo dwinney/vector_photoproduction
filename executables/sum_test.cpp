@@ -59,11 +59,14 @@ int main( int argc, char** argv )
   // ---------------------------------------------------------------------------
   // T - CHANNEL
 
-  // Background amplitude
-  pomeron_exchange  background(ptr);
+  // Set up pomeron trajectory
+  linear_traj alpha(0.941, 0.364);
 
-  // Pomeron trajectory parameters and t-slope
-  std::vector<double> back_params = {0.379, 0.941, 0.364, 0.12};
+  // Create amplitude with kinematics and trajectory
+  pomeron_exchange background(ptr, &alpha);
+
+  // normalization and t-slope
+  std::vector<double> back_params = {0.379, 0.12};
   background.set_params(back_params);
 
   // Add to the sum
@@ -73,7 +76,10 @@ int main( int argc, char** argv )
   // Print helicity amplitudes to command-line
 
   cout << std::right << setw(5) << " ";
-  cout << setw(10) << "lam_gam" << setw(10) << "lam_targ" << setw(10) << "lam_vec" << setw(10) << "lam_rec";
+  cout << setw(10) << "lam_gam";
+  cout << setw(10) << "lam_targ";
+  cout << setw(10) << "lam_vec";
+  cout << setw(10) << "lam_rec";
   cout << setw(25) << "helicity_amplitude" << endl;
 
   double s = mPro * (2.l * egam + mPro);

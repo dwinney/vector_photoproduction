@@ -65,7 +65,7 @@ std::complex<double> pomeron_exchange::regge_factor(double s, double zs)
   double t_min = kinematics->t_man(s, 1.);
 
   std::complex<double> result = exp(b0 * (t - t_min)) / s;
-  result *= pow(s - kinematics->sth, trajectory(t));
+  result *= pow(s - kinematics->sth, pomeron_traj->eval(t));
   result *= xi * norm;
 
   return result;
