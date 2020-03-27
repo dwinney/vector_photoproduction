@@ -37,6 +37,8 @@ public:
   reaction_kinematics * kinematics;
 
   virtual std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs) = 0;
+
+  double diff_xsection(double s, double zs);
 };
 
 #endif
