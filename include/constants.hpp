@@ -15,6 +15,7 @@
 // ---------------------------------------------------------------------------
 const double deg2rad = (M_PI / 180.);
 const double EPS = 1.e-6;
+const double alpha = 1. / 137.;
 const std::complex<double> xr(1., 0.);
 const std::complex<double> xi(0., 1.);
 
@@ -22,6 +23,7 @@ const std::complex<double> xi(0., 1.);
 const double mPi = 3.14159265359;
 const double mPro = 0.9383;
 const double mJpsi = 3.097;
+const double mPsi2S = 3.686;
 
 // Masses squared
 const double mPi_sqr = mPi * mPi;
