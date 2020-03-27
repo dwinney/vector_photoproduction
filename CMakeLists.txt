@@ -37,6 +37,23 @@ function(update_deps_file deps)
     include(${deps_file})
 endfunction(update_deps_file)
 
+# Look for and connect ROOT and GSL
+find_package(ROOT REQUIRED MathMore)
+if (ROOT_FOUND)
+    include_directories(${ROOT_INCLUDE_DIRS})
+    link_directories(${ROOT_LIBRARY_DIRS})
+else()
+    message(SEND_ERROR "Root not found!")
+endif()
+
+find_package(GSL REQUIRED)
+if (GSL_FOUND)
+    include_directories(${GSL_INCLUDE_DIRS})
+    link_directories(${GSL_LIBRARY_DIRS})
+else()
+    message(SEND_ERROR "GSL not found!")
+endif()
+
 # BUILD LIBRARY FROM LOCAL FiLES
 include_directories("include")
 include_directories("src")
