@@ -24,7 +24,6 @@ class reaction_kinematics
 private:
   // vector meson mass and identifier
   const double mVec;
-  const std::string vector_particle;
 
 public:
   // Constructor
@@ -45,17 +44,25 @@ public:
     target(old.target), recoil(old.recoil)
   {};
 
+  const std::string vector_particle;
+
   // inital and final state kinematics
   const double sth = (mVec + mPro) * (mVec + mPro);
   two_body_state initial, final;
   polarization_vector eps_vec, eps_gamma;
   dirac_spinor target, recoil;
 
+  // Invariante variables 
   double t_man(double s, double zs)
   {
     std::complex<double> kq = initial.momentum("beam", s) * final.momentum(vector_particle, s);
     std::complex<double> E1E3 = initial.energy("beam", s) * final.energy(vector_particle, s);
     return mVec*mVec - 2. * abs(E1E3) + 2. * abs(kq) * zs;
+  };
+
+  double s_man(double egam)
+  {
+    return mPro * (2. * egam + mPro);
   };
 
   // Helicity configurations

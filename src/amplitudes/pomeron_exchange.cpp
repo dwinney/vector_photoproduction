@@ -57,7 +57,7 @@ std::complex<double> pomeron_exchange::regge_factor(double s, double zs)
 {
   if (s < kinematics->sth)
   {
-    std::cout << "pomeron_exchange: Trying to evaluate below threshold! Quitting... \n";
+    std::cout << " \n pomeron_exchange: Trying to evaluate below threshold (sqrt(s) = " << sqrt(s) << ")! Quitting... \n";
     exit(0);
   }
 
