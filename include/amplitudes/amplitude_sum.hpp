@@ -16,7 +16,7 @@
 // and add them together to get observables!
 // ---------------------------------------------------------------------------
 
-class amplitude_sum
+class amplitude_sum : public amplitude
 {
 private:
   // Store a vector of all the amplitudes you want to sum incoherently
@@ -24,12 +24,13 @@ private:
 
 public:
   // Empty constructor
-  amplitude_sum()
+  amplitude_sum(reaction_kinematics * xkinem)
+  : amplitude(xkinem)
   {};
 
   // Constructor with a vector already set up
-  amplitude_sum(std::vector<amplitude*> vec)
-  : amps(vec)
+  amplitude_sum(reaction_kinematics * xkinem, std::vector<amplitude*> vec)
+  : amplitude(xkinem), amps(vec)
   {};
 
   // Add a new amplitude to the vector

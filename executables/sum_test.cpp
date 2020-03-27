@@ -40,7 +40,7 @@ int main( int argc, char** argv )
   reaction_kinematics * ptr = new reaction_kinematics(mJpsi, "jpsi");
 
   // Incoherent sum of the s and t channels
-  amplitude_sum sum;
+  amplitude_sum sum(ptr);
 
   // ---------------------------------------------------------------------------
   // S - CHANNEL
