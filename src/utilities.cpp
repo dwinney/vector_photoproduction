@@ -95,7 +95,7 @@ void quick_plot(vector<double> s, vector<double> fx, string filename)
 
   string namepdf = filename + ".pdf";
   c->Print(namepdf.c_str());
-  cout << "Printed to: " << namepdf << std::endl;
+  cout << "Plotted to: " << namepdf << std::endl;
 
   delete c, gRe;
 };
@@ -138,7 +138,7 @@ void quick_cplot(vector<double> s, vector<complex<double>> fx, string filename)
 
   string namepdf = filename + ".pdf";
   c->Print(namepdf.c_str());
-  cout << "Printed to: " << namepdf << std::endl;
+  cout << "Plotted to: " << namepdf << std::endl;
 
   delete c, gRe, gIm;
 };
