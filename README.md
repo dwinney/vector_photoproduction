@@ -13,6 +13,9 @@ cmake ..
 make test
 ````
 
+##### psi_comparison
+Comparison of the unpolarized cross sections for the photoproduction of the Psi(1s) and Psi(2s) states near threshold in the GlueX kinematics. Optional flags are `-c [0:180]` to change the center-of-mass frame angle (in degrees) and `-lab` whether to plot in terms of photon lab frame of center-of-mass frame energy.
+
 ### Amplitudes
 The main object of interest is the abstract `amplitude` class. This allows you to build observables (so far only DXS) from helicity amplitudes. Implemented so far are those considered in [1,2]:
 
