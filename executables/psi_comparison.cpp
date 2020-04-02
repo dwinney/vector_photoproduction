@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
 // Comparing the photoproduction cross-sections of the Jpsi 1s and 2s states
-// near threshold.
+// near threshold at GlueX
 //
 // Author:       Daniel Winney (2020)
 // Affiliation:  Joint Physics Analysis Center (JPAC)
@@ -24,9 +24,12 @@
 int main( int argc, char** argv )
 {
   double theta = 0.;
+  bool IF_LAB = false;
+
   for (int i = 0; i < argc; i++)
   {
     if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
+    if (std::strcmp(argv[i], "-lab")==0) IF_LAB = true;
   }
 
   // Set up kinematics, determined entirely by vector meson mass
@@ -43,7 +46,6 @@ int main( int argc, char** argv )
   pomeron_exchange pomeron_2s(ptr2s, &alpha);
 
   // Feed in other two parameters (normalization and t-slope)
-
   // Best fit from [1]
   std::vector<double> params_1s = {0.379, 0.12};
   pomeron_1s.set_params(params_1s);
@@ -72,10 +74,17 @@ int main( int argc, char** argv )
     std::vector<double> s_n, dxs_n;
     for (int i = 0; i < 100; i++)
     {
-      double si = (amp[n]->kinematics->sth + 0.5) + double(i) * (900. - (amp[n]->kinematics->sth + 0.5)) / 100.;
+      double si = (amp[n]->kinematics->sth + 0.5) + double(i) * (30 - (amp[n]->kinematics->sth + 0.5)) / 100.;
       double dxsi = amp[n]->diff_xsection(si, zs);
 
-      s_n.push_back(sqrt(si));
+      if (IF_LAB == false)
+      {
+        s_n.push_back(sqrt(si));
+      }
+      else
+      {
+        s_n.push_back((si/mPro - mPro)/2.);
+      }
       dxs_n.push_back(dxsi);
     }
 
@@ -91,10 +100,17 @@ int main( int argc, char** argv )
   std::vector<double> s, ratio;
   for (int i = 0; i < 100; i++)
   {
-    double si = (ptr2s->sth + 0.5) + double(i) * (900. - (ptr2s->sth + 0.5)) / 100.;
+    double si = (ptr2s->sth + 0.5) + double(i) * (30 - (ptr2s->sth + 0.5)) / 100.;
     double ratioi = pomeron_2s.diff_xsection(si, zs) / pomeron_1s.diff_xsection(si, zs);
 
-    s.push_back(sqrt(si));
+    if (IF_LAB == false)
+    {
+      s.push_back(sqrt(si));
+    }
+    else
+    {
+      s.push_back((si/mPro - mPro)/2.);
+    }
     ratio.push_back(ratioi);
   }
 
