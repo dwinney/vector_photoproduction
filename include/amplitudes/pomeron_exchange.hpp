@@ -27,11 +27,6 @@
 
 class pomeron_exchange : public amplitude
 {
-private:
-
-  double norm, b0; // Regge factor parameters: normalization and t-slope
-  regge_trajectory * pomeron_traj;
-
 public:
   // Constructor
   pomeron_exchange(reaction_kinematics * xkinem, regge_trajectory * alpha)
@@ -51,7 +46,15 @@ public:
     b0 = params[1];
   };
 
-  // Photon - J/Psi - Pomeron vertex
+  // Assemble the helicity amplitude by contracting the lorentz indices
+  std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);
+
+private:
+
+  double norm, b0; // Regge factor parameters: normalization and t-slope
+  regge_trajectory * pomeron_traj;
+
+  // Photon - Vector - Pomeron vertex
   std::complex<double> top_vertex(int mu, int lam_gam, int lam_vec, double s, double zs);
 
   // Nucleon - Nucleon - Pomeron vertex
@@ -59,9 +62,6 @@ public:
 
   // Energy dependence from Pomeron propogator
   std::complex<double> regge_factor(double s, double zs);
-
-  // Assemble the helicity amplitude by contracting the lorentz indices
-  std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);
 };
 
 #endif
