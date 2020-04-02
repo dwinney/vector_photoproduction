@@ -63,7 +63,7 @@ add_library( JPAC_vecPhoto ${INC} ${SRC} )
 
 # GRAB EXECUTABLES
 include_directories("executables")
-file(GLOB EXE_FILES "executables/*.cpp")
+file(GLOB_RECURSE EXE_FILES "executables/*.cpp")
 update_deps_file("${EXE_FILES}")
 foreach( exefile ${EXE_FILES} )
     get_filename_component( exename ${exefile} NAME_WE)
