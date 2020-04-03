@@ -61,6 +61,11 @@ std::complex<double> pomeron_exchange::regge_factor(double s, double zs)
     exit(0);
   }
 
+  if (s - kinematics->sth < 0.001)
+  {
+    return 0.;
+  }
+
   double t = kinematics->t_man(s, zs);
   double t_min = kinematics->t_man(s, 1.);
 

@@ -52,7 +52,7 @@ public:
   polarization_vector eps_vec, eps_gamma;
   dirac_spinor target, recoil;
 
-  // Invariante variables 
+  // Invariante variables
   double t_man(double s, double zs)
   {
     std::complex<double> kq = initial.momentum("beam", s) * final.momentum(vector_particle, s);
