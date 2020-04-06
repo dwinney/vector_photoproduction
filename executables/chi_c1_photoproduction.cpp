@@ -73,10 +73,10 @@ for (int n = 0; n < exchanges.size(); n++)
   std::vector<double> s, dxs;
   for (int i = 0; i < N; i++)
   {
-    double si = ptr->sth + double(i) * (100. - ptr->sth) / N;
+    double si = ptr->sth + double(i) * (30. - ptr->sth) / N;
     double dxsi = exchanges[n]->diff_xsection(si, zs);
 
-    s.push_back(si);
+    s.push_back((si/mPro - mPro) / 2.);
     dxs.push_back(dxsi);
   }
 
@@ -93,10 +93,10 @@ std::cout << " photoproduction.\n";
 std::vector<double> s, dxs;
 for (int i = 0; i < N; i++)
 {
-  double si = ptr->sth + double(i) * (100. - ptr->sth) / N;
+  double si = ptr->sth + double(i) * (30. - ptr->sth) / N;
   double dxsi = total.diff_xsection(si, zs);
 
-  s.push_back(si);
+  s.push_back((si/mPro - mPro)/2.);
   dxs.push_back(dxsi);
 }
 
