@@ -38,12 +38,12 @@ std::complex<double> pomeron_exchange::top_vertex(int mu, int lam_gam, int lam_v
     std::complex<double> temp1, temp2;
 
     temp1 = kinematics->initial.component(nu, "beam", s, 1.);
-    temp1 *= metric[nu];
+    temp1 *= metric[nu][nu];
     temp1 *= kinematics->eps_vec.conjugate_component(nu, lam_vec, s, zs);
     sum1 += kinematics->eps_gamma.component(mu, lam_gam, s, 1.) * temp1;
 
     temp2 = kinematics->eps_gamma.component(nu, lam_gam, s, 1.);
-    temp2 *= metric[nu];
+    temp2 *= metric[nu][nu];
     temp2 *= kinematics->eps_vec.conjugate_component(nu, lam_vec, s, zs);
     sum2 += kinematics->initial.component(mu, "beam", s, 1.) * temp2;
   }
@@ -59,6 +59,11 @@ std::complex<double> pomeron_exchange::regge_factor(double s, double zs)
   {
     std::cout << " \n pomeron_exchange: Trying to evaluate below threshold (sqrt(s) = " << sqrt(s) << ")! Quitting... \n";
     exit(0);
+  }
+
+  if (s - kinematics->sth < 0.001)
+  {
+    return 0.;
   }
 
   double t = kinematics->t_man(s, zs);
@@ -85,7 +90,7 @@ std::complex<double> pomeron_exchange::helicity_amplitude(std::vector<int> helic
   {
     std::complex<double> temp = regge_factor(s, zs);
     temp *= top_vertex(mu, lam_gam, lam_vec, s, zs);
-    temp *= metric[mu];
+    temp *= metric[mu][mu];
     temp *= bottom_vertex(mu, lam_targ, lam_rec, s, zs);
 
     result += temp;

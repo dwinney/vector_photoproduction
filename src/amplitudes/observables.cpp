@@ -21,8 +21,6 @@ double amplitude::diff_xsection(double s, double zs)
     sum += real(square);
   }
 
-  std::complex<double> p_i = kinematics->initial.momentum("beam", s);
-  std::complex<double> p_f = kinematics->final.momentum(kinematics->vector_particle, s);
   double norm = (6084.375 * alpha) / pow(0.5 * (s - mPro_sqr), 2.);
 
   return sum * norm;
