@@ -13,6 +13,10 @@ cmake ..
 make test
 ````
 
+##### polarized_pentaquark
+Sensitivity study of double polarized observables to the LHCb pentaquarks in Hall A at JLab.
+Reproduces the results in [2]. See [JPAC page on γp→J/ψp](http://cgl.soic.indiana.edu/jpac/polarizedPenta.php).
+
 ##### psi_comparison
 Comparison of the unpolarized cross sections for the photoproduction of the Psi(1s) and Psi(2s) states near threshold in the GlueX kinematics. Optional flag are `-c [0:180]` to change the center-of-mass frame angle (in degrees) (default is forward scattering theta = 0).
 
