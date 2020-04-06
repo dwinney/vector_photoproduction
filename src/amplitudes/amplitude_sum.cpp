@@ -14,7 +14,7 @@ std::complex<double> amplitude_sum::helicity_amplitude(std::vector<int> heliciti
   std::complex<double> result = 0.;
   for (int i = 0; i < amps.size(); i++)
   {
-    result += amps[0]->helicity_amplitude(helicities, s, zs);
+    result += amps[i]->helicity_amplitude(helicities, s, zs);
   }
 
   return result;
