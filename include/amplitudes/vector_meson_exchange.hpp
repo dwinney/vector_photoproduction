@@ -46,6 +46,9 @@ private:
   // Couplings to the axial-vector/photon and vector/tensor couplings to nucleon
   double gGamma = 0., gV = 0., gT = 0.;
 
+  // Mandelstam t momentum transfer
+  double momentum_transfer(double s, double zs);
+
   // Four dimensional Levi-Civita symbol
   double LeviCivita(int mu, int alpha, int beta, int gamma);
 
