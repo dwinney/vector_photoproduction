@@ -21,6 +21,8 @@
 
 #include "reaction_kinematics.hpp"
 
+#include <string>
+
 class amplitude
 {
 public:
@@ -29,12 +31,20 @@ public:
   : kinematics(xkinem)
   {};
 
-  // Copy constructor
-  amplitude(const amplitude & old)
-  : kinematics(old.kinematics)
+  amplitude(reaction_kinematics * xkinem, std::string id)
+  : kinematics(xkinem), identifier(id)
   {};
 
+  // Copy constructor
+  amplitude(const amplitude & old)
+  : kinematics(old.kinematics), identifier(old.identifier)
+  {};
+
+  // Kinematics object for thresholds and etc.
   reaction_kinematics * kinematics;
+
+  // Some saveable string by which to identify the amplitude
+  std::string identifier;
 
   virtual std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs) = 0;
 
