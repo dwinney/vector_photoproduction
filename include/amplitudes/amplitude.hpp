@@ -38,7 +38,15 @@ public:
 
   virtual std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs) = 0;
 
+  // ---------------------------------------------------------------------------
+  // Observables
+
+  // Differential and total cross-section
   double diff_xsection(double s, double zs);
+
+  // Spin asymmetries
+  double K_LL(double s, double zs);
+  double A_LL(double s, double zs);
 };
 
 #endif

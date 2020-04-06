@@ -8,6 +8,8 @@
 
 #include "amplitudes/amplitude.hpp"
 
+// ---------------------------------------------------------------------------
+// Differential cross section dsigma / dt
 double amplitude::diff_xsection(double s, double zs)
 {
   // Sum all the helicity amplitudes
@@ -25,3 +27,49 @@ double amplitude::diff_xsection(double s, double zs)
 
   return sum * norm;
 };
+
+// ---------------------------------------------------------------------------
+// Polarizatiopn asymmetry between beam and recoil proton
+double amplitude::K_LL(double s, double zs)
+{
+  double sigmapp = 0., sigmapm = 0.;
+  for (int i = 0; i < 6; i++)
+  {
+    std::complex<double> squarepp, squarepm;
+
+    // Amplitudes with lam_gam = + and lam_recoil = +
+    squarepp = helicity_amplitude(kinematics->helicities[2*i+1], s, zs);
+    squarepp *= conj(squarepp);
+    sigmapp += real(squarepp);
+
+    // Amplitudes with lam_gam = + and lam_recoil = -
+    squarepm = helicity_amplitude(kinematics->helicities[2*i], s, zs);
+    squarepm *= conj(squarepm);
+    sigmapm += real(squarepm);
+  }
+
+  return (sigmapp - sigmapm) / (sigmapp + sigmapm);
+}
+
+// ---------------------------------------------------------------------------
+// Polarizatiopn asymmetry between beam and target proton
+double amplitude::A_LL(double s, double zs)
+{
+  double sigmapp = 0., sigmapm = 0.;
+  for (int i = 0; i < 6; i++)
+  {
+    std::complex<double> squarepp, squarepm;
+
+    // Amplitudes with lam_gam = + and lam_targ = +
+    squarepp = helicity_amplitude(kinematics->helicities[i+6], s, zs);
+    squarepp *= conj(squarepp);
+    sigmapp += real(squarepp);
+
+    // Amplitudes with lam_gam = + and lam_targ = -
+    squarepm = helicity_amplitude(kinematics->helicities[i], s, zs);
+    squarepm *= conj(squarepm);
+    sigmapm += real(squarepm);
+  }
+
+  return (sigmapp - sigmapm) / (sigmapp + sigmapm);
+}
