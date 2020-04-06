@@ -148,7 +148,7 @@ double wigner_d(int j, int lam1, int lam2, double z)
             }
             case -3:
             {
-              result = - pow((1. - z)/ 2., 1.5) * (3. + 5.*z);
+              result = - pow((1. - z)/ 2., 1.5) * (3. + 5.*z); break;
             }
             default: wigner_error(j, lam1, lam2);
           }
