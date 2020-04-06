@@ -18,13 +18,13 @@ class vector_meson_exchange : public amplitude
 {
 public:
   // Constructor
-  vector_meson_exchange(reaction_kinematics * xkinem, double mass)
-  : amplitude(xkinem), mEx2(mass*mass)
+  vector_meson_exchange(reaction_kinematics * xkinem, double mass, std::string exchange)
+  : amplitude(xkinem), mEx2(mass*mass), exchange_particle(exchange)
   {};
 
   // Copy constructor
   vector_meson_exchange(const vector_meson_exchange & old)
-  : amplitude(old), mEx2(old.mEx2),
+  : amplitude(old), mEx2(old.mEx2), exchange_particle(old.exchange_particle),
     gGamma(old.gGamma), gV(old.gV), gT(old.gT)
   {};
 
@@ -42,6 +42,7 @@ public:
 private:
   // Mass of the exchange
   double mEx2;
+  std::string exchange_particle;
 
   // Couplings to the axial-vector/photon and vector/tensor couplings to nucleon
   double gGamma = 0., gV = 0., gT = 0.;
