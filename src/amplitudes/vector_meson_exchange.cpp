@@ -41,15 +41,15 @@ std::complex<double> vector_meson_exchange::top_vertex(int mu, int lam_gam, int 
 {
   // Contract with LeviCivita
   std::complex<double> result = 0.;
-  for (int alpha = 0; alpha < 3; alpha++)
+  for (int alpha = 0; alpha < 4; alpha++)
   {
-    for (int beta = 0; beta < 3; beta++)
+    for (int beta = 0; beta < 4; beta++)
     {
-      for (int gamma = 0; gamma < 3; gamma++)
+      for (int gamma = 0; gamma < 4; gamma++)
       {
         std::complex<double> temp;
-        temp = LeviCivita(mu, alpha, beta, gamma);
-        temp *= exchange_momenta(alpha, s, zs);
+        temp = LeviCivita(gamma, mu, alpha, beta);
+        temp *= kinematics->initial.component(alpha, "beam", s, 1.);
         temp *= kinematics->eps_gamma.component(beta, lam_gam, s, 1.);
         temp *= kinematics->eps_vec.component(gamma, lam_vec, s, zs);
 
@@ -107,7 +107,7 @@ std::complex<double> vector_meson_exchange::bottom_vertex(int mu, int lam_targ, 
 std::complex<double> vector_meson_exchange::vector_propagator(int mu, int nu, double s, double zs)
 {
   std::complex<double> result;
-  result +=  exchange_momenta(mu, s, zs) * exchange_momenta(nu, s, zs) / mEx2;
+  result =  exchange_momenta(mu, s, zs) * exchange_momenta(nu, s, zs) / mEx2;
   if (mu == nu)
   {
     result -= metric[mu];
