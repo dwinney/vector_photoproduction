@@ -79,7 +79,7 @@ int main( int argc, char** argv )
     for (int i = 2; i < N; i++)
     {
       double si = amp[n]->kinematics->sth + double(i) * (30. - amp[n]->kinematics->sth) / N;
-      double dxsi = amp[n]->diff_xsection(si, zs);
+      double dxsi = amp[n]->differential_xsection(si, zs);
 
       s_n.push_back((si/mPro - mPro)/2.);
 
@@ -102,7 +102,7 @@ int main( int argc, char** argv )
   for (int i = 10; i < N; i++)
   {
     double si = ptr2s->sth + double(i) * (30 - ptr2s->sth) / N;
-    double ratioi = pomeron_2s.diff_xsection(si, zs) / pomeron_1s.diff_xsection(si, zs);
+    double ratioi = pomeron_2s.differential_xsection(si, zs) / pomeron_1s.differential_xsection(si, zs);
 
     s.push_back((si/mPro - mPro)/2.);
     ratio.push_back(ratioi);

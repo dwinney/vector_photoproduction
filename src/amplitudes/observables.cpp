@@ -10,8 +10,13 @@
 
 // ---------------------------------------------------------------------------
 // Differential cross section dsigma / dt
-double amplitude::diff_xsection(double s, double zs)
+double amplitude::differential_xsection(double s, double zs)
 {
+  if (s - kinematics->sth < 0.001)
+  {
+    return 0.;
+  }
+
   // Sum all the helicity amplitudes
   double sum = 0.;
   for (int i = 0; i < 24; i++)
@@ -23,9 +28,31 @@ double amplitude::diff_xsection(double s, double zs)
     sum += real(square);
   }
 
-  double norm = (6084.375 * alpha) / pow(0.5 * (s - mPro_sqr), 2.);
+  double norm = 64. * M_PI * s;
+  norm *= real(kinematics->initial.momentum("beam", s)) * real(kinematics->initial.momentum("beam", s));
 
-  return sum * norm;
+  return sum / norm * (1.E6);
+};
+
+// ---------------------------------------------------------------------------
+// Inegrated total cross-section
+double amplitude::integrated_xsection(double s)
+{
+  int xN = 100;
+  double x[xN+1], w[xN+1];
+  NR_gauleg(-1., +1., x, w, xN);
+
+  double sum = 0.;
+  for (int i = 0; i <= xN; i++)
+  {
+    double jacobian; // 2. k * q
+    jacobian = 2. * real(kinematics->initial.momentum("beam", s));
+    jacobian *= real(kinematics->final.momentum(kinematics->vector_particle, s));
+
+    sum += w[i] * jacobian * differential_xsection(s, x[i]);
+  }
+
+  return sum;
 };
 
 // ---------------------------------------------------------------------------

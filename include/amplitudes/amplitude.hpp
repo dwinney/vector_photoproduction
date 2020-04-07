@@ -20,6 +20,7 @@
 // ---------------------------------------------------------------------------
 
 #include "reaction_kinematics.hpp"
+#include "integration.hpp"
 
 #include <string>
 
@@ -52,7 +53,8 @@ public:
   // Observables
 
   // Differential and total cross-section
-  double diff_xsection(double s, double zs);
+  double differential_xsection(double s, double zs);
+  double integrated_xsection(double s);
 
   // Spin asymmetries
   double K_LL(double s, double zs);
