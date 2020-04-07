@@ -23,9 +23,9 @@ std::complex<double> vector_meson_exchange::helicity_amplitude(std::vector<int> 
     {
       std::complex<double> temp;
       temp = top_vertex(mu, lam_gam, lam_vec, s, zs);
-      temp *= metric[mu][nu];
+      temp *= metric[mu];
       temp *= vector_propagator(mu, nu, s, zs);
-      temp *= metric[mu][nu];
+      temp *= metric[nu];
       temp *= bottom_vertex(nu, lam_targ, lam_rec, s, zs);
 
       result += temp;
@@ -107,8 +107,11 @@ std::complex<double> vector_meson_exchange::bottom_vertex(int mu, int lam_targ, 
 std::complex<double> vector_meson_exchange::vector_propagator(int mu, int nu, double s, double zs)
 {
   std::complex<double> result;
-  result = - metric[mu][nu];
   result +=  exchange_momenta(mu, s, zs) * exchange_momenta(nu, s, zs) / mEx2;
+  if (mu == nu)
+  {
+    result -= metric[mu];
+  }
 
   return result / (momentum_transfer(s,zs) - mEx2);
 };
@@ -125,7 +128,7 @@ std::complex<double> vector_meson_exchange::exchange_momenta(int mu, double s, d
   qGamma_mu = kinematics->initial.component(mu, "beam", s, 1.);
   qA_mu = kinematics->final.component(mu, kinematics->vector_particle, s, zs);
 
-  return  qGamma_mu - qA_mu;
+  return (qGamma_mu - qA_mu);
 };
 
 // Mandelstam t momentum transfer
@@ -136,7 +139,7 @@ double vector_meson_exchange::momentum_transfer(double s, double zs)
   {
     std::complex<double> temp;
     temp = exchange_momenta(mu, s, zs);
-    temp *= metric[mu][mu];
+    temp *= metric[mu];
     temp *= exchange_momenta(mu, s, zs);
 
     t += real(temp);

@@ -68,12 +68,6 @@ const std::complex<double> gamma_5[4][4] =
   { 0., 1., 0., 0. }
 };
 
-const double metric[4][4] =
-{
-		{1., 0., 0., 0.},
-		{0., -1., 0., 0.},
-		{0., 0., -1., 0.},
-		{0., 0., 0., -1.}
-};
+const double metric[4] = {1., -1., -1., -1.};
 
 #endif

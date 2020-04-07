@@ -23,9 +23,11 @@
 int main( int argc, char** argv )
 {
   double theta = 0.;
+  bool INTEG = false;
   for (int i = 0; i < argc; i++)
   {
     if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
+    if (std::strcmp(argv[i],"-integ")==0) INTEG = true;
   }
 
   // Set up kinematics for the chi_c1
@@ -66,17 +68,36 @@ double zs = cos(theta * deg2rad);
 
 for (int n = 0; n < exchanges.size(); n++)
 {
-  std::cout << "\n";
-  std::cout << "Printing DXS contribution from " << exchanges[n]->identifier;
-  std::cout << " exchange. \n";
+  if (INTEG == false)
+  {
+    std::cout << "\n";
+    std::cout << "Printing DXS contribution from " << exchanges[n]->identifier;
+    std::cout << " exchange at " << theta << " degrees. \n";
+  }
+  else
+  {
+    std::cout << "\n";
+    std::cout << "Printing integrated cross-section contribution from " << exchanges[n]->identifier;
+    std::cout << " exchange. \n";
+  }
 
   std::vector<double> s, dxs;
   for (int i = 0; i < N; i++)
   {
-    double si = ptr->sth + double(i) * (30. - ptr->sth) / N;
-    double dxsi = exchanges[n]->diff_xsection(si, zs);
+    double si = ptr->sth + double(i) * (100. - ptr->sth) / N;
 
-    s.push_back((si/mPro - mPro) / 2.);
+    double dxsi;
+    if (INTEG == false)
+    {
+      dxsi = exchanges[n]->differential_xsection(si, zs);
+    }
+    else
+    {
+      dxsi = exchanges[n]->integrated_xsection(si);
+    }
+
+    // s.push_back((si/mPro - mPro) / 2.);
+    s.push_back(si);
     dxs.push_back(dxsi);
   }
 
@@ -85,18 +106,37 @@ for (int n = 0; n < exchanges.size(); n++)
 }
 
 // ---------------------------------------------------------------------------
-// Print the total differential cross-section
-std::cout << "\n";
-std::cout << "Printing total DXS for " << ptr->vector_particle;
-std::cout << " photoproduction.\n";
+// Print the total cross-section
+if (INTEG == false)
+{
+  std::cout << "\n";
+  std::cout << "Printing total DXS for " << ptr->vector_particle;
+  std::cout << " photoproduction at " << theta << " degrees. \n";
+}
+else
+{
+  std::cout << "\n";
+  std::cout << "Printing total integrated cross-section contribution from " << ptr->vector_particle;
+  std::cout << " photoproduction. \n";
+}
 
 std::vector<double> s, dxs;
 for (int i = 0; i < N; i++)
 {
-  double si = ptr->sth + double(i) * (30. - ptr->sth) / N;
-  double dxsi = total.diff_xsection(si, zs);
+  double si = ptr->sth + double(i) * (100. - ptr->sth) / N;
 
-  s.push_back((si/mPro - mPro)/2.);
+  double dxsi;
+  if (INTEG == false)
+  {
+    dxsi = total.differential_xsection(si, zs);
+  }
+  else
+  {
+    dxsi = total.integrated_xsection(si);
+  }
+
+  // s.push_back((si/mPro - mPro)/2.);
+  s.push_back(si);
   dxs.push_back(dxsi);
 }
 
