@@ -21,10 +21,6 @@
 
 class reaction_kinematics
 {
-private:
-  // vector meson mass and identifier
-  const double mVec;
-
 public:
   // Constructor
   reaction_kinematics(double vec_mass, std::string vec_name)
@@ -45,7 +41,8 @@ public:
   {};
 
   const std::string vector_particle;
-
+  const double mVec;
+  
   // inital and final state kinematics
   const double sth = (mVec + mPro) * (mVec + mPro);
   two_body_state initial, final;
