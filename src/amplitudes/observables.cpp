@@ -31,14 +31,19 @@ double amplitude::differential_xsection(double s, double zs)
   double norm = 64. * M_PI * s;
   norm *= real(kinematics->initial.momentum("beam", s)) * real(kinematics->initial.momentum("beam", s));
 
-  return sum / norm * (1.E6);
+  return sum / norm;
 };
 
 // ---------------------------------------------------------------------------
 // Inegrated total cross-section
 double amplitude::integrated_xsection(double s)
 {
-  int xN = 100;
+  if (s - kinematics->sth < 0.1)
+  {
+    return 0.;
+  }
+
+  int xN = 15;
   double x[xN+1], w[xN+1];
   NR_gauleg(-1., +1., x, w, xN);
 
@@ -49,7 +54,7 @@ double amplitude::integrated_xsection(double s)
     jacobian = 2. * real(kinematics->initial.momentum("beam", s));
     jacobian *= real(kinematics->final.momentum(kinematics->vector_particle, s));
 
-    sum += w[i] * jacobian * differential_xsection(s, x[i]);
+    sum += w[i] * differential_xsection(s, x[i]) * jacobian;
   }
 
   return sum;
