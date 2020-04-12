@@ -14,6 +14,8 @@
 #include <complex>
 #include <iostream>
 
+#include "misc_math.hpp"
+
 // ---------------------------------------------------------------------------
 // The two_body_state is the base object for defining a reaction in the
 // s-channel center of mass scatering frame.

@@ -48,15 +48,15 @@ std::complex<double> two_body_state::energy(std::string name, double s)
 
 std::complex<double> two_body_state::momentum(std::string name, double s)
 {
+  std::complex<double> q = sqrt(Kallen(s, m1*m1, m2*m2)) / (2. * sqrt(s));
+  
   if (name == particle1)
   {
-    std::complex<double> E1 = energy(name, s);
-    return sqrt(E1*E1 - m1*m1);
+    return q;
   }
   else if (name == particle2)
   {
-    std::complex<double> E2 = energy(name, s);
-    return -sqrt(E2*E2 - m2*m2);
+    return -q;
   }
   else
   {
