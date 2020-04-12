@@ -1,18 +1,14 @@
 // ---------------------------------------------------------------------------
-// Analytic model for the photoproduction of chi_c1 near threshold at GlueX
+// Numerical test code for the new vector_exchange amplitude
 //
 // Author:       Daniel Winney (2020)
 // Affiliation:  Joint Physics Analysis Center (JPAC)
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
-// References:
-// [1] 10.1103/PhysRevD.96.093008
-// ---------------------------------------------------------------------------
 
 #include "constants.hpp"
 #include "reaction_kinematics.hpp"
-#include "amplitudes/vector_meson_exchange.hpp"
-#include "amplitudes/amplitude_sum.hpp"
+#include "amplitudes/vector_exchange.hpp"
 #include "utilities.hpp"
 
 #include <cstring>
@@ -22,7 +18,7 @@
 
 int main( int argc, char** argv )
 {
-  double theta = 45.;
+  double theta = 0.;
   for (int i = 0; i < argc; i++)
   {
     if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
@@ -31,38 +27,22 @@ int main( int argc, char** argv )
   // Set up kinematics for the chi_c1
   reaction_kinematics * ptr = new reaction_kinematics(3.510, "chi_c1");
 
-  vector_meson_exchange rho(ptr, .770, "rho");
-  rho.set_params({9.2E-4, 2.4, 14.6});
-  exchanges.push_back(&rho);
-
-  vector_meson_exchange omega(ptr, .780, "omega");
-  omega.set_params({5.2E-4, 16., 0.});
-  exchanges.push_back(&omega);
+  vector_exchange amp(ptr, .780, "omega");
+  amp.set_params({5.2E-4, 16., 0.});
 
   int N = 50; // how many points to plot
 
-// ---------------------------------------------------------------------------
-// You shouldnt need to change anything below this line
-// ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // You shouldnt need to change anything below this line
+  // ---------------------------------------------------------------------------
 
-// ---------------------------------------------------------------------------
-// Print contributions from each exchange seperately
-double zs = cos(theta * deg2rad);
+  // ---------------------------------------------------------------------------
+  // Print contributions from each exchange seperately
+  double zs = cos(theta * deg2rad);
 
-for (int n = 0; n < exchanges.size(); n++)
-{
-  if (INTEG == false)
-  {
-    std::cout << "\n";
-    std::cout << "Printing DXS contribution from " << exchanges[n]->identifier;
-    std::cout << " exchange at " << theta << " degrees. \n";
-  }
-  else
-  {
-    std::cout << "\n";
-    std::cout << "Printing integrated cross-section contribution from " << exchanges[n]->identifier;
-    std::cout << " exchange. \n";
-  }
+  std::cout << "\n";
+  std::cout << "Printing DXS contribution from " << amp.identifier;
+  std::cout << " exchange at " << theta << " degrees. \n";
 
   std::vector<double> s, dxs;
   for (int i = 0; i < N; i++)
@@ -70,19 +50,13 @@ for (int n = 0; n < exchanges.size(); n++)
     double si = ptr->sth + double(i) * (100. - ptr->sth) / N;
     double dxsi;
 
-    if (INTEG == false)
-    {
-      dxsi = exchanges[n]->differential_xsection(si, zs);
-    }
-    else
-    {
-      dxsi = exchanges[n]->integrated_xsection(si);
-    }
+    dxsi = amp.differential_xsection(si, zs);
+
 
     s.push_back(si);
     dxs.push_back(dxsi);
   }
 
-  quick_print(s, dxs, exchanges[n]->identifier + "_exchange");
-  quick_plot(s, dxs, exchanges[n]->identifier + "_exchange");
+  quick_print(s, dxs, amp.identifier + "_exchange");
+  quick_plot(s, dxs, amp.identifier + "_exchange");
 }
