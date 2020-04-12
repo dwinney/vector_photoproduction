@@ -26,14 +26,19 @@ std::complex<double> polarization_vector::component(int i, int lambda, double s,
   }
   else if (lambda == 0)
   {
-    if (abs(mass) < 0.01) return 0.;
-
-    switch (i)
+    if (abs(mass) < 0.01)
     {
-      case 0: return state.momentum(particle, s) / mass;
-      case 1: return state.energy(particle, s) * sqrt(1. - zs*zs) / mass;
-      case 2: return 0.;
-      case 3: return state.energy(particle, s) * zs / mass;
+      return 0.;
+    }
+    else
+    {
+      switch (i)
+      {
+        case 0: return state.momentum(particle, s) / mass;
+        case 1: return state.energy(particle, s) * sqrt(1. - zs*zs) / mass;
+        case 2: return 0.;
+        case 3: return state.energy(particle, s) * zs / mass;
+      }
     }
   }
   else
