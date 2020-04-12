@@ -5,11 +5,11 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#include "amplitudes/vector_meson_exchange.hpp"
+#include "amplitudes/vector_exchange.hpp"
 
 // ---------------------------------------------------------------------------
 // Assemble the helicity amplitude by contracting the lorentz indices
-std::complex<double> vector_meson_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
+std::complex<double> vector_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
 {
   int lam_gam = helicities[0];
   int lam_targ = helicities[1];
@@ -37,7 +37,7 @@ std::complex<double> vector_meson_exchange::helicity_amplitude(std::vector<int> 
 
 // ---------------------------------------------------------------------------
 // Photon - Axial Vector - Vector vertex
-std::complex<double> vector_meson_exchange::top_vertex(int mu, int lam_gam, int lam_vec, double s, double zs)
+std::complex<double> vector_exchange::top_vertex(int mu, int lam_gam, int lam_vec, double s, double zs)
 {
   // Contract with LeviCivita
   std::complex<double> result = 0.;
@@ -64,7 +64,7 @@ std::complex<double> vector_meson_exchange::top_vertex(int mu, int lam_gam, int 
 
 // ---------------------------------------------------------------------------
 // Nucleon - Nucleon - Vector vertex
-std::complex<double> vector_meson_exchange::bottom_vertex(int mu, int lam_targ, int lam_rec, double s, double zs)
+std::complex<double> vector_exchange::bottom_vertex(int mu, int lam_targ, int lam_rec, double s, double zs)
 {
   std::complex<double> vector = 0., tensor = 0.;
 
@@ -74,9 +74,9 @@ std::complex<double> vector_meson_exchange::bottom_vertex(int mu, int lam_targ, 
     for (int j = 0; j < 4; j++)
     {
       std::complex<double> temp;
-      temp = kinematics->recoil.adjoint_component(i, lam_rec, s, zs);
+      temp = kinematics->recoil.adjoint_component(i, lam_rec, s, -zs);
       temp *= gamma_matrices[mu][i][j];
-      temp *= kinematics->target.component(j, lam_targ, s, 1.);
+      temp *= kinematics->target.component(j, lam_targ, s, -1.);
 
       vector += temp;
     }
@@ -88,7 +88,7 @@ std::complex<double> vector_meson_exchange::bottom_vertex(int mu, int lam_targ, 
     for (int j = 0; j < 4; j++)
     {
       std::complex<double> temp = 0., temp2 = 0.;
-      temp = kinematics->recoil.adjoint_component(i, lam_rec, s, zs);
+      temp = kinematics->recoil.adjoint_component(i, lam_rec, s, -zs);
 
       for (int nu = 0; nu < 4; nu++)
       {
@@ -96,7 +96,7 @@ std::complex<double> vector_meson_exchange::bottom_vertex(int mu, int lam_targ, 
       }
       temp *= temp2;
 
-      temp *= kinematics->target.component(j, lam_targ, s, 1.);
+      temp *= kinematics->target.component(j, lam_targ, s, -1.);
     }
   }
 
@@ -104,7 +104,7 @@ std::complex<double> vector_meson_exchange::bottom_vertex(int mu, int lam_targ, 
 };
 
 // ---------------------------------------------------------------------------
-std::complex<double> vector_meson_exchange::vector_propagator(int mu, int nu, double s, double zs)
+std::complex<double> vector_exchange::vector_propagator(int mu, int nu, double s, double zs)
 {
   std::complex<double> result;
   result =  exchange_momenta(mu, s, zs) * exchange_momenta(nu, s, zs) / mEx2;
@@ -122,7 +122,7 @@ std::complex<double> vector_meson_exchange::vector_propagator(int mu, int nu, do
 // ---------------------------------------------------------------------------
 // Four-momentum of the exchanged meson.
 // Simply the difference of the photon and axial 4-momenta
-std::complex<double> vector_meson_exchange::exchange_momenta(int mu, double s, double zs)
+std::complex<double> vector_exchange::exchange_momenta(int mu, double s, double zs)
 {
   std::complex<double> qGamma_mu, qA_mu;
   qGamma_mu = kinematics->initial.component(mu, "beam", s, 1.);
@@ -132,7 +132,7 @@ std::complex<double> vector_meson_exchange::exchange_momenta(int mu, double s, d
 };
 
 // Mandelstam t momentum transfer
-double vector_meson_exchange::momentum_transfer(double s, double zs)
+double vector_exchange::momentum_transfer(double s, double zs)
 {
   double t;
   for (int mu = 0; mu < 4; mu++)
@@ -149,7 +149,7 @@ double vector_meson_exchange::momentum_transfer(double s, double zs)
 };
 
 // ---------------------------------------------------------------------------
-std::complex<double> vector_meson_exchange::Sigma(int mu, int nu, int i, int j)
+std::complex<double> vector_exchange::Sigma(int mu, int nu, int i, int j)
 {
   std::complex<double> result;
   result = gamma_matrices[mu][i][j] * gamma_matrices[nu][i][j];
@@ -160,7 +160,7 @@ std::complex<double> vector_meson_exchange::Sigma(int mu, int nu, int i, int j)
 
 // ---------------------------------------------------------------------------
 // Four dimensional Levi-Civita symbol
-double vector_meson_exchange::LeviCivita(int mu, int alpha, int beta, int gamma)
+double vector_exchange::LeviCivita(int mu, int alpha, int beta, int gamma)
 {
   // Error check
   if ((mu > 3 || alpha > 3 || beta > 3 || gamma > 3) || (mu < 0 || alpha < 0 || beta < 0 || gamma < 0))

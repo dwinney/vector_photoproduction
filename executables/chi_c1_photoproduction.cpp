@@ -11,7 +11,7 @@
 
 #include "constants.hpp"
 #include "reaction_kinematics.hpp"
-#include "amplitudes/vector_meson_exchange.hpp"
+#include "amplitudes/vector_exchange.hpp"
 #include "amplitudes/amplitude_sum.hpp"
 #include "utilities.hpp"
 
@@ -37,19 +37,19 @@ int main( int argc, char** argv )
   // Which we will sum incoherently
   std::vector<amplitude*> exchanges;
 
-  vector_meson_exchange rho(ptr, .770, "rho");
+  vector_exchange rho(ptr, .770, "rho");
   rho.set_params({9.2E-4, 2.4, 14.6});
   exchanges.push_back(&rho);
 
-  vector_meson_exchange omega(ptr, .780, "omega");
+  vector_exchange omega(ptr, .780, "omega");
   omega.set_params({5.2E-4, 16., 0.});
   exchanges.push_back(&omega);
 
-  vector_meson_exchange phi(ptr, 1.10, "phi");
+  vector_exchange phi(ptr, 1.10, "phi");
   phi.set_params({4.2E-4, -6.2, 2.1});
   exchanges.push_back(&phi);
 
-  vector_meson_exchange jpsi(ptr, 3.097, "jpsi");
+  vector_exchange jpsi(ptr, 3.097, "jpsi");
   jpsi.set_params({1., 3.3E-3, 0.});
   exchanges.push_back(&jpsi);
 

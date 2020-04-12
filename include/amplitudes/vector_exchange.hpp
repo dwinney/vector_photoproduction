@@ -14,16 +14,16 @@
 
 #include "amplitude.hpp"
 
-class vector_meson_exchange : public amplitude
+class vector_exchange : public amplitude
 {
 public:
   // Constructor
-  vector_meson_exchange(reaction_kinematics * xkinem, double mass, std::string exchange)
+  vector_exchange(reaction_kinematics * xkinem, double mass, std::string exchange)
   : amplitude(xkinem, exchange), mEx2(mass*mass)
   {};
 
   // Copy constructor
-  vector_meson_exchange(const vector_meson_exchange & old)
+  vector_exchange(const vector_exchange & old)
   : amplitude(old), mEx2(old.mEx2),
     gGamma(old.gGamma), gV(old.gV), gT(old.gT)
   {};
