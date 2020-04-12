@@ -15,7 +15,7 @@
 // ---------------------------------------------------------------------------
 const double deg2rad = (M_PI / 180.);
 const double EPS = 1.e-6;
-const double alpha = 1. / 137.;
+const double M_ALPHA = 1. / 137.;
 const std::complex<double> xr(1., 0.);
 const std::complex<double> xi(0., 1.);
 
