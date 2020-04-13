@@ -49,6 +49,7 @@ std::complex<double> vector_exchange::top_vertex(int mu, int lam_gam, int lam_ve
       {
         std::complex<double> temp;
         temp = levi_civita(mu, alpha, beta, gamma);
+        temp *= metric[mu];
         temp *= kinematics->initial.component(alpha, "beam", s, 1.);
         temp *= kinematics->eps_gamma.component(beta, lam_gam, s, 1.);
         temp *= kinematics->eps_vec.component(gamma, lam_vec, s, zs);
@@ -74,9 +75,9 @@ std::complex<double> vector_exchange::bottom_vertex(int mu, int lam_targ, int la
     for (int j = 0; j < 4; j++)
     {
       std::complex<double> temp;
-      temp = kinematics->recoil.adjoint_component(i, lam_rec, s, -zs);
+      temp = kinematics->recoil.adjoint_component(i, lam_rec, s, zs);
       temp *= gamma_matrices[mu][i][j];
-      temp *= kinematics->target.component(j, lam_targ, s, -1.);
+      temp *= kinematics->target.component(j, lam_targ, s, 1.);
 
       vector += temp;
     }
@@ -88,7 +89,7 @@ std::complex<double> vector_exchange::bottom_vertex(int mu, int lam_targ, int la
     for (int j = 0; j < 4; j++)
     {
       std::complex<double> temp = 0., temp2 = 0.;
-      temp = kinematics->recoil.adjoint_component(i, lam_rec, s, -zs);
+      temp = kinematics->recoil.adjoint_component(i, lam_rec, s, zs);
 
       for (int nu = 0; nu < 4; nu++)
       {
@@ -96,28 +97,12 @@ std::complex<double> vector_exchange::bottom_vertex(int mu, int lam_targ, int la
       }
       temp *= temp2;
 
-      temp *= kinematics->target.component(j, lam_targ, s, -1.);
+      temp *= kinematics->target.component(j, lam_targ, s, 1.);
     }
   }
 
   return gV * vector - gT * tensor;
 };
-
-// ---------------------------------------------------------------------------
-std::complex<double> vector_exchange::vector_propagator(int mu, int nu, double s, double zs)
-{
-  std::complex<double> result;
-  result =  exchange_momenta(mu, s, zs) * exchange_momenta(nu, s, zs) / mEx2;
-  if (mu == nu)
-  {
-    result -= metric[mu];
-  }
-
-  return result / (momentum_transfer(s,zs) - mEx2);
-};
-
-// ---------------------------------------------------------------------------
-// Misc other functions
 
 // ---------------------------------------------------------------------------
 // Four-momentum of the exchanged meson.
@@ -131,19 +116,20 @@ std::complex<double> vector_exchange::exchange_momenta(int mu, double s, double 
   return (qGamma_mu - qA_mu);
 };
 
-// Mandelstam t momentum transfer
-double vector_exchange::momentum_transfer(double s, double zs)
+// ---------------------------------------------------------------------------
+// Propagator of a massive spin-one particle
+std::complex<double> vector_exchange::vector_propagator(int mu, int nu, double s, double zs)
 {
-  double t;
-  for (int mu = 0; mu < 4; mu++)
-  {
-    std::complex<double> temp;
-    temp = exchange_momenta(mu, s, zs);
-    temp *= metric[mu];
-    temp *= exchange_momenta(mu, s, zs);
+  std::complex<double> result;
+  result = exchange_momenta(mu, s, zs) * exchange_momenta(nu, s, zs) / mEx2;
 
-    t += real(temp);
+  if (mu == nu)
+  {
+    result -= metric[mu];
   }
 
-  return t;
+  // pole piece (zero width here)
+  result /= kinematics->t_man(s,zs) - mEx2;
+
+  return result;
 };

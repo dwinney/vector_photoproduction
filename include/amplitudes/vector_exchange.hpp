@@ -49,8 +49,6 @@ private:
   // Couplings to the axial-vector/photon and vector/tensor couplings to nucleon
   double gGamma = 0., gV = 0., gT = 0.;
 
-  // Mandelstam t momentum transfer
-  double momentum_transfer(double s, double zs);
 
   // Four-momentum of the exhange
   std::complex<double> exchange_momenta(int mu, double s, double zs);
