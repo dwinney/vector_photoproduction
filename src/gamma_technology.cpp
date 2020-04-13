@@ -11,11 +11,16 @@
 // Rank two gamma tensor
 std::complex<double> sigma(int mu, int nu, int i, int j)
 {
-  std::complex<double> result;
-  result = gamma_matrices[mu][i][j] * gamma_matrices[nu][i][j];
-  result -= gamma_matrices[nu][i][j] * gamma_matrices[mu][i][j];
+  std::complex<double> result = 0.;
+  for (int k = 0; k < 4; k++)
+  {
+    result += gamma_matrices[mu][i][k] * gamma_matrices[nu][k][j];
+    result -= gamma_matrices[nu][i][k] * gamma_matrices[mu][k][j];
+  }
 
-  return result / 2.;
+  result *= xr / 2.;
+
+  return result;
 };
 
 // ---------------------------------------------------------------------------
