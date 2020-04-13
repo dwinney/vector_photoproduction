@@ -8,6 +8,8 @@
 #ifndef _GAMMA_
 #define _GAMMA_
 
+#include "constants.hpp"
+
 #include <complex>
 #include <string>
 #include <vector>
