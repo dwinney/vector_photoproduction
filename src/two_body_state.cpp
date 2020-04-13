@@ -72,7 +72,7 @@ std::complex<double> two_body_state::component(int i, std::string name, double s
   switch (i)
   {
     case 0: return energy(name, s);
-    case 1: momentum(name, s) * sqrt(1. - zs * zs);
+    case 1: return momentum(name, s) * sqrt(1. - zs * zs);
     case 2: return 0.;
     case 3: return momentum(name, s) * zs;
     default: std::cout << "two_body_state: Invalid four vector component! Quiting...\n";
