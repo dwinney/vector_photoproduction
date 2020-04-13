@@ -67,9 +67,8 @@ std::complex<double> vector_exchange::top_vertex(int mu, int lam_gam, int lam_ve
 // Nucleon - Nucleon - Vector vertex
 std::complex<double> vector_exchange::bottom_vertex(int mu, int lam_targ, int lam_rec, double s, double zs)
 {
-  std::complex<double> vector = 0., tensor = 0.;
-
   // Vector coupling piece
+  std::complex<double> vector = 0.;
   for (int i = 0; i < 4; i++)
   {
     for (int j = 0; j < 4; j++)
@@ -84,20 +83,23 @@ std::complex<double> vector_exchange::bottom_vertex(int mu, int lam_targ, int la
   }
 
   // Tensor coupling piece
+  std::complex<double> tensor = 0.;
   for (int i = 0; i < 4; i++)
   {
     for (int j = 0; j < 4; j++)
     {
-      std::complex<double> temp = 0., temp2 = 0.;
-      temp = kinematics->recoil.adjoint_component(i, lam_rec, s, zs);
-
+      std::complex<double> sigma_q_ij = 0.;
       for (int nu = 0; nu < 4; nu++)
       {
-        temp2 += sigma(mu, nu, i, j) * exchange_momenta(nu, s, zs) / (2. * mPro);
+        sigma_q_ij += sigma(mu, nu, i, j) * metric[nu] * exchange_momenta(nu, s, zs) / (2. * mPro);
       }
-      temp *= temp2;
 
+      std::complex<double> temp;
+      temp = kinematics->recoil.adjoint_component(i, lam_rec, s, zs);
+      temp *= sigma_q_ij;
       temp *= kinematics->target.component(j, lam_targ, s, 1.);
+
+      tensor += temp;
     }
   }
 
