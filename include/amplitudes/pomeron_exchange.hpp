@@ -9,6 +9,7 @@
 #define _POMERON_
 
 #include "amplitude.hpp"
+#include "gamma_technology.hpp"
 #include "regge_trajectory.hpp"
 
 // ---------------------------------------------------------------------------

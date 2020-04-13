@@ -12,7 +12,10 @@
 #include <vector>
 #include <iostream>
 
+#include <iomanip>
+
 #include "amplitude.hpp"
+#include "gamma_technology.hpp"
 
 class vector_exchange : public amplitude
 {
@@ -48,12 +51,6 @@ private:
 
   // Mandelstam t momentum transfer
   double momentum_transfer(double s, double zs);
-
-  // Four dimensional Levi-Civita symbol
-  double LeviCivita(int mu, int alpha, int beta, int gamma);
-
-  // Gamma matric tensor
-  std::complex<double> Sigma(int mu, int nu, int i, int j);
 
   // Four-momentum of the exhange
   std::complex<double> exchange_momenta(int mu, double s, double zs);

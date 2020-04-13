@@ -68,7 +68,7 @@ double baryon_resonance::photo_coupling(std::vector<int> helicities, double s)
   emGamma *= pow(pi_bar / pf_bar, double(2*l_min +1)) * P_t;
 
   // Photo-coupling overall size of |A_1/2|^2 + |A_3/2|^2 is restriced from VMD
-  double A_lam = emGamma * mPi * mRes * double(J + 1) / (2. * mPro * pi_bar * pi_bar);
+  double A_lam = emGamma * M_PI * mRes * double(J + 1) / (2. * mPro * pi_bar * pi_bar);
   A_lam = sqrt(A_lam) * a;
 
   double result = sqrt(s) * pi_bar / mRes;

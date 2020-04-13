@@ -48,7 +48,7 @@ std::complex<double> vector_exchange::top_vertex(int mu, int lam_gam, int lam_ve
       for (int gamma = 0; gamma < 4; gamma++)
       {
         std::complex<double> temp;
-        temp = LeviCivita(gamma, mu, alpha, beta);
+        temp = levi_civita(mu, alpha, beta, gamma);
         temp *= kinematics->initial.component(alpha, "beam", s, 1.);
         temp *= kinematics->eps_gamma.component(beta, lam_gam, s, 1.);
         temp *= kinematics->eps_vec.component(gamma, lam_vec, s, zs);
@@ -92,7 +92,7 @@ std::complex<double> vector_exchange::bottom_vertex(int mu, int lam_targ, int la
 
       for (int nu = 0; nu < 4; nu++)
       {
-        temp2 += Sigma(mu, nu, i, j) * exchange_momenta(nu, s, zs) / (2. * mPro);
+        temp2 += sigma(mu, nu, i, j) * exchange_momenta(nu, s, zs) / (2. * mPro);
       }
       temp *= temp2;
 
@@ -146,82 +146,4 @@ double vector_exchange::momentum_transfer(double s, double zs)
   }
 
   return t;
-};
-
-// ---------------------------------------------------------------------------
-std::complex<double> vector_exchange::Sigma(int mu, int nu, int i, int j)
-{
-  std::complex<double> result;
-  result = gamma_matrices[mu][i][j] * gamma_matrices[nu][i][j];
-  result -= gamma_matrices[nu][i][j] * gamma_matrices[mu][i][j];
-
-  return result / 2.;
-};
-
-// ---------------------------------------------------------------------------
-// Four dimensional Levi-Civita symbol
-double vector_exchange::LeviCivita(int mu, int alpha, int beta, int gamma)
-{
-  // Error check
-  if ((mu > 3 || alpha > 3 || beta > 3 || gamma > 3) || (mu < 0 || alpha < 0 || beta < 0 || gamma < 0))
-  {
-    std::cout << " \nLeviCivita: Error! Invalid argument recieved. Quitting... \n";
-    exit(0);
-  }
-
-  // Return 0 if any are equal
-  if (mu == alpha || mu == beta || mu == gamma || alpha == beta || alpha == gamma || beta == gamma)
-  {
-    return 0.;
-  }
-
-  // Else compare with strings
-  std::string input = std::to_string(mu) + std::to_string(alpha) + std::to_string(beta) + std::to_string(gamma);
-  std::vector<std::string>  even_permutations =
-  {
-    "0123",
-    "0231",
-    "0312",
-    "1032",
-    "1203",
-    "1320",
-    "2013",
-    "2130",
-    "2301",
-    "3021",
-    "3102",
-    "3210"
-  };
-
-  for (int i = 0; i < 12; i++)
-  {
-    if (input == even_permutations[i])
-    {
-      return 1.;
-    }
-  }
-
-  std::vector<std::string> odd_permutations =
-  {
-    "0132",
-    "0213",
-    "0321",
-    "1023",
-    "2103",
-    "3120",
-    "1230",
-    "1302",
-    "2031",
-    "2310",
-    "3012",
-    "3201"
-  };
-
-  for (int i = 0; i < 12; i++)
-  {
-    if (input == odd_permutations[i])
-    {
-      return -1.;
-    }
-  }
 };
