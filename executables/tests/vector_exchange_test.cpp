@@ -12,6 +12,7 @@
 #include "utilities.hpp"
 
 #include <cstring>
+#include <complex>
 #include <cmath>
 #include <iostream>
 #include <iomanip>
@@ -47,11 +48,10 @@ int main( int argc, char** argv )
   std::vector<double> s, dxs;
   for (int i = 0; i < N; i++)
   {
-    double si = ptr->sth + double(i) * (100. - ptr->sth) / N;
+    double si = (ptr->sth + EPS) + double(i) * (100. - (ptr->sth + EPS)) / N;
     double dxsi;
 
     dxsi = amp.differential_xsection(si, zs);
-
 
     s.push_back(si);
     dxs.push_back(dxsi);
