@@ -79,7 +79,7 @@ int main( int argc, char** argv )
     for (int i = 2; i < N; i++)
     {
       double si = amp[n]->kinematics->sth + double(i) * (30. - amp[n]->kinematics->sth) / N;
-      double dxsi = amp[n]->differential_xsection(si, zs);
+      double dxsi = M_PI * M_ALPHA * amp[n]->differential_xsection(si, zs);
 
       s_n.push_back((si/mPro - mPro)/2.);
 

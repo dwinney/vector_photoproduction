@@ -10,6 +10,7 @@
 
 // ---------------------------------------------------------------------------
 // Differential cross section dsigma / dt
+// in NANOBARN
 double amplitude::differential_xsection(double s, double zs)
 {
   if (s - kinematics->sth < 0.001)
@@ -21,21 +22,21 @@ double amplitude::differential_xsection(double s, double zs)
   double sum = 0.;
   for (int i = 0; i < 24; i++)
   {
-    std::complex<double> square;
-    square = helicity_amplitude(kinematics->helicities[i], s, zs);
-    square *= conj(helicity_amplitude(kinematics->helicities[i], s, zs));
-
-    sum += real(square);
+    std::complex<double> amp_i = helicity_amplitude(kinematics->helicities[i], s, zs);
+    sum += std::real(amp_i * conj(amp_i));
   }
 
-  double norm = 64. * M_PI * s;
-  norm *= real(kinematics->initial.momentum("beam", s)) * real(kinematics->initial.momentum("beam", s));
+  double norm = 1.;
+  norm /= 64. * M_PI * s;
+  norm /= real(pow(kinematics->initial.momentum("beam", s), 2.));
+  norm /= (2.56819E-6); // Convert from GeV^-2 -> nb
 
-  return sum / norm;
+  return norm * sum;
 };
 
 // ---------------------------------------------------------------------------
 // Inegrated total cross-section
+// IN NANOBARD
 double amplitude::integrated_xsection(double s)
 {
   if (s - kinematics->sth < 0.1)
@@ -43,15 +44,15 @@ double amplitude::integrated_xsection(double s)
     return 0.;
   }
 
-  int xN = 15;
+  int xN = 100;
   double x[xN+1], w[xN+1];
   NR_gauleg(-1., +1., x, w, xN);
 
   double sum = 0.;
-  for (int i = 0; i <= xN; i++)
+  for (int i = 1; i <= xN; i++)
   {
-    double jacobian; // 2. k * q
-    jacobian = 2. * real(kinematics->initial.momentum("beam", s));
+    double jacobian; // k * q
+    jacobian = real(kinematics->initial.momentum("beam", s));
     jacobian *= real(kinematics->final.momentum(kinematics->vector_particle, s));
 
     sum += w[i] * differential_xsection(s, x[i]) * jacobian;
