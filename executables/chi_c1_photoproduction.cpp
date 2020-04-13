@@ -56,7 +56,7 @@ int main( int argc, char** argv )
   // The total amplitude with all the above exchanges
   amplitude_sum total(ptr, exchanges);
 
-  int N = 20; // how many points to plot
+  int N = 50; // how many points to plot
 
 // ---------------------------------------------------------------------------
 // You shouldnt need to change anything below this line
@@ -84,7 +84,7 @@ for (int n = 0; n < exchanges.size(); n++)
   std::vector<double> s, dxs;
   for (int i = 0; i < N; i++)
   {
-    double si = ptr->sth + double(i) * (100. - ptr->sth) / N;
+    double si = (ptr->sth + EPS) + double(i) * (100. - (ptr->sth + EPS)) / N;
     double dxsi;
 
     if (INTEG == false)

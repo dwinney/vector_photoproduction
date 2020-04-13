@@ -20,16 +20,18 @@
 int main( int argc, char** argv )
 {
   double theta = 0.;
+  int mu = 0.;
   for (int i = 0; i < argc; i++)
   {
     if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
+    if (std::strcmp(argv[i],"-mu")==0) mu = atoi(argv[i+1]);
   }
 
   // Set up kinematics for the chi_c1
   reaction_kinematics * ptr = new reaction_kinematics(3.510, "chi_c1");
 
   vector_exchange amp(ptr, .780, "omega");
-  amp.set_params({5.2E-4, 16., 0.});
+  amp.set_params({5.2E-4, 2., 14.});
 
   int N = 50; // how many points to plot
 
@@ -46,14 +48,13 @@ int main( int argc, char** argv )
   std::cout << " exchange at " << theta << " degrees. \n";
 
   std::vector<double> s, dxs;
+  std::vector<std::complex<double>> mom;
   for (int i = 0; i < N; i++)
   {
     double si = (ptr->sth + EPS) + double(i) * (100. - (ptr->sth + EPS)) / N;
-    double dxsi;
-
-    dxsi = amp.differential_xsection(si, zs);
-
     s.push_back(si);
+
+    double dxsi = amp.differential_xsection(si, zs);;
     dxs.push_back(dxsi);
   }
 
