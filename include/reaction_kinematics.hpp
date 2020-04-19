@@ -24,7 +24,7 @@ class reaction_kinematics
 public:
   // Constructor
   reaction_kinematics(double vec_mass, std::string vec_name)
-  : mVec(vec_mass), vector_particle(vec_name),
+  : mVec(vec_mass), mVec2(vec_mass*vec_mass), vector_particle(vec_name),
     initial(0., mPro, "beam", "target"),
     final(vec_mass, mPro, vec_name, "recoil"),
     eps_vec(final, vec_name),
@@ -34,15 +34,15 @@ public:
 
 // Copy Constructor
   reaction_kinematics(const reaction_kinematics & old)
-  : mVec(old.mVec), vector_particle(old.vector_particle),
+  : mVec(old.mVec), mVec2(old.mVec2), vector_particle(old.vector_particle),
     initial(old.initial), final(old.final),
     eps_vec(old.eps_vec), eps_gamma(old.eps_gamma),
     target(old.target), recoil(old.recoil)
   {};
 
   const std::string vector_particle;
-  const double mVec;
-  
+  const double mVec, mVec2;
+
   // inital and final state kinematics
   const double sth = (mVec + mPro) * (mVec + mPro);
   two_body_state initial, final;
