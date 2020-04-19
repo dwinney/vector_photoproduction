@@ -36,7 +36,7 @@ double amplitude::differential_xsection(double s, double zs)
 
 // ---------------------------------------------------------------------------
 // Inegrated total cross-section
-// IN NANOBARD
+// IN NANOBARN
 double amplitude::integrated_xsection(double s)
 {
   if (s - kinematics->sth < 0.1)
@@ -51,8 +51,7 @@ double amplitude::integrated_xsection(double s)
   double sum = 0.;
   for (int i = 1; i <= xN; i++)
   {
-    double jacobian; // 2. * k * q
-    jacobian = 2.;
+    double jacobian = 2.; // 2. * k * q
     jacobian *= real(kinematics->initial.momentum("beam", s));
     jacobian *= real(kinematics->final.momentum(kinematics->vector_particle, s));
 
