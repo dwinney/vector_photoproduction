@@ -26,8 +26,8 @@ const double mJpsi = 3.097;
 const double mPsi2S = 3.686;
 
 // Masses squared
-const double mPro_sqr = mPro * mPro;
-const double mJpsi_sqr = mJpsi * mJpsi;
+const double mPro2 = mPro * mPro;
+const double mJpsi2 = mJpsi * mJpsi;
 
 // Thresholds
 const double sthPsiPro = (mJpsi + mPro) * (mJpsi + mPro);
