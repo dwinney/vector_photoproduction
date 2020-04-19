@@ -18,12 +18,15 @@ T Kallen(T x, T y, T z)
   return x*x + y*y + z*z - 2. * (x*y + x*z + y*z);
 };
 
-void wigner_error(int j, int lam1, int lam2);
-
+// ---------------------------------------------------------------------------
 // Wigner d-function for half-integer spin
 std::complex<double> wigner_d_half(int j, int lam1, int lam2, std::complex<double> z);
+
 // Wigner d-function for integer spin
 std::complex<double> wigner_d_int(int j, int lam1, int lam2, std::complex<double> z);
+
+// Error message display function for the above
+void wigner_error(int j, int lam1, int lam2, bool half);
 
 
 #endif
