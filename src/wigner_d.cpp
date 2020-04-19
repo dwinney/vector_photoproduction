@@ -17,14 +17,14 @@ void wigner_error(int j, int lam1, int lam2)
   exit(0);
 }
 
-double wigner_d(int j, int lam1, int lam2, double z)
+std::complex<double> wigner_d_half(int j, int lam1, int lam2, std::complex<double> z)
 {
-  if (abs(z) > 1.)
-  {
-    std::cout << "wigner_d: Angular argument outside of real region (-1 < z < 1).";
-    std::cout << "Quitting... \n";
-    exit(0);
-  }
+  // if (abs(z) > 1.)
+  // {
+  //   std::cout << "wigner_d: Angular argument outside of real region (-1 < z < 1).";
+  //   std::cout << "Quitting... \n";
+  //   exit(0);
+  // }
 
   double phase = 1.;
   // If first lam argument is smaller, switch them
@@ -46,7 +46,7 @@ double wigner_d(int j, int lam1, int lam2, double z)
     phase *= pow(-1., double(lam1 - lam2)/2.);
   }
 
-  double result = 0.;
+  std::complex<double> result = 0.;
   switch (j)
   {
     // Spin-1/2
@@ -56,11 +56,11 @@ double wigner_d(int j, int lam1, int lam2, double z)
       {
         if (lam2 == 1)
         {
-          result = sqrt((1. + z) / 2.); break;
+          result = sqrt((xr + z) / 2.); break;
         }
         else
         {
-          result = sqrt((1. - z) / 2.); break;
+          result = sqrt((xr - z) / 2.); break;
         }
       }
       else
@@ -78,18 +78,18 @@ double wigner_d(int j, int lam1, int lam2, double z)
       {
         switch (lam2)
         {
-          case 3: result = pow((1. + z) / 2., 1.5); break;
+          case 3: result = pow((xr + z) / 2., 1.5); break;
           case 1:
           {
-            result = - sqrt(3.) * (1. + z) / 2.;
-            result *= sqrt((1. - z) / 2.); break;
+            result = - sqrt(3.) * (xr + z) / 2.;
+            result *= sqrt((xr - z) / 2.); break;
           }
           case -1:
           {
-            result = sqrt(3.) * (1. - z) / 2.;
-            result *= sqrt((1. + z) / 2.); break;
+            result = sqrt(3.) * (xr - z) / 2.;
+            result *= sqrt((xr + z) / 2.); break;
           }
-          case -3: result = - pow((1. - z) / 2., 1.5); break;
+          case -3: result = - pow((xr - z) / 2., 1.5); break;
           default: wigner_error(j, lam1, lam2);
         }
       }
@@ -102,12 +102,12 @@ double wigner_d(int j, int lam1, int lam2, double z)
           case 1:
           {
             result = (3. * z - 1.) / 2.;
-            result *= sqrt((1. + z) / 2.); break;
+            result *= sqrt((xr + z) / 2.); break;
           }
           case -1:
           {
             result = - (3. * z + 1.) / 2.;
-            result *= sqrt((1. - z) / 2.); break;
+            result *= sqrt((xr - z) / 2.); break;
           }
           default: wigner_error(j, lam1, lam2);
         }
@@ -134,21 +134,21 @@ double wigner_d(int j, int lam1, int lam2, double z)
             case 3:
             {
               result = (-3. + 5. * z) * (1. + z) / 4.;
-              result *= sqrt((1. + z)); break;
+              result *= sqrt((xr + z)); break;
             }
             case 1:
             {
               result = (1. + z) * (-1. + 5.*z) / 4.;
-              result *= - sqrt(1. - z); break;
+              result *= - sqrt(xr - z); break;
             }
             case -1:
             {
               result = (-1. + z) * (1. + 5.*z) / 4.;
-              result *= - sqrt(1. + z); break;
+              result *= - sqrt(xr + z); break;
             }
             case -3:
             {
-              result = - pow((1. - z)/ 2., 1.5) * (3. + 5.*z); break;
+              result = - pow((xr - z)/ 2., 1.5) * (3. + 5.*z); break;
             }
             default: wigner_error(j, lam1, lam2);
           }
@@ -160,12 +160,12 @@ double wigner_d(int j, int lam1, int lam2, double z)
           {
             case 1:
             {
-              result = sqrt((1. + z) / 2.);
+              result = sqrt((xr + z) / 2.);
               result *= (-1. - 2.*z + 5.*z*z) / 2.; break;
             }
             case -1:
             {
-              result = sqrt((1. - z) / 2.);
+              result = sqrt((xr - z) / 2.);
               result *= (1. - 2.*z - 5.*z*z) / 2.; break;
             }
             default: wigner_error(j, lam1, lam2);

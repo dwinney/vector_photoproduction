@@ -10,6 +10,7 @@
 
 #include "constants.hpp"
 #include <iostream>
+#include <complex>
 
 template <typename T>
 T Kallen(T x, T y, T z)
@@ -17,9 +18,12 @@ T Kallen(T x, T y, T z)
   return x*x + y*y + z*z - 2. * (x*y + x*z + y*z);
 };
 
-// Wigner d-function for half-integer spin
 void wigner_error(int j, int lam1, int lam2);
-double wigner_d(int j, int lam1, int lam2, double z);
+
+// Wigner d-function for half-integer spin
+std::complex<double> wigner_d_half(int j, int lam1, int lam2, std::complex<double> z);
+// Wigner d-function for integer spin
+std::complex<double> wigner_d_int(int j, int lam1, int lam2, std::complex<double> z);
 
 
 #endif

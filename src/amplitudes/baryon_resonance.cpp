@@ -97,5 +97,5 @@ double baryon_resonance::hadronic_decay(std::vector<int> helicities, double zs)
     if (lam_f < 0) {g *= -1.;}
   }
 
-  return g * wigner_d(J, lam_i, lam_f, zs);
+  return g * std::real(wigner_d_half(J, lam_i, lam_f, zs));
 };
