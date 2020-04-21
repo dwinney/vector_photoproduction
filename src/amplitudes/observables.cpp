@@ -44,7 +44,7 @@ double amplitude::integrated_xsection(double s)
     return 0.;
   }
 
-  int xN = 25;
+  int xN = 200;
   double x[xN+1], w[xN+1];
   NR_gauleg(-1., +1., x, w, xN);
 
