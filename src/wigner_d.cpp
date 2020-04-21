@@ -8,26 +8,28 @@
 #include "misc_math.hpp"
 
 // ---------------------------------------------------------------------------
-void wigner_error(int j, int lam1, int lam2, bool half)
+double wigner_error(int j, int lam1, int lam2, bool half)
 {
-  if (half == true)
-  {
-    std::cout << "\n";
-    std::cout << "wigner_d: Argument combination with j = " << j << "/2";
-    std::cout << ", lam1 = " << lam1 << "/2";
-    std::cout << ", lam2 = " << lam2 << "/2";
-    std::cout << " does not exist. Quitting... \n";
-  }
-  else
-  {
-    std::cout << "\n";
-    std::cout << "wigner_d: Argument combination with j = " << j;
-    std::cout << ", lam1 = " << lam1;
-    std::cout << ", lam2 = " << lam2;
-    std::cout << " does not exist. Quitting... \n";
-  }
+  // if (half == true)
+  // {
+  //   std::cout << "\n";
+  //   std::cout << "wigner_d: Argument combination with j = " << j << "/2";
+  //   std::cout << ", lam1 = " << lam1 << "/2";
+  //   std::cout << ", lam2 = " << lam2 << "/2";
+  //   std::cout << " does not exist. Quitting... \n";
+  // }
+  // else
+  // {
+  //   std::cout << "\n";
+  //   std::cout << "wigner_d: Argument combination with j = " << j;
+  //   std::cout << ", lam1 = " << lam1;
+  //   std::cout << ", lam2 = " << lam2;
+  //   std::cout << " does not exist. Quitting... \n";
+  // }
+  //
+  // exit(0);
 
-  exit(0);
+  return 0.;
 }
 // ---------------------------------------------------------------------------
 std::complex<double> wigner_d_half(int j, int lam1, int lam2, std::complex<double> z)

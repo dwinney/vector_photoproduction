@@ -26,7 +26,7 @@ std::complex<double> wigner_d_half(int j, int lam1, int lam2, std::complex<doubl
 std::complex<double> wigner_d_int(int j, int lam1, int lam2, std::complex<double> z);
 
 // Error message display function for the above
-void wigner_error(int j, int lam1, int lam2, bool half);
+double wigner_error(int j, int lam1, int lam2, bool half);
 
 
 #endif
