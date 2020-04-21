@@ -49,18 +49,14 @@ public:
   polarization_vector eps_vec, eps_gamma;
   dirac_spinor target, recoil;
 
-  // Invariante variables
-  double t_man(double s, double zs)
-  {
-    std::complex<double> kq = initial.momentum("beam", s) * final.momentum(vector_particle, s);
-    std::complex<double> E1E3 = initial.energy("beam", s) * final.energy(vector_particle, s);
-    return mVec*mVec - 2. * abs(E1E3) + 2. * abs(kq) * zs;
-  };
+  // Invariant variables
+  double t_man(double s, double zs);
 
-  double s_man(double egam)
-  {
-    return mPro * (2. * egam + mPro);
-  };
+  // Scattering angle in the t-channel
+  std::complex<double> z_t(double s, double zs);
+
+  // Cosine of crossing angles
+  std::complex<double> crossing_angle(std::string particle, double s, double zs);
 
   // Helicity configurations
   // Photon [0], Incoming Proton [1], Vector meson [2], Outgoing Proton [3]
