@@ -20,9 +20,11 @@
 int main( int argc, char** argv )
 {
   double theta = 0.;
+  bool integ = false;
   for (int i = 0; i < argc; i++)
   {
     if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
+    if (std::strcmp(argv[i],"-integ")==0) integ = true;
   }
 
   // Set up kinematics for the chi_c1
@@ -41,9 +43,19 @@ int main( int argc, char** argv )
   // Print contributions from each exchange seperately
   double zs = cos(theta * deg2rad);
 
-  std::cout << "\n";
-  std::cout << "Printing DXS contribution from " << amp.identifier;
-  std::cout << " exchange at " << theta << " degrees. \n";
+  if (integ == false)
+  {
+    std::cout << "\n";
+    std::cout << "Printing DXS contribution from " << amp.identifier;
+    std::cout << " exchange at " << theta << " degrees. \n";
+  }
+  else
+  {
+    std::cout << "\n";
+    std::cout << "Printing integrated cross section from " << amp.identifier;
+    std::cout << " exchange.\n";
+  }
+
 
   std::vector<double> s, dxs;
   std::vector<std::complex<double>> mom;
@@ -52,8 +64,17 @@ int main( int argc, char** argv )
     double si = (ptr->sth + EPS) + double(i) * (100. - (ptr->sth + EPS)) / N;
     s.push_back(si);
 
-    double dxsi = amp.differentia_xsection(si, zs);;
-    dxs.push_back(dxsi);
+    double xsi;
+    if (integ == false)
+    {
+      xsi = amp.differential_xsection(si, zs);
+    }
+    else if (integ == true)
+    {
+      xsi = amp.integrated_xsection(si);
+    }
+
+    dxs.push_back(xsi);
   }
 
   quick_print(s, dxs, amp.identifier + "_exchange");
