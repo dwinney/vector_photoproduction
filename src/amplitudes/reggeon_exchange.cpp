@@ -27,8 +27,8 @@ std::complex<double> reggeon_exchange::helicity_amplitude(std::vector<int> helic
   //
   //   // wigner functions with appropriate crossing angles
   //   std::complex<double> temp = xr;
-  //   temp *= wigner_d_int(1, lamp_gam, lam_gam, M_PI);
-  //   temp *= wigner_d_int(1, lamp_vec, lam_vec, -kinematics->crossing_angle(kinematics->vector_particle, s, zs));
+  //   temp *= wigner_d_int(1, lamp_gam, lam_gam,  M_PI / 2.);
+  //   temp *= wigner_d_int(1, lamp_vec, lam_vec, kinematics->crossing_angle(kinematics->vector_particle, s, zs));
   //   temp *= wigner_d_half(1, lamp_targ, lam_targ, kinematics->crossing_angle("target", s, zs));
   //   temp *= wigner_d_half(1, lamp_rec, lam_rec, kinematics->crossing_angle("recoil", s, zs));
   //   temp *= t_channel_amplitude(kinematics->helicities[i], s, zs);
@@ -73,17 +73,17 @@ std::complex<double> reggeon_exchange::top_vertex(int lam, double t)
   std::complex<double> result;
   switch (std::abs(lam))
   {
-    case 2:
+    case 0:
     {
-      result = (t - kinematics->mVec2) / sqrt(4. * t * xr);
+      result = 1.;
       break;
     }
     case 1:
     {
-      result = (t - kinematics->mVec2) / kinematics->mVec;
+      result = sqrt(xr * t) / kinematics->mVec;
       break;
     }
-    case 0:
+    case 2:
     {
       return 0.;
     }
@@ -94,7 +94,8 @@ std::complex<double> reggeon_exchange::top_vertex(int lam, double t)
     }
   }
 
-  return result * gGamma;
+  std::complex<double> q = (t - kinematics->mVec2) / sqrt(4. * t * xr);
+  return  result * q * gGamma;
 };
 
 // ---------------------------------------------------------------------------
@@ -102,16 +103,18 @@ std::complex<double> reggeon_exchange::top_vertex(int lam, double t)
 std::complex<double> reggeon_exchange::bottom_vertex(int lamp, double t)
 {
   std::complex<double> result;
+  std::complex<double> p = sqrt(xr * t - 4. * mPro2) / 2.;
   switch (std::abs(lamp))
   {
-    case 1:
-    {
-      result = - 2. * mPro2;
-      break;
-    }
     case 0:
     {
-      result = sqrt(xr * 2. * t);
+      result =  1.;
+      break;
+    }
+    case 1:
+    {
+      result = sqrt(xr * t) / mPro;
+      result *= sqrt(2.) / 2.;
       break;
     }
     default:
@@ -121,5 +124,5 @@ std::complex<double> reggeon_exchange::bottom_vertex(int lamp, double t)
     }
   }
 
-  return result * gV;
+  return result * gV * (2. * mPro);
 };
