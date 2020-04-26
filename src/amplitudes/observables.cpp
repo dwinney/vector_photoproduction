@@ -44,21 +44,19 @@ double amplitude::integrated_xsection(double s)
     return 0.;
   }
 
-  int xN = 200;
-  double x[xN+1], w[xN+1];
-  NR_gauleg(-1., +1., x, w, xN);
-
-  double sum = 0.;
-  for (int i = 1; i <= xN; i++)
+  auto F = [&](double zs)
   {
     double jacobian = 2.; // 2. * k * q
     jacobian *= real(kinematics->initial.momentum("beam", s));
     jacobian *= real(kinematics->final.momentum(kinematics->vector_particle, s));
 
-    sum += w[i] * differential_xsection(s, x[i]) * jacobian;
-  }
+    return differential_xsection(s, zs) * jacobian;
+  };
 
-  return sum;
+  double result;
+  result = boost::math::quadrature::gauss_kronrod<double, 15>::integrate(F, -1, 1, 0, 1.E-9, NULL);
+
+  return result;
 };
 
 // ---------------------------------------------------------------------------

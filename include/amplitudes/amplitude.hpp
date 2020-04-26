@@ -20,7 +20,8 @@
 // ---------------------------------------------------------------------------
 
 #include "reaction_kinematics.hpp"
-#include "integration.hpp"
+
+#include <boost/math/quadrature/gauss_kronrod.hpp>
 
 #include <string>
 
