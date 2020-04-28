@@ -17,11 +17,24 @@
 #include "amplitude.hpp"
 #include "gamma_technology.hpp"
 
+// ---------------------------------------------------------------------------
+// vector_exchange class describes the amplitude for a fixed-spin-1 exchange
+// in the t-channel. Derived in terms of simple feynman rules at tree level
+//
+// Initialization required a reaction_kinematics object, the mass of the exchange,
+// and an optional string to identify the amplitude with.
+//
+//  Evaluation requires three couplings photon coupling, gGamma, and vector/tensor
+// nucleon couplings, gV and gT respectively.
+//
+// Set couplings with amp.set_params({gGamma, gV, gT});
+// ---------------------------------------------------------------------------
+
 class vector_exchange : public amplitude
 {
 public:
   // Constructor
-  vector_exchange(reaction_kinematics * xkinem, double mass, std::string exchange)
+  vector_exchange(reaction_kinematics * xkinem, double mass, std::string exchange = "")
   : amplitude(xkinem, exchange), mEx2(mass*mass)
   {};
 
