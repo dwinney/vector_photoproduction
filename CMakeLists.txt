@@ -37,8 +37,8 @@ function(update_deps_file deps)
     include(${deps_file})
 endfunction(update_deps_file)
 
-# Look for and connect ROOT and GSL
-find_package(ROOT REQUIRED MathMore)
+# Look for and connect ROOT and Boost
+find_package(ROOT REQUIRED)
 if (ROOT_FOUND)
     include_directories(${ROOT_INCLUDE_DIRS})
     link_directories(${ROOT_LIBRARY_DIRS})
