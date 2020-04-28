@@ -102,19 +102,21 @@ std::complex<double> reggeon_exchange::top_vertex(int lam, double t)
 // Nucleon - Nucleon - Vector vertex
 std::complex<double> reggeon_exchange::bottom_vertex(int lamp, double t)
 {
-  std::complex<double> result;
-  std::complex<double> p = sqrt(xr * t - 4. * mPro2) / 2.;
+  std::complex<double> vector, tensor;
+
+  // vector coupling
   switch (std::abs(lamp))
   {
     case 0:
     {
-      result =  1.;
+      vector =  1.;
+      tensor = sqrt(xr * t) / (2. * mPro);
       break;
     }
     case 1:
     {
-      result = sqrt(xr * t) / mPro;
-      result *= sqrt(2.) / 2.;
+      vector = sqrt(2.) * sqrt(xr * t) / (2. * mPro);
+      tensor = sqrt(2.);
       break;
     }
     default:
@@ -124,5 +126,9 @@ std::complex<double> reggeon_exchange::bottom_vertex(int lamp, double t)
     }
   }
 
-  return result * gV * (2. * mPro);
+  std::complex<double> result;
+  result = gV * vector + gT * tensor * sqrt(xr * t) / (2. * mPro);
+  result *= 2. * mPro;
+
+  return result;
 };
