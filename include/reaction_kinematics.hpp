@@ -51,6 +51,7 @@ public:
 
   // Invariant variables
   double t_man(double s, double zs);
+  double u_man(double s, double zs);
 
   // Scattering angle in the t-channel
   std::complex<double> z_t(double s, double zs);

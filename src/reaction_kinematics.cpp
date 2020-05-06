@@ -17,6 +17,13 @@ double reaction_kinematics::t_man(double s, double zs)
   return mVec*mVec - 2. * abs(E1E3) + 2. * abs(kq) * zs;
 };
 
+double reaction_kinematics::u_man(double s, double zs)
+{
+  double t = t_man(s, zs);
+
+  return 3. * mPro2 + mVec2 - s - t;
+};
+
 // ---------------------------------------------------------------------------
 // Scattering angle in the t-channel
 std::complex<double> reaction_kinematics::z_t(double s, double zs)
