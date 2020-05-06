@@ -2,7 +2,7 @@
 Framework for vector meson photo-production amplitudes off a proton.
 
 ## Executables
-Requires ROOT (tested with version 6.17).
+Requires [ROOT](https://root.cern.ch/) (tested with version 6.17) and [BOOST](https://www.boost.org/) (tested with version 1.73) libraries.
 
 To build any example script in the `executables` folder, for example `test.cpp`, use:
 
@@ -34,7 +34,7 @@ Available amplitudes, so far, are those considered in [1,2]:
 
 * Single baryon resonance (s-channel)
 * Pomeron exchange amplitude (t-channel)
-* Vector meson exchange (t-channel)
+* Fixed-mass vector meson exchange (t-channel)
 
 Incoherent (interfering) sums of amplitudes may be constructed through the `amplitude_sum` class (see for example `executables/tests/sum_test.cpp`).
 
