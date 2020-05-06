@@ -13,12 +13,6 @@
 // in NANOBARN
 double amplitude::differential_xsection(double s, double zs)
 {
-  if (s - kinematics->sth < 0.001)
-  {
-    return 0.;
-  }
-
-  // Sum all the helicity amplitudes
   double sum = 0.;
   for (int i = 0; i < 24; i++)
   {
@@ -39,11 +33,6 @@ double amplitude::differential_xsection(double s, double zs)
 // IN NANOBARN
 double amplitude::integrated_xsection(double s)
 {
-  if (s - kinematics->sth < 0.1)
-  {
-    return 0.;
-  }
-
   auto F = [&](double zs)
   {
     double jacobian = 2.; // 2. * k * q
