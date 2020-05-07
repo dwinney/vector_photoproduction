@@ -73,17 +73,14 @@ int main( int argc, char** argv )
 
     std::vector<double> s_n, dxs_n;
 
-    s_n.push_back((amp[n]->kinematics->sth/mPro - mPro)/2.);
-    dxs_n.push_back(0.);
-
-    for (int i = 2; i < N; i++)
+    for (int i = 1; i < N; i++)
     {
-      double si = amp[n]->kinematics->sth + double(i) * (30. - amp[n]->kinematics->sth) / N;
+      double si = amp[n]->kinematics->sth + EPS + double(i) * (30. - amp[n]->kinematics->sth - EPS) / N;
       double dxsi = M_PI * M_ALPHA * amp[n]->differential_xsection(si, zs);
 
       s_n.push_back((si/mPro - mPro)/2.);
 
-      dxs_n.push_back(dxsi);
+      dxs_n.push_back(dxsi / 4.); // divide by 4 to average over final state helicities
     }
 
     quick_print(s_n, dxs_n, amp[n]->kinematics->vector_particle + "_photoproduction");
@@ -96,12 +93,10 @@ int main( int argc, char** argv )
   std::cout << "Printing ratio of cross-sections. \n";
 
   std::vector<double> s, ratio;
-  s.push_back((ptr2s->sth/mPro - mPro) / 2.);
-  ratio.push_back(0.);
 
-  for (int i = 10; i < N; i++)
+  for (int i = 1; i < N; i++)
   {
-    double si = ptr2s->sth + double(i) * (30 - ptr2s->sth) / N;
+    double si = (ptr2s->sth + EPS) + double(i) * (30 - ptr2s->sth - EPS) / N;
     double ratioi = pomeron_2s.differential_xsection(si, zs) / pomeron_1s.differential_xsection(si, zs);
 
     s.push_back((si/mPro - mPro)/2.);
