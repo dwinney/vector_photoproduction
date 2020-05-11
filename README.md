@@ -1,7 +1,7 @@
 # vector_photoproduction
 Framework for vector meson photo-production amplitudes off a proton.
 
-## Executables
+## EXECUTABLES
 Requires [ROOT](https://root.cern.ch/) (tested with version 6.17) and [BOOST](https://www.boost.org/) (tested with version 1.73) libraries.
 
 To build any example script in the `executables` folder, for example `test.cpp`, use:
@@ -23,7 +23,7 @@ Comparison of the unpolarized cross sections for the photoproduction of the Psi(
 ##### chi_c1_photoproduction
 Analytical model for the unpolarized cross section near threshold of axial vector states. Decomposed into different exchanges in the t-channel (e.g. omega, rho, phi).
 
-## Amplitudes
+## AMPLITUDES
 The main object of interest is the abstract `amplitude` class. This allows you to build observables from helicity amplitudes:
 
 * Differential cross section ( dσ / dt )
@@ -38,7 +38,9 @@ Available amplitudes, so far, are those considered in [1,2]:
 
 Incoherent (interfering) sums of amplitudes may be constructed through the `amplitude_sum` class (see for example `executables/tests/sum_test.cpp`).
 
+## PLOTTING
+Plots are automatically created using the JPAC collaboration style guidelines. For more information see the [jpacStyle](https://github.com/dwinney/jpacStyle) library.
 
-## References
+## REFERENCES
 * [1] "Theoretical model of the phi meson photoproduction amplitudes" Lesniak and Szczepaniak [[arXiv:hep-ph/0304007]](https://arxiv.org/abs/hep-ph/0304007)
 * [2] "Double Polarization Observables in Pentaquark Photoproduction" JPAC Collaboration [[arXiv:1907.09393]](https://arxiv.org/abs/1907.09393)
