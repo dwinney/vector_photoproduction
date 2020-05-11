@@ -15,6 +15,8 @@
 #include "amplitudes/amplitude_sum.hpp"
 #include "utilities.hpp"
 
+#include "jpacGraph1D.hpp"
+
 #include <cstring>
 #include <cmath>
 #include <iostream>
@@ -49,7 +51,7 @@ int main( int argc, char** argv )
   phi.set_params({4.2E-4, -6.2, 2.1});
   exchanges.push_back(&phi);
 
-  vector_exchange jpsi(ptr, 3.097, "jpsi");
+  vector_exchange jpsi(ptr, 3.097, "psi");
   jpsi.set_params({1., 3.3E-3, 0.});
   exchanges.push_back(&jpsi);
 
@@ -62,27 +64,43 @@ int main( int argc, char** argv )
 // You shouldnt need to change anything below this line
 // ---------------------------------------------------------------------------
 
-// ---------------------------------------------------------------------------
-// Print contributions from each exchange seperately
 double zs = cos(theta * deg2rad);
 
-for (int n = 0; n < exchanges.size(); n++)
+jpacGraph1D* plotter = new jpacGraph1D();
+plotter->SetXaxis(ROOT_italics("s") + " (GeV^{2})", 19.5, 100.);
+plotter->SetYaxis(ROOT_italics("d#sigma/dt") + " (" + ROOT_italics("nB") + " / GeV^{2})", 0., .4);
+plotter->SetLegend(0.6, .7);
+
+// ---------------------------------------------------------------------------
+// Print the total cross-section
+std::vector<double> s, dxs;
+for (int i = 0; i <= N; i++)
 {
+  double si = (ptr->sth + EPS) + double(i) * (100. - ptr->sth) / N;
+
+  double dxsi;
   if (INTEG == false)
   {
-    std::cout << "\n";
-    std::cout << "Printing DXS contribution from " << exchanges[n]->identifier;
-    std::cout << " exchange at " << theta << " degrees. \n";
+    dxsi = total.differential_xsection(si, zs);
   }
   else
   {
-    std::cout << "\n";
-    std::cout << "Printing integrated cross-section contribution from " << exchanges[n]->identifier;
-    std::cout << " exchange. \n";
+    dxsi = total.integrated_xsection(si);
   }
 
+  s.push_back(si);
+  dxs.push_back(dxsi);
+}
+
+plotter->AddEntry(s, dxs, "Sum");
+
+// ---------------------------------------------------------------------------
+// Print contributions from each exchange seperately
+
+for (int n = 0; n < exchanges.size(); n++)
+{
   std::vector<double> s, dxs;
-  for (int i = 0; i < N; i++)
+  for (int i = 0; i <= N; i++)
   {
     double si = (ptr->sth + EPS) + double(i) * (100. - (ptr->sth + EPS)) / N;
     double dxsi;
@@ -100,48 +118,11 @@ for (int n = 0; n < exchanges.size(); n++)
     dxs.push_back(dxsi);
   }
 
-  quick_print(s, dxs, exchanges[n]->identifier + "_exchange");
-  quick_plot(s, dxs, exchanges[n]->identifier + "_exchange");
+  plotter->AddEntry(s, dxs, "#" + exchanges[n]->identifier);
 }
 
-// ---------------------------------------------------------------------------
-// Print the total cross-section
-if (INTEG == false)
-{
-  std::cout << "\n";
-  std::cout << "Printing total DXS for " << ptr->vector_particle;
-  std::cout << " photoproduction at " << theta << " degrees. \n";
-}
-else
-{
-  std::cout << "\n";
-  std::cout << "Printing total integrated cross-section for " << ptr->vector_particle;
-  std::cout << " photoproduction. \n";
-}
+plotter->Plot("chi_c1_photoproduction.pdf");
 
-std::vector<double> s, dxs;
-for (int i = 0; i < N; i++)
-{
-  double si = ptr->sth + double(i) * (100. - ptr->sth) / N;
-
-  double dxsi;
-  if (INTEG == false)
-  {
-    dxsi = total.differential_xsection(si, zs);
-  }
-  else
-  {
-    dxsi = total.integrated_xsection(si);
-  }
-
-  s.push_back(si);
-  dxs.push_back(dxsi);
-}
-
-quick_print(s, dxs, ptr->vector_particle + "_photoproduction");
-quick_plot(s, dxs, ptr->vector_particle + "_photoproduction");
-std::cout << "\n";
-
-delete ptr;
+delete ptr, plotter;
 return 1.;
 };
