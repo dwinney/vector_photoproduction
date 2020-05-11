@@ -97,6 +97,18 @@ void jpacGraph1Dc::AddEntry(std::vector<double> xs, std::vector<std::complex<dou
 };
 
 // -----------------------------------------------------------------------------
+// Clear saved data
+void jpacGraph1Dc::ClearData()
+{
+  for (int i = 0; i < entries.size(); i++)
+  {
+    delete std::get<0>(entries[i]);
+    delete std::get<1>(entries[i]);
+  }
+  entries.clear();
+};
+
+// -----------------------------------------------------------------------------
 // Add the J^{PAC} logo in appropriate colors at the top right of the plot
 // Also add labels for Real and imaginary part
 void jpacGraph1Dc::AddLogo()
@@ -126,13 +138,21 @@ void jpacGraph1Dc::AddLogo()
 // Plot all the saved entries and print to file given by filename
 void jpacGraph1Dc::Plot(std::string filename)
 {
+  if (entries.size() == 0)
+  {
+    std::cout << "\n";
+    std::cout << "Error! Trying to plot empty graph. Call to Plot() will be ignored... \n";
+    return;
+  }
   if (entries.size() > 10)
   {
+    std::cout << "\n";
     std::cout << "Warning! Number of curve greater than number of colors (10)! \n";
     std::cout << "\n";
   }
   if (yCustom == true || yLabel != "")
   {
+    std::cout << "\n";
     std::cout << "Warning! Custom Y-axes for complex plots implemented with SetYRealaxis and SetYImagaxis! \n";
     std::cout << "Call to SetYaxis() will be ignored... \n";
     std::cout << "\n";

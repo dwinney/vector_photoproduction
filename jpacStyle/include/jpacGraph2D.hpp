@@ -36,6 +36,9 @@ public:
   // Add in the data as vectors
   void SetData(std::vector<double> x, std::vector<double> y, std::vector<double> z);
 
+  // Clear all added entries
+  void ClearData();
+
   // Set up the Legend
   void SetLegend(double xx, double yy);
 

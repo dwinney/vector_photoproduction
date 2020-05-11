@@ -17,6 +17,17 @@ void jpacGraph1D::AddEntry(std::vector<double> xs, std::vector<double> fxs, std:
 };
 
 // -----------------------------------------------------------------------------
+// Clear saved data
+void jpacGraph1D::ClearData()
+{
+  for (int i = 0; i < entries.size(); i++)
+  {
+    delete std::get<0>(entries[i]);
+  }
+  entries.clear();
+};
+
+// -----------------------------------------------------------------------------
 // Toggle legAdd which if false wont draw a legend at all
 void jpacGraph1D::SetLegend(bool ifremove)
 {
@@ -45,9 +56,16 @@ void jpacGraph1D::AddLogo()
 // Plot all the saved entries and print to file given by filename
 void jpacGraph1D::Plot(std::string filename)
 {
+  if (entries.size() == 0)
+  {
+    std::cout << "\n";
+    std::cout << "Error! Trying to plot empty graph. Call to Plot() will be ignored... \n";
+    return;
+  }
   if (entries.size() > 10)
   {
-      std::cout << "Warning! Number of curve greater than number of colors (9)! \n";
+    std::cout << "\n";
+    std::cout << "Warning! Number of curve greater than number of colors (9)! \n";
   }
 
   // Force the canvas to be square

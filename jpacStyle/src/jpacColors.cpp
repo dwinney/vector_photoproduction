@@ -8,6 +8,23 @@
 #include "jpacPlotter.hpp"
 
 // -----------------------------------------------------------------------------
+// Functions to italicize and bold
+std::string ROOT_italics(std::string in)
+{
+  return "#font[12]{" + in + "}";
+};
+
+std::string ROOT_bold(std::string in)
+{
+  return "#font[22]{" + in + "}";
+};
+
+std::string ROOT_bold_italics(std::string in)
+{
+  return "#font[32]{" + in + "}";
+};
+
+// -----------------------------------------------------------------------------
 // JPAC Color Palette
 Int_t jpacPlotter::kjpacBlue = TColor::GetFreeColorIndex();
 TColor * jpacPlotter::jpacBlue = new TColor(kjpacBlue, 0.12156862745098039, 0.4666666666666667, 0.7058823529411765);
@@ -43,25 +60,6 @@ std::vector<Int_t> jpacPlotter::jpacColors = {kjpacBlue, kjpacRed, kjpacGreen,
                                 kjpacOrange, kjpacPurple, kjpacBrown,
                                 kjpacPink, kjpacGold, kjpacAqua, kjpacGrey};
 
-// -----------------------------------------------------------------------------
-// Functions to italicize and bold
-std::string ROOT_italics(std::string in)
-{
-  return "#font[12]{" + in + "}";
-};
-
-std::string ROOT_bold(std::string in)
-{
-  return "#font[22]{" + in + "}";
-};
-
-std::string ROOT_bold_italics(std::string in)
-{
-  return "#font[32]{" + in + "}";
-};
-
-// -----------------------------------------------------------------------------
-// JPAC Logo as Strings
 std::string jpacPlotter::JPAC_BW = "#scale[1.3]{#font[32]{J}^{#scale[0.8]{#font[32]{PAC}}}}";
 
 std::string jpacPlotter::JPAC = "#scale[1.3]{#font[32]{#color[" + std::to_string(kjpacBlue) + "]{J}}"

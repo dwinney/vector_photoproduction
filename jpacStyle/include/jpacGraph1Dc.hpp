@@ -61,6 +61,9 @@ public:
   // Take in x and f(x) values as a vector and a legend entry
   void AddEntry(std::vector<double> xs, std::vector<std::complex<double>> fxs, std::string name);
 
+  // Clear all added entries
+  void ClearData();
+
   // Plot all the saved entries and print to file given by filename
   void Plot(std::string filename);
 

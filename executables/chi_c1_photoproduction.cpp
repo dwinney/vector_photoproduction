@@ -24,13 +24,43 @@
 
 int main( int argc, char** argv )
 {
-  double theta = 45.;
+  std::cout << "n";
+
+  // Parse command line arguments
+  double theta = 0.;
   bool INTEG = false;
+  double upper_limit = 7.;
+  std::string filename = "chi_c1_photoproduction.pdf";
+  std::string ylabel = ROOT_italics("d#sigma/dt") + " (" + ROOT_italics("nB") + " / GeV^{2})";
   for (int i = 0; i < argc; i++)
   {
-    if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
-    if (std::strcmp(argv[i],"-integ")==0) INTEG = true;
+    if (std::strcmp(argv[i],"-f")==0)
+    {
+      filename = argv[i+1];
+    }
+    if (std::strcmp(argv[i],"-c")==0)
+    {
+      theta = atof(argv[i+1]);
+      if (std::abs(theta) < 90.)
+      {
+        upper_limit = .5;
+      }
+    }
+    if (std::strcmp(argv[i],"-integ")==0)
+    {
+       INTEG = true;
+       upper_limit = 12.;
+       ylabel = ROOT_italics("#sigma") + " (" + ROOT_italics("nB") + ")";
+    }
   }
+
+  // Plotter object
+  jpacGraph1D* plotter = new jpacGraph1D();
+  plotter->SetXaxis(ROOT_italics("s") + " (GeV^{2})", 19.5, 100.);
+
+  // To change the range of the Y-axis or the position of the Legend change the arguments here
+  plotter->SetYaxis(ylabel , 0., upper_limit);
+  plotter->SetLegend(0.2, .75);
 
   // Set up kinematics for the chi_c1
   reaction_kinematics * ptr = new reaction_kinematics(3.510, "chi_c1");
@@ -39,21 +69,21 @@ int main( int argc, char** argv )
   // Which we will sum incoherently
   std::vector<amplitude*> exchanges;
 
-  vector_exchange rho(ptr, .770, "rho");
-  rho.set_params({9.2E-4, 2.4, 14.6});
-  exchanges.push_back(&rho);
-
   vector_exchange omega(ptr, .780, "omega");
   omega.set_params({5.2E-4, 16., 0.});
-  exchanges.push_back(&omega);
+  exchanges.push_back(&omega); // Add to the sum vector
+
+  vector_exchange rho(ptr, .770, "rho");
+  rho.set_params({9.2E-4, 2.4, 14.6});
+  exchanges.push_back(&rho); // Add to the sum vector
 
   vector_exchange phi(ptr, 1.10, "phi");
   phi.set_params({4.2E-4, -6.2, 2.1});
-  exchanges.push_back(&phi);
+  exchanges.push_back(&phi); // Add to the sum vector
 
   vector_exchange jpsi(ptr, 3.097, "psi");
   jpsi.set_params({1., 3.3E-3, 0.});
-  exchanges.push_back(&jpsi);
+  exchanges.push_back(&jpsi); // Add to the sum vector
 
   // The total amplitude with all the above exchanges
   amplitude_sum total(ptr, exchanges);
@@ -65,11 +95,6 @@ int main( int argc, char** argv )
 // ---------------------------------------------------------------------------
 
 double zs = cos(theta * deg2rad);
-
-jpacGraph1D* plotter = new jpacGraph1D();
-plotter->SetXaxis(ROOT_italics("s") + " (GeV^{2})", 19.5, 100.);
-plotter->SetYaxis(ROOT_italics("d#sigma/dt") + " (" + ROOT_italics("nB") + " / GeV^{2})", 0., .4);
-plotter->SetLegend(0.6, .7);
 
 // ---------------------------------------------------------------------------
 // Print the total cross-section
@@ -96,7 +121,6 @@ plotter->AddEntry(s, dxs, "Sum");
 
 // ---------------------------------------------------------------------------
 // Print contributions from each exchange seperately
-
 for (int n = 0; n < exchanges.size(); n++)
 {
   std::vector<double> s, dxs;
@@ -121,7 +145,8 @@ for (int n = 0; n < exchanges.size(); n++)
   plotter->AddEntry(s, dxs, "#" + exchanges[n]->identifier);
 }
 
-plotter->Plot("chi_c1_photoproduction.pdf");
+// Output to file
+plotter->Plot(filename);
 
 delete ptr, plotter;
 return 1.;

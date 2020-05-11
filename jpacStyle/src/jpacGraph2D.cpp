@@ -15,6 +15,13 @@ void jpacGraph2D::SetData(std::vector<double> x, std::vector<double> y, std::vec
 };
 
 // -----------------------------------------------------------------------------
+// Clear saved data
+void jpacGraph2D::ClearData()
+{
+  data = NULL;
+};
+
+// -----------------------------------------------------------------------------
 // Add the J^{PAC} logo in black and white in top right corner
 void jpacGraph2D::AddLogo()
 {
@@ -29,6 +36,14 @@ void jpacGraph2D::AddLogo()
 // Plot to file
 void jpacGraph2D::Plot(std::string filename)
 {
+  if (data == NULL)
+  {
+    std::cout << "\n";
+    std::cout << "Warning! Trying to plot empty graph. Call to Plot() will be ignored... \n";
+    std::cout << "\n";
+    return;
+  };
+
   // Force the canvas to be square
   // Also make sure to give enough room for the axes labels
   canvas->SetRightMargin(0.15);

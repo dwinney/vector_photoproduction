@@ -15,6 +15,14 @@
 #include <TAxis.h>
 #include <tuple>
 
+// -----------------------------------------------------------------------------
+// Super simple string functions to facilitate bolding and italics
+std::string ROOT_italics(std::string in);
+std::string ROOT_bold(std::string in);
+std::string ROOT_bold_italics(std:: string in);
+
+// -----------------------------------------------------------------------------
+// Abstract class for the jpac style
 class jpacGraph1D : public jpacPlotter
 {
 public:
@@ -40,6 +48,9 @@ public:
 
   // Take in x and f(x) values as a vector and a legend entry
   void AddEntry(std::vector<double> xs, std::vector<double> fxs, std::string name);
+
+  // Clear all added entries
+  void ClearData();
 
   // Set up the Legend
   void SetLegend(bool ifremove);

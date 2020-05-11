@@ -16,6 +16,8 @@
 #include "regge_trajectory.hpp"
 #include "utilities.hpp"
 
+#include "jpacGraph1D.hpp"
+
 #include <cstring>
 #include <cmath>
 #include <iostream>
@@ -31,8 +33,8 @@ int main( int argc, char** argv )
   }
 
   // Set up kinematics, determined entirely by vector meson mass
-  reaction_kinematics * ptr1s = new reaction_kinematics(3.097, "PSI(1s)");
-  reaction_kinematics * ptr2s = new reaction_kinematics(3.686, "PSI(2s)");
+  reaction_kinematics * ptr1s = new reaction_kinematics(3.097, "#psi(1S)");
+  reaction_kinematics * ptr2s = new reaction_kinematics(3.686, "#psi(2S)");
 
   // Set up pomeron trajectory
   // Here we use (real) linear trajectory with intercept and slope only free params
@@ -58,58 +60,40 @@ int main( int argc, char** argv )
   // You shouldnt need to change anything below this line
   // ---------------------------------------------------------------------------
 
-  // ---------------------------------------------------------------------------
-  // Print .dat files of differential cross section and plot it to a .pdf
+  // Initialize two plotting objects for the ratio and the dxs
+  jpacGraph1D* plotter = new jpacGraph1D();
+  plotter->SetLegend(0.2, .8);
+  plotter->SetXaxis(ROOT_italics("E_{#gamma}") + " (GeV)", 10.5, 16.);
+  plotter->SetYaxis(ROOT_italics("d#sigma/dt") + " (" + ROOT_italics("nB") + " / GeV^{2})", 0., 0.035);
 
-  std::vector<amplitude*> amp = {&pomeron_1s, &pomeron_2s};
   double zs = cos(theta * deg2rad);
+  std::vector<double> s, dxs, ratio;
 
-  for (int n = 0; n < amp.size(); n++)
+  for (int i = 1; i <= N; i++)
   {
-    std::cout << "\n";
-    std::cout << "Printing DXS for " << amp[n]->kinematics->vector_particle;
-    std::cout << " production at " << theta << " degrees in center-of-mass frame.";
-    std::cout << "\n";
+    double si = ptr2s->sth + EPS + double(i) * (30. - ptr2s->sth - EPS) / N;
+    double dxsi = M_PI * M_ALPHA * pomeron_2s.differential_xsection(si, zs);
+    double ratioi = dxsi / (pomeron_1s.differential_xsection(si, zs) / 4.);
 
-    std::vector<double> s_n, dxs_n;
-
-    for (int i = 1; i < N; i++)
-    {
-      double si = amp[n]->kinematics->sth + EPS + double(i) * (30. - amp[n]->kinematics->sth - EPS) / N;
-      double dxsi = M_PI * M_ALPHA * amp[n]->differential_xsection(si, zs);
-
-      s_n.push_back((si/mPro - mPro)/2.);
-
-      dxs_n.push_back(dxsi / 4.); // divide by 4 to average over final state helicities
-    }
-
-    quick_print(s_n, dxs_n, amp[n]->kinematics->vector_particle + "_photoproduction");
-    quick_plot(s_n, dxs_n, amp[n]->kinematics->vector_particle + "_photoproduction");
-  }
-  std::cout << "\n";
-
-  // ---------------------------------------------------------------------------
-  // Do the same for the ratio though
-  std::cout << "Printing ratio of cross-sections. \n";
-
-  std::vector<double> s, ratio;
-
-  for (int i = 1; i < N; i++)
-  {
-    double si = (ptr2s->sth + EPS) + double(i) * (30 - ptr2s->sth - EPS) / N;
-    double ratioi = pomeron_2s.differential_xsection(si, zs) / pomeron_1s.differential_xsection(si, zs);
-
+    //Convert center of mass energy to lab frame energy
     s.push_back((si/mPro - mPro)/2.);
+
+    dxs.push_back(dxsi / 4.); // divide by 4 to average over final state helicities
     ratio.push_back(ratioi);
   }
 
-  quick_print(s, ratio, "dxs_ratio");
-  quick_plot(s, ratio, "dxs_ratio");
-  std::cout << "\n";
+  plotter->AddEntry(s, dxs, "#psi(2S)");
+  plotter->Plot("psi2S_dxs.pdf");
 
+  plotter->ClearData();
+  plotter->AddEntry(s, ratio,"");
+  plotter->SetLegend(false);
+  plotter->SetYaxis(ROOT_italics("d#sigma") + "(2S)" + ROOT_italics(" / d#sigma") + "(1S)", 0., 0.0016);
+  plotter->Plot("psi_dxs_ratio.pdf");
+
+  // Clean up pointers
   delete ptr1s, ptr2s;
+  delete plotter;
 
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
   return 1.;
 };
