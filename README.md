@@ -26,7 +26,7 @@ Analytical model for the unpolarized cross section near threshold of axial vecto
 Optional command line flags are:
 ```bash
 -c [0:180]    # CM scattering angle in degrees (default: 0)
--f [string]   # Filename of desired output (default: "chi_c1_photoproduction.pdf")
+-f [string]   # Desired ilename of output (default: chi_c1_photoproduction.pdf)
 -integ        # Toggle integrated xsection instead of differential
 -feyn         # Toggle evaluating amplitude with covariant rules (included for debugging)
 ```
