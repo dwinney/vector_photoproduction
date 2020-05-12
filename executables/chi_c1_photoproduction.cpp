@@ -25,13 +25,14 @@
 int main( int argc, char** argv )
 {
   std::cout << "n";
-
+  // ---------------------------------------------------------------------------
   // Parse command line arguments
   double theta = 0.;
   bool INTEG = false;
+  bool FEYN = false;
   double upper_limit = 7.;
   std::string filename = "chi_c1_photoproduction.pdf";
-  std::string ylabel = ROOT_italics("d#sigma/dt") + " (" + ROOT_italics("nB") + " / GeV^{2})";
+  std::string ylabel = ROOT_italics("d#sigma/dt") + "  (" + ROOT_italics("nB") + " / GeV^{2})";
   for (int i = 0; i < argc; i++)
   {
     if (std::strcmp(argv[i],"-f")==0)
@@ -49,14 +50,20 @@ int main( int argc, char** argv )
     if (std::strcmp(argv[i],"-integ")==0)
     {
        INTEG = true;
-       upper_limit = 12.;
-       ylabel = ROOT_italics("#sigma") + " (" + ROOT_italics("nB") + ")";
+       upper_limit = 13.;
+       ylabel = ROOT_italics("#sigma") + "  (" + ROOT_italics("nB") + ")";
+    }
+    if (std::strcmp(argv[i],"-feyn")==0)
+    {
+      FEYN = true;
     }
   }
+  // ---------------------------------------------------------------------------
 
+  // ---------------------------------------------------------------------------
   // Plotter object
   jpacGraph1D* plotter = new jpacGraph1D();
-  plotter->SetXaxis(ROOT_italics("s") + " (GeV^{2})", 19.5, 100.);
+  plotter->SetXaxis(ROOT_italics("s") + "  (GeV^{2})", 19.5, 100.);
 
   // To change the range of the Y-axis or the position of the Legend change the arguments here
   plotter->SetYaxis(ylabel , 0., upper_limit);
@@ -69,19 +76,19 @@ int main( int argc, char** argv )
   // Which we will sum incoherently
   std::vector<amplitude*> exchanges;
 
-  vector_exchange omega(ptr, .780, "omega");
+  vector_exchange omega(ptr, .780, "#omega", FEYN);
   omega.set_params({5.2E-4, 16., 0.});
   exchanges.push_back(&omega); // Add to the sum vector
 
-  vector_exchange rho(ptr, .770, "rho");
+  vector_exchange rho(ptr, .770, "#rho", FEYN);
   rho.set_params({9.2E-4, 2.4, 14.6});
   exchanges.push_back(&rho); // Add to the sum vector
 
-  vector_exchange phi(ptr, 1.10, "phi");
+  vector_exchange phi(ptr, 1.10, "#phi", FEYN);
   phi.set_params({4.2E-4, -6.2, 2.1});
   exchanges.push_back(&phi); // Add to the sum vector
 
-  vector_exchange jpsi(ptr, 3.097, "psi");
+  vector_exchange jpsi(ptr, 3.097, "J/#psi", FEYN);
   jpsi.set_params({1., 3.3E-3, 0.});
   exchanges.push_back(&jpsi); // Add to the sum vector
 
@@ -90,10 +97,10 @@ int main( int argc, char** argv )
 
   int N = 50; // how many points to plot
 
+
 // ---------------------------------------------------------------------------
 // You shouldnt need to change anything below this line
 // ---------------------------------------------------------------------------
-
 double zs = cos(theta * deg2rad);
 
 // ---------------------------------------------------------------------------
@@ -142,7 +149,7 @@ for (int n = 0; n < exchanges.size(); n++)
     dxs.push_back(dxsi);
   }
 
-  plotter->AddEntry(s, dxs, "#" + exchanges[n]->identifier);
+  plotter->AddEntry(s, dxs, exchanges[n]->identifier);
 }
 
 // Output to file

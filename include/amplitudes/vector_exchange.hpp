@@ -34,20 +34,20 @@ class vector_exchange : public amplitude
 {
 public:
   // Constructor
-  vector_exchange(reaction_kinematics * xkinem, double mass, std::string exchange = "")
-  : amplitude(xkinem, exchange), mEx2(mass*mass)
+  vector_exchange(reaction_kinematics * xkinem, double mass, std::string exchange = "", bool iffeyn = false)
+  : amplitude(xkinem, exchange), mEx2(mass*mass), FEYN(iffeyn)
   {};
 
   // Copy constructor
   vector_exchange(const vector_exchange & old)
   : amplitude(old), mEx2(old.mEx2),
-    gGamma(old.gGamma), gV(old.gV), gT(old.gT)
+    gGam(old.gGam), gV(old.gV), gT(old.gT), FEYN(old.FEYN)
   {};
 
   // Setting utility
   void set_params(std::vector<double> params)
   {
-    gGamma = params[0];
+    gGam = params[0];
     gV = params[1];
     gT = params[2];
   };
@@ -56,11 +56,19 @@ public:
   std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);
 
 private:
+  // Whether to calculate with feynman rules or analytic residues
+  // Give the same result but analytic is faster
+  bool FEYN = false;
+
   // Mass of the exchange
   double mEx2;
 
   // Couplings to the axial-vector/photon and vector/tensor couplings to nucleon
-  double gGamma = 0., gV = 0., gT = 0.;
+  double gGam = 0., gpGam = 0., gV = 0., gT = 0.;
+
+  // Calculation of the residues analytically
+  std::complex<double> top_residue(int lam, double t);
+  std::complex<double> bottom_residue(int lamp, double t);
 
   // Four-momentum of the exhange
   std::complex<double> exchange_momenta(int mu, double s, double zs);

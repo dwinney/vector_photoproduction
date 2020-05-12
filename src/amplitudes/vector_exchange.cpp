@@ -17,26 +17,115 @@ std::complex<double> vector_exchange::helicity_amplitude(std::vector<int> helici
   int lam_rec = helicities[3];
 
   std::complex<double> result = 0.;
-  for (int mu = 0; mu < 4; mu++)
+  if (FEYN == true)
   {
-    for(int nu = 0; nu < 4; nu++)
+    for (int mu = 0; mu < 4; mu++)
     {
-      std::complex<double> temp;
-      temp = top_vertex(mu, lam_gam, lam_vec, s, zs);
-      temp *= metric[mu];
-      temp *= vector_propagator(mu, nu, s, zs);
-      temp *= metric[nu];
-      temp *= bottom_vertex(nu, lam_targ, lam_rec, s, zs);
+      for(int nu = 0; nu < 4; nu++)
+      {
+        std::complex<double> temp;
+        temp = top_vertex(mu, lam_gam, lam_vec, s, zs);
+        temp *= metric[mu];
+        temp *= vector_propagator(mu, nu, s, zs);
+        temp *= metric[nu];
+        temp *= bottom_vertex(nu, lam_targ, lam_rec, s, zs);
 
-      result += temp;
+        result += temp;
+      }
     }
+  }
+  else
+  {
+    double t = kinematics->t_man(s, zs);
+    std::complex<double> zt = kinematics->z_t(s, zs);
+
+    int lam  = lam_gam - lam_vec;
+    int lamp = (lam_targ - lam_rec) / 2.;
+
+    // Product of residues
+    result  = top_residue(lam, t);
+    result *= bottom_residue(lamp, t);
+
+    // Pole piece
+    result /= t - mEx2;
+
+    // angular function
+    result *= wigner_d_int(1, lamp, lam, zt);
   }
 
   return result;
 };
 
 // ---------------------------------------------------------------------------
+// Analytic residues
+std::complex<double> vector_exchange::top_residue(int lam, double t)
+{
+  std::complex<double> result;
+  switch (std::abs(lam))
+  {
+    case 0:
+    {
+      result = 1.;
+      break;
+    }
+    case 1:
+    {
+      result = sqrt(xr * t) / kinematics->mVec;
+      break;
+    }
+    case 2:
+    {
+      return gpGam * (t / kinematics->mVec2 - 1.);
+    }
+    default:
+    {
+      std::cout << "\nvector_exchange: invalid helicity flip lambda = " << lam << ". Quitting... \n";
+      exit(0);
+    }
+  }
+
+  std::complex<double> q = (t - kinematics->mVec2) / sqrt(4. * t * xr);
+  return  result * q * gGam;
+};
+
+std::complex<double> vector_exchange::bottom_residue(int lamp, double t)
+{
+  std::complex<double> vector, tensor;
+  switch (std::abs(lamp))
+  {
+    case 0:
+    {
+      vector =  1.;
+      tensor = sqrt(xr * t) / (2. * mPro);
+      break;
+    }
+    case 1:
+    {
+      vector = sqrt(2.) * sqrt(xr * t) / (2. * mPro);
+      tensor = sqrt(2.);
+      break;
+    }
+    case 2:
+    {
+      return 0.;
+    }
+    default:
+    {
+      std::cout << "\nreggeon_exchange: invalid helicity flip lambda^prime = " << lamp << ". Quitting... \n";
+      exit(0);
+    }
+  }
+
+  std::complex<double> result;
+  result = gV * vector + gT * tensor * sqrt(xr * t) / (2. * mPro);
+  result *= 2. * mPro;
+
+  return result;
+};
+
+// ---------------------------------------------------------------------------
 // Photon - Axial Vector - Vector vertex
+// Feynman rules
 std::complex<double> vector_exchange::top_vertex(int mu, int lam_gam, int lam_vec, double s, double zs)
 {
   // Contract with LeviCivita
@@ -60,7 +149,7 @@ std::complex<double> vector_exchange::top_vertex(int mu, int lam_gam, int lam_ve
   }
 
   // Multiply by coupling
-  return result * gGamma;
+  return result * gGam;
 };
 
 // ---------------------------------------------------------------------------
