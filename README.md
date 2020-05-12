@@ -6,7 +6,7 @@ Requires [ROOT](https://root.cern.ch/) (tested with version 6.17) and [BOOST](ht
 
 To build any example script in the `executables` folder, for example `test.cpp`, use:
 
-```
+```bash
 mkdir build
 cd build
 cmake ..
@@ -23,6 +23,14 @@ Comparison of the unpolarized cross sections for the photoproduction of the Psi(
 ##### chi_c1_photoproduction
 Analytical model for the unpolarized cross section near threshold of axial vector states. Decomposed into different exchanges in the t-channel (e.g. omega, rho, phi).
 
+Optional command line flags are:
+```bash
+-c [0:180]    # CM scattering angle in degrees (default: 0)
+-f [string]   # Filename of desired output (default: "chi_c1_photoproduction.pdf")
+-integ        # Toggle integrated xsection instead of differential
+-feyn         # Toggle evaluating amplitude with covariant rules (included for debugging)
+```
+
 ## AMPLITUDES
 The main object of interest is the abstract `amplitude` class. This allows you to build observables from helicity amplitudes:
 
@@ -36,7 +44,7 @@ Available amplitudes, so far, are those considered in [1,2]:
 * Pomeron exchange amplitude (t-channel)
 * Fixed-mass vector meson exchange (t-channel)
 
-Incoherent (interfering) sums of amplitudes may be constructed through the `amplitude_sum` class (see for example `executables/tests/sum_test.cpp`).
+Incoherent (interfering) sums of amplitudes may be constructed through the `amplitude_sum` class (see for example [sum_test.cpp](./executables/tests/sum_test/cpp)).
 
 ## PLOTTING
 Plots are automatically created using the JPAC collaboration style guidelines. For more information see the [jpacStyle](https://github.com/dwinney/jpacStyle) library.
