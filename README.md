@@ -53,7 +53,7 @@ Available amplitudes, so far, are those considered in [1,2]:
 * [Fixed-spin vector meson exchange](./include/amplitudes/vector_exchange.hpp) (t-channel)
 * [Reggeized meson exchange](./include/amplitudes/reggeon_exchange.hpp) (t-channel)
 
-Incoherent (interfering) sums of amplitudes may be constructed through the [`amplitude_sum`](./include/amplitudes/amplitude_sum.hpp) class (see for example [sum_test.cpp](./executables/tests/sum_test.cpp)).
+Incoherent (interfering) sums of amplitudes may be constructed through the [`amplitude_sum`](./include/amplitudes/amplitude_sum.hpp) class.
 
 ## PLOTTING
 Plots are automatically created using the JPAC collaboration style guidelines. For more information see the [jpacStyle](https://github.com/dwinney/jpacStyle) library.
