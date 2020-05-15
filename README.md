@@ -39,6 +39,15 @@ Optional command line flags are:
 ```
 Outputs the differential (or integrated) cross-section to a pdf.
 
+#### [X3872_photoproduction](./executables/X3872_photoproduction.cpp)
+Prediction for the unpolarized cross-section for exclusive X(3872) photoproduction at low momentum transfer and high energies of interest for the future EIC.
+
+Optional command line flags are:
+```bash
+-c [0:180]    # CM scattering angle in degrees (default: 0)
+-f [string]   # Desired filename of output (default: chi_c1_photoproduction.pdf)
+```
+
 ## AMPLITUDES
 The main object of interest is the abstract [`amplitude`](./include/amplitudes/amplitude.hpp) class. This allows you to build observables from helicity amplitudes:
 
