@@ -19,6 +19,7 @@ const double M_ALPHA = 1. / 137.;
 
 const std::complex<double> xr(1., 0.);
 const std::complex<double> xi(0., 1.);
+const std::complex<double> ieps(0., EPS);
 
 // Masses
 const double mPro = 0.9383;

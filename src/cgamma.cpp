@@ -1,10 +1,12 @@
 
 #include "misc_math.hpp"
 
-std::complex<double> cgamma(std::complex<double> z, int OPT)
+// ------------------------------------------------
+std::complex<double> cgamma(std::complex<double> z,int OPT)
+// OPT = 0 for Gamma ; OPT = 1 for log(Gamma)
 {
-  //double complex I(0,1);
-  std::complex<double> g, infini= 1e308+ 0.*xi; // z0,z1
+  std::complex<double> I(0,1);
+  std::complex<double> g, infini= 1e308+ 0.*I; // z0,z1
   double x0,q1,q2,x,y,th,th1,th2,g0,gr,gi,gr1,gi1;
   double na,t,x1,y1,sr,si;
   int j,k;
@@ -23,14 +25,12 @@ std::complex<double> cgamma(std::complex<double> z, int OPT)
     1.796443723688307e-01,
     -1.39243221690590};
 
-  x = real(z);
-  y = imag(z);
+  x = real(z); x1 = x;
+  y = imag(z); y1 = y;
   if (x > 171) return infini;
   if ((y == 0.0) && (x == (int)x) && (x <= 0.0))
     return infini;
   else if (x < 0.0) {
-    x1 = x;
-    y1 = y;
     x = -x;
     y = -y;
   }
@@ -76,6 +76,6 @@ std::complex<double> cgamma(std::complex<double> z, int OPT)
     gr = g0*cos(gi);
     gi = g0*sin(gi);
   }
-  g = gr + xi*gi;
+  g = gr + I*gi;
   return g;
 }
