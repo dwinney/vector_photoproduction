@@ -39,7 +39,7 @@ int main( int argc, char** argv )
   // Set up pomeron trajectory
   // Here we use (real) linear trajectory with intercept and slope only free params
   // Best fit values from [1]
-  linear_traj alpha(1, 0.941, 0.364, "pomeron");
+  linear_trajectory alpha(1, 0.941, 0.364, "pomeron");
 
   // Create amplitudes with kinematics and same trajectory
   pomeron_exchange pomeron_1s(ptr1s, &alpha);

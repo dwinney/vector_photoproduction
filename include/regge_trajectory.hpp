@@ -42,7 +42,7 @@ public:
 
 
 // Basic linear regge_trajectory
-class linear_traj : public regge_trajectory
+class linear_trajectory : public regge_trajectory
 {
 private:
   // Intercept and slope
@@ -50,16 +50,16 @@ private:
 
 public:
   // Empty constructor
-  linear_traj(){};
+  linear_trajectory(){};
 
   // Parameterized constructor
-  linear_traj(int J_min, double inter, double slope, std::string name = "")
+  linear_trajectory(int J_min, double inter, double slope, std::string name = "")
   : regge_trajectory(J_min, (double(J_min) - inter)/ slope, name),
     a0(inter), aprime(slope)
   {};
 
   // copy Constructor
-  linear_traj(const linear_traj & old)
+  linear_trajectory(const linear_trajectory & old)
   : regge_trajectory(old),
     a0(old.a0), aprime(old.aprime)
   {};
@@ -72,6 +72,11 @@ public:
   std::complex<double> eval(double s)
   {
     return a0 + aprime * s;
+  }
+
+  double slope()
+  {
+    return aprime;
   }
 };
 
