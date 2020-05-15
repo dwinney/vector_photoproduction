@@ -16,28 +16,14 @@ std::complex<double> reggeon_exchange::helicity_amplitude(std::vector<int> helic
   int lam_vec = helicities[2];
   int lam_rec = helicities[3];
 
-  // Sum over all helicities in the t - channel
-  std::complex<double> result = 0.;
-  // for (int i = 0; i < 24; i++)
-  // {
-  //   int lamp_gam = kinematics->helicities[i][0];
-  //   int lamp_targ = kinematics->helicities[i][1];
-  //   int lamp_vec = kinematics->helicities[i][2];
-  //   int lamp_rec = kinematics->helicities[i][3];
-  //
-  //   // wigner functions with appropriate crossing angles
-  //   std::complex<double> temp = xr;
-  //   temp *= wigner_d_int(1, lamp_gam, lam_gam,  M_PI / 2.);
-  //   temp *= wigner_d_int(1, lamp_vec, lam_vec, kinematics->crossing_angle(kinematics->vector_particle, s, zs));
-  //   temp *= wigner_d_half(1, lamp_targ, lam_targ, kinematics->crossing_angle("target", s, zs));
-  //   temp *= wigner_d_half(1, lamp_rec, lam_rec, kinematics->crossing_angle("recoil", s, zs));
-  //   temp *= t_channel_amplitude(kinematics->helicities[i], s, zs);
-  //
-  //   result += temp;
-  // }
+  // NOTE WE ASSUME HERE THE HELICITIES ARE IN THE t CHANNEL!
+  // if outputting anyting other than unpolarized x-section need to rotate
+  // by crossing matrix.
 
-  result = t_channel_amplitude(helicities, s, zs);
-  return result;
+  // To be implimented in the future
+
+  // Sum over all helicities in the t - channel
+  return t_channel_amplitude(helicities, s, zs);
 };
 
 // ---------------------------------------------------------------------------
@@ -46,29 +32,47 @@ std::complex<double> reggeon_exchange::t_channel_amplitude(std::vector<int> heli
 {
   // Net helicities
   int lam  = helicities[0] - helicities[2];
-  int lamp = (helicities[1] - helicities[3]) / 2.;
+  int lamp = (helicities[1] - helicities[3]) / 2;
+  int M = std::max(std::abs(lam), std::abs(lamp));
+
+  // Double flip is assumed to be negligable
+  if (M == 2)
+  {
+    return 0.;
+  }
 
   // Center of mass energy and scattering angle
   double t = kinematics->t_man(s, zs);
-  std::complex<double> zt = kinematics->z_t(s, zs);
+  std::complex<double> z_t = kinematics->z_t(s,zs);
 
   // Product of residues
-  std::complex<double> result = xr;
-  result *= top_vertex(lam, t);
-  result *= bottom_vertex(lamp, t);
+  std::complex<double> result;
+  result = top_residue(lam, t) * bottom_residue(lamp, t);
 
-  // Pole piece
-  result /= t - mEx2;
+  // Angular momentum barrier factor
+  auto pq = [&](double t)
+  {
+    std::complex<double> q = (t - kinematics->mVec2) / sqrt(4. * t * xr);
+    std::complex<double> p = sqrt(xr * t - 4.*mPro2) / 2.;
+    return 2. * p * q;
+  };
 
-  // angular function
-  result *= wigner_d_int(1, lamp, lam, zt);
+  // Theres only a nontrivial barrier factor in the lam = lamp = 0 case
+  if (M == 0)
+  {
+    result /= pq(t);
+  }
 
+  result *= half_angle_factor(lam, lamp, z_t);
+  result *= regge_propagator(t);
+  result *= pow(s, alpha->eval(t) - double(M));
   return result;
 };
 
 // ---------------------------------------------------------------------------
 // Photon - Axial Vector - Vector vertex
-std::complex<double> reggeon_exchange::top_vertex(int lam, double t)
+// These are the same residues identifies from the fixed spin exchange amplitude
+std::complex<double> reggeon_exchange::top_residue(int lam, double t)
 {
   std::complex<double> result;
   switch (std::abs(lam))
@@ -95,15 +99,15 @@ std::complex<double> reggeon_exchange::top_vertex(int lam, double t)
   }
 
   std::complex<double> q = (t - kinematics->mVec2) / sqrt(4. * t * xr);
-  return  result * q * gGamma;
+  return  result * q * gGam;
 };
 
 // ---------------------------------------------------------------------------
 // Nucleon - Nucleon - Vector vertex
-std::complex<double> reggeon_exchange::bottom_vertex(int lamp, double t)
+std::complex<double> reggeon_exchange::bottom_residue(int lamp, double t)
 {
-  std::complex<double> vector, tensor;
 
+  std::complex<double> vector, tensor;
   // vector coupling
   switch (std::abs(lamp))
   {
@@ -129,6 +133,34 @@ std::complex<double> reggeon_exchange::bottom_vertex(int lamp, double t)
   std::complex<double> result;
   result = gV * vector + gT * tensor * sqrt(xr * t) / (2. * mPro);
   result *= 2. * mPro;
+
+  return result;
+};
+
+//------------------------------------------------------------------------------
+// Half angle factors
+std::complex<double> reggeon_exchange::half_angle_factor(int lam, int lamp, std::complex<double> z_t)
+{
+  std::complex<double> sinhalf = sqrt((xr - z_t) / 2.);
+  std::complex<double> coshalf = sqrt((xr + z_t) / 2.);
+
+  std::complex<double> result;
+  result  = pow(sinhalf, double(std::abs(lam - lamp)) / 2.);
+  result *= pow(coshalf, double(std::abs(lam + lamp)) / 2.);
+
+  return result;
+}
+
+// ---------------------------------------------------------------------------
+// Usual Reggeon Propagator
+std::complex<double> reggeon_exchange::regge_propagator(double t)
+{
+  std::complex<double> alpha_t = alpha->eval(t);
+
+  std::complex<double> result;
+  result  = - M_PI * alpha->slope();
+  result *= 0.5 * ( double(signature) + exp(-xi * M_PI * alpha_t));
+  result /= cgamma(alpha_t) * sin(M_PI * alpha_t);
 
   return result;
 };
