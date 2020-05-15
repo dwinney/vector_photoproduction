@@ -17,7 +17,7 @@ make test
 Sensitivity study of double polarized observables to the LHCb pentaquarks in Hall A at JLab.
 Reproduces the results in [2]. See [JPAC page on γp→J/ψp](http://cgl.soic.indiana.edu/jpac/polarizedPenta.php).
 
-#### [psi_comparison](./executables/psi_comarison.cpp)
+#### [psi_comparison](./executables/psi_comparison.cpp)
 Comparison of the unpolarized cross sections for the photoproduction of the Psi(1S) and Psi(2S) states near threshold in the GlueX kinematics.
 
 Optional command line flags are:
@@ -27,7 +27,7 @@ Optional command line flags are:
 ```
 Outputs PSI(2S) unpolarized cross-section and ratio of (2S)/(1S) plotted in pdfs.
 
-#### [chi_c1_photoproduction](./chi_c1_photoproduction.cpp)
+#### [chi_c1_photoproduction](./executables/chi_c1_photoproduction.cpp)
 Analytical model for the unpolarized cross section near threshold of axial vector states. Decomposed into different exchanges in the t-channel (e.g. omega, rho, phi).
 
 Optional command line flags are:
@@ -53,7 +53,7 @@ Available amplitudes, so far, are those considered in [1,2]:
 * [Fixed-spin vector meson exchange](./include/amplitudes/vector_exchange.hpp) (t-channel)
 * [Reggeized meson exchange](./include/amplitudes/reggeon_exchange.hpp) (t-channel)
 
-Incoherent (interfering) sums of amplitudes may be constructed through the [`amplitude_sum`](./include/amplitudes/amplitude_sum.hpp) class (see for example [sum_test.cpp](./executables/tests/sum_test/cpp)).
+Incoherent (interfering) sums of amplitudes may be constructed through the [`amplitude_sum`](./include/amplitudes/amplitude_sum.hpp) class (see for example [sum_test.cpp](./executables/tests/sum_test.cpp)).
 
 ## PLOTTING
 Plots are automatically created using the JPAC collaboration style guidelines. For more information see the [jpacStyle](https://github.com/dwinney/jpacStyle) library.
