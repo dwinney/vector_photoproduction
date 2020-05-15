@@ -46,7 +46,7 @@ std::complex<double> reggeon_exchange::t_channel_amplitude(std::vector<int> heli
   std::complex<double> z_t = kinematics->z_t(s,zs);
 
   // Product of residues
-  std::complex<double> result;
+  std::complex<double> result = xr;
   result = top_residue(lam, t) * bottom_residue(lamp, t);
 
   // Angular momentum barrier factor
@@ -157,10 +157,18 @@ std::complex<double> reggeon_exchange::regge_propagator(double t)
 {
   std::complex<double> alpha_t = alpha->eval(t);
 
-  std::complex<double> result;
-  result  = - M_PI * alpha->slope();
-  result *= 0.5 * ( double(signature) + exp(-xi * M_PI * alpha_t));
-  result /= cgamma(alpha_t) * sin(M_PI * alpha_t);
+  // the gamma function causes problesm for large t so
+  if (std::abs(alpha_t) > 30.)
+  {
+    return 0.;
+  }
+  else
+  {
+    std::complex<double> result;
+    result  = - alpha->slope();
+    result *= 0.5 * ( double(signature) + exp(-xi * M_PI * alpha_t));
+    result *= cgamma(1. - alpha_t);
 
-  return result;
+    return result;
+  }
 };

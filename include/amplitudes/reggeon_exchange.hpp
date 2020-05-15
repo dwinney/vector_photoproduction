@@ -33,19 +33,23 @@ public:
     alpha(old.alpha)
   {};
 
-  // Setting utility
-  void set_params(std::tuple<int, double, double, double> params)
+  // Setting utilities
+  void set_signature(int i)
   {
-    signature   = std::get<0>(params);
-    gGam        = std::get<1>(params);
-    gV          = std::get<2>(params);
-    gT          = std::get<3>(params);
+    signature = i;
 
     if (std::abs(signature) != 1)
     {
-      std::cout << "Warning! Invalid signature (" << signature << ")";
-      std::cout << " passed to reggeon_exchange: " << amplitude::identifier << "\n.";
+      std::cout << "\nWarning! Invalid signature (" << signature << ")";
+      std::cout << " passed to reggeon_exchange: " << amplitude::identifier << ".\n";
     }
+  };
+
+  void set_params(std::vector<double> params)
+  {
+    gGam    = params[0];
+    gV      = params[1];
+    gT      = params[2];
   };
 
   // Assemble the helicity amplitude
@@ -53,7 +57,7 @@ public:
 
 private:
   linear_trajectory * alpha;
-  int signature;
+  int signature = -1.;
 
   // Couplings to the axial-vector/photon and vector/tensor couplings to nucleon
   double gGam = 0., gV = 0., gT = 0.;
