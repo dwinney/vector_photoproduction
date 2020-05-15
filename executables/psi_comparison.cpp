@@ -26,10 +26,11 @@
 int main( int argc, char** argv )
 {
   double theta = 0.;
-
+  bool LAB = false;
   for (int i = 0; i < argc; i++)
   {
     if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
+    if (std::strcmp(argv[i],"-lab")==0) LAB = true;
   }
 
   // Set up kinematics, determined entirely by vector meson mass
@@ -63,8 +64,16 @@ int main( int argc, char** argv )
   // Initialize two plotting objects for the ratio and the dxs
   jpacGraph1D* plotter = new jpacGraph1D();
   plotter->SetLegend(0.2, .8);
-  plotter->SetXaxis(ROOT_italics("E_{#gamma}") + " (GeV)", 10.5, 16.);
   plotter->SetYaxis(ROOT_italics("d#sigma/dt") + " (" + ROOT_italics("nB") + " / GeV^{2})", 0., 0.035);
+
+  if (LAB == true)
+  {
+    plotter->SetXaxis(ROOT_italics("E_{#gamma}") + " (GeV)", 10.5, 16.);
+  }
+  else
+  {
+    plotter->SetXaxis(ROOT_italics("#sqrt{s}") + " (GeV)", 4.6 , 5.55);
+  }
 
   double zs = cos(theta * deg2rad);
   std::vector<double> s, dxs, ratio;
@@ -76,7 +85,15 @@ int main( int argc, char** argv )
     double ratioi = dxsi / (pomeron_1s.differential_xsection(si, zs) / 4.);
 
     //Convert center of mass energy to lab frame energy
-    s.push_back((si/mPro - mPro)/2.);
+    if (LAB == true)
+    {
+      s.push_back((si/mPro - mPro)/2.);
+    }
+    else
+    {
+      s.push_back(sqrt(si));
+    }
+
 
     dxs.push_back(dxsi / 4.); // divide by 4 to average over final state helicities
     ratio.push_back(ratioi);
