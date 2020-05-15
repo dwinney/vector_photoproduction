@@ -13,11 +13,11 @@ cmake ..
 make test
 ````
 
-#### polarized_pentaquark
+#### [polarized_pentaquark](./executables/polarized_pentaquark.cpp)
 Sensitivity study of double polarized observables to the LHCb pentaquarks in Hall A at JLab.
 Reproduces the results in [2]. See [JPAC page on γp→J/ψp](http://cgl.soic.indiana.edu/jpac/polarizedPenta.php).
 
-#### psi_comparison
+#### [psi_comparison](./executables/psi_comarison.cpp)
 Comparison of the unpolarized cross sections for the photoproduction of the Psi(1S) and Psi(2S) states near threshold in the GlueX kinematics.
 
 Optional command line flags are:
@@ -27,7 +27,7 @@ Optional command line flags are:
 ```
 Outputs PSI(2S) unpolarized cross-section and ratio of (2S)/(1S) plotted in pdfs.
 
-#### chi_c1_photoproduction
+#### [chi_c1_photoproduction](./chi_c1_photoproduction.cpp)
 Analytical model for the unpolarized cross section near threshold of axial vector states. Decomposed into different exchanges in the t-channel (e.g. omega, rho, phi).
 
 Optional command line flags are:
@@ -40,7 +40,7 @@ Optional command line flags are:
 Outputs the differential (or integrated) cross-section to a pdf.
 
 ## AMPLITUDES
-The main object of interest is the abstract [`amplitude`](./include/amplitude/amplitude.hpp) class. This allows you to build observables from helicity amplitudes:
+The main object of interest is the abstract [`amplitude`](./include/amplitudes/amplitude.hpp) class. This allows you to build observables from helicity amplitudes:
 
 * Differential cross section ( dσ / dt )
 * Integrated total cross section ( σ )
@@ -48,12 +48,12 @@ The main object of interest is the abstract [`amplitude`](./include/amplitude/am
 
 Available amplitudes, so far, are those considered in [1,2]:
 
-* [Single baryon resonance](./include/amplitude/baryon_resonance.hpp) (s-channel)
-* [Pomeron exchange amplitude](./include/amplitude/pomeron_exchange.hpp) (t-channel)
-* [Fixed-spin vector meson exchange](./include/amplitude/vector_exchange.hpp) (t-channel)
-* [Reggeized meson exchange](./include/amplitude/reggeon_exchange.hpp) (t-channel)
+* [Single baryon resonance](./include/amplitudes/baryon_resonance.hpp) (s-channel)
+* [Pomeron exchange amplitude](./include/amplitudes/pomeron_exchange.hpp) (t-channel)
+* [Fixed-spin vector meson exchange](./include/amplitudes/vector_exchange.hpp) (t-channel)
+* [Reggeized meson exchange](./include/amplitudes/reggeon_exchange.hpp) (t-channel)
 
-Incoherent (interfering) sums of amplitudes may be constructed through the [`amplitude_sum`](./include/amplitude/amplitude_sum.hpp) class (see for example [sum_test.cpp](./executables/tests/sum_test/cpp)).
+Incoherent (interfering) sums of amplitudes may be constructed through the [`amplitude_sum`](./include/amplitudes/amplitude_sum.hpp) class (see for example [sum_test.cpp](./executables/tests/sum_test/cpp)).
 
 ## PLOTTING
 Plots are automatically created using the JPAC collaboration style guidelines. For more information see the [jpacStyle](https://github.com/dwinney/jpacStyle) library.
