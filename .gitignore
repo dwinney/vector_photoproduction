@@ -1,3 +1,4 @@
 /build/
 *.cmake
 /gnuplot/
+/executables/tests
