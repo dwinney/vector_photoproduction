@@ -25,11 +25,15 @@
 int main( int argc, char** argv )
 {
   double theta = 0.;
+  bool integ = false;
+  bool compare = false;
   std::string filename = "X3872_photoproduction.pdf";
   for (int i = 0; i < argc; i++)
   {
     if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
     if (std::strcmp(argv[i],"-f")==0) filename = argv[i+1];
+    if (std::strcmp(argv[i],"-integ")==0) integ = true;
+    if (std::strcmp(argv[i],"-compare")==0) compare = true;
   }
 
   // Set up kinematics for the X(3872)
@@ -56,7 +60,15 @@ int main( int argc, char** argv )
   // ---------------------------------------------------------------------------
   // Print contributions from each exchange seperately
   double zs = cos(theta * deg2rad);
-  double max = 1.E4;
+  double max;
+  if (integ == true)
+  {
+    max = 200.;
+  }
+  else
+  {
+    max = 1.E4;
+  }
 
   std::vector<double> s, dxs, NRdxs;
   std::vector<std::complex<double>> mom;
@@ -67,11 +79,28 @@ int main( int argc, char** argv )
 
     // Divide by 4 to average over helicities in the final state
     double xsi, nrxsi;
-    xsi   = regge.differential_xsection(si, zs) / 4.;
-    nrxsi = not_regge.differential_xsection(si, zs) / 4.;
+    if (integ == false)
+    {
+      xsi   = regge.differential_xsection(si, zs) / 4.;
+      dxs.push_back(xsi * 1.E-3);
 
-    dxs.push_back(xsi * 200. * 1.E-3);
-    NRdxs.push_back(nrxsi * 1.E-3);
+      if (compare == true)
+      {
+        nrxsi = not_regge.differential_xsection(si, zs) / 4.;
+        NRdxs.push_back(nrxsi * 1.E-6);
+      }
+    }
+    else
+    {
+      xsi   = regge.integrated_xsection(si) / 4.;
+      dxs.push_back(xsi);
+
+      if (compare == true)
+      {
+        nrxsi = not_regge.integrated_xsection(si) / 4.;
+        NRdxs.push_back(nrxsi * 1.E-6);
+      }
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -82,13 +111,24 @@ int main( int argc, char** argv )
   jpacGraph1D* plotter = new jpacGraph1D();
 
   // Add the data sets from above
-  plotter->AddEntry(s, NRdxs, "#rho exchange");
-  plotter->AddEntry(s, dxs, "200 x #alpha_{#rho}(t)");
+  plotter->AddEntry(s, dxs, "#alpha_{#rho}(t)");
+
+  if (compare == true)
+  {
+    plotter->AddEntry(s, NRdxs, "#rho exchange x 10^{-3}");
+  }
 
 // // Tweak the axes
-  plotter->SetYaxis(ROOT_italics("d#sigma/dt") + "  (#mub GeV^{-2})", 0., 6.);
+  if (integ == false)
+  {
+    plotter->SetYaxis(ROOT_italics("d#sigma/dt") + "  (#mub GeV^{-2})");
+    plotter->SetXlogscale(true);
+  }
+  else
+  {
+    plotter->SetYaxis("#sigma   (nb)");
+  }
 
-  plotter->SetXlogscale(true);
   plotter->SetXaxis(ROOT_italics("s") + "  (GeV^{2})", ptr->sth, max);
 
   plotter->SetLegend(0.6, 0.5);
