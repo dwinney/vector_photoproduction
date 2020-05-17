@@ -41,8 +41,8 @@ int main( int argc, char** argv )
 
   // Two different pentaquarks
   // masses and widths from 2015 LHCb paper [2]
-  baryon_resonance P_c1(3, 4.45, 0.4, ptr);
-  baryon_resonance P_c2(-5, 4.38, 0.1, ptr);
+  baryon_resonance P_c1(3, -1, 4.45, 0.4, ptr);
+  baryon_resonance P_c2(5, +1, 4.38, 0.1, ptr);
 
   // 2% branching fraction and equal photocouplings for both
   std::vector<double> params = {0.02, .7071};
