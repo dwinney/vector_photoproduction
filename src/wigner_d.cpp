@@ -117,12 +117,14 @@ std::complex<double> wigner_d_half(int j, int lam1, int lam2, std::complex<doubl
           case 1:
           {
             result = (3. * z - 1.) / 2.;
-            result *= sqrt((xr + z) / 2.); break;
+            result *= sqrt((xr + z) / 2.);
+            break;
           }
           case -1:
           {
             result = - (3. * z + 1.) / 2.;
-            result *= sqrt((xr - z) / 2.); break;
+            result *= sqrt((xr - z) / 2.);
+            break;
           }
           default: wigner_error(j, lam1, lam2, true);
         }
@@ -141,47 +143,60 @@ std::complex<double> wigner_d_half(int j, int lam1, int lam2, std::complex<doubl
     {
       switch (lam1)
       {
-        case 5: wigner_error(j, lam1, lam2, true);
+        case 5:
+        {
+          wigner_error(j, lam1, lam2, true);
+          break;
+        }
+        // lam1 == 3
         case 3:
         {
           switch (lam2)
           {
             case 3:
             {
-              result = (-3. + 5. * z) * (1. + z) / 4.;
-              result *= sqrt((xr + z)); break;
+              result  = (-3. + 5. * z) * (1. + z) / 4.;
+              result *= sqrt((xr + z) / 2.);
+              break;
             }
             case 1:
             {
               result = (1. + z) * (-1. + 5.*z) / 4.;
-              result *= - sqrt(xr - z); break;
+              result *= - sqrt(xr - z);
+              break;
             }
             case -1:
             {
               result = (-1. + z) * (1. + 5.*z) / 4.;
-              result *= - sqrt(xr + z); break;
+              result *= - sqrt(xr + z);
+              break;
             }
             case -3:
             {
-              result = - pow((xr - z)/ 2., 1.5) * (3. + 5.*z); break;
+              result  = -(3. + 5. * z) * (1. - z) / 4.;
+              result *= sqrt((xr - z) / 2.);
+              break;
             }
             default: wigner_error(j, lam1, lam2, true);
           }
           break;
         }
+        // lam1 == 1
         case 1:
         {
           switch (lam2)
           {
             case 1:
             {
-              result = sqrt((xr + z) / 2.);
-              result *= (-1. - 2.*z + 5.*z*z) / 2.; break;
+              result  = sqrt((xr + z) / 2.);
+              result *= (-1. - 2.*z + 5.*z*z) / 2.;
+              break;
             }
             case -1:
             {
-              result = sqrt((xr - z) / 2.);
-              result *= (1. - 2.*z - 5.*z*z) / 2.; break;
+              result  = sqrt((xr - z) / 2.);
+              result *= (1. - 2.*z - 5.*z*z) / 2.;
+              break;
             }
             default: wigner_error(j, lam1, lam2, true);
           }
