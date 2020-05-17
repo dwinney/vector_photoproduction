@@ -166,7 +166,7 @@ std::complex<double> reggeon_exchange::regge_propagator(double t)
   {
     std::complex<double> result;
     result  = - alpha->slope();
-    result *= 0.5 * ( double(signature) + exp(-xi * M_PI * alpha_t));
+    result *= 0.5 * (double(alpha->signature) + exp(-xi * M_PI * alpha_t));
     result *= cgamma(1. - alpha_t);
 
     return result;

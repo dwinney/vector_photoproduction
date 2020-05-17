@@ -40,12 +40,11 @@ int main( int argc, char** argv )
   reaction_kinematics * ptr = new reaction_kinematics(3.872, "X(3872)");
 
   // Linear trajectory for the rho
-  linear_trajectory alpha(1, 0.5, 0.9, "EXD_linear");
+  linear_trajectory alpha(1, -1, 0.5, 0.9, "EXD_linear");
 
   // Initialize Reggeon amplitude with the above kinematics and regge_trajectory
   reggeon_exchange regge(ptr, &alpha, "#rho");
   regge.set_params({0.20, 2.4, 14.6});
-  regge.set_signature(-1);
 
   // Fixed spin rho-exhcange with same couplings for comparison
   vector_exchange not_regge(ptr, .770, "#rho");

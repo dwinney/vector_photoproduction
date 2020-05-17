@@ -21,8 +21,8 @@ public:
   : parent(name)
   {};
 
-  regge_trajectory(int J, double m2, std::string name = "")
-  : J_min(J), M_min2(m2), parent(name)
+  regge_trajectory(int J, int sig, double m2, std::string name = "")
+  : J_min(J), signature(sig), M_min2(m2), parent(name)
   {};
 
   // copy constructor
@@ -36,7 +36,7 @@ public:
   // These parameters define the trajectory
   // name, spin, and mass of the lowest lying resonance on the parent trajectory
   std::string parent;
-  int J_min;
+  int J_min, signature;
   double M_min2;
 };
 
@@ -53,8 +53,8 @@ public:
   linear_trajectory(){};
 
   // Parameterized constructor
-  linear_trajectory(int J_min, double inter, double slope, std::string name = "")
-  : regge_trajectory(J_min, (double(J_min) - inter)/ slope, name),
+  linear_trajectory(int J_min, int sig, double inter, double slope, std::string name = "")
+  : regge_trajectory(J_min, sig, (double(J_min) - inter)/ slope, name),
     a0(inter), aprime(slope)
   {};
 
@@ -63,6 +63,7 @@ public:
   : regge_trajectory(old),
     a0(old.a0), aprime(old.aprime)
   {};
+
   // Setting utility
   void set_params(double inter, double slope)
   {
