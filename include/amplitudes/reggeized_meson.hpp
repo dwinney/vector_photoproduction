@@ -25,15 +25,15 @@
 // Set couplings with amp.set_params({gGamma, gV, gT});
 // ---------------------------------------------------------------------------
 
-class reggeized_meson_exchange : public vector_exchange
+class reggeized_meson : public vector_exchange
 {
 public:
-  reggeized_meson_exchange(reaction_kinematics * xkinem, linear_trajectory * traj, std::string exchange = "")
+  reggeized_meson(reaction_kinematics * xkinem, linear_trajectory * traj, std::string exchange = "")
   : vector_exchange(xkinem, traj->M_min2, exchange), alpha(traj)
     {};
 
   // Copy constructor
-  reggeized_meson_exchange(const reggeized_meson_exchange & old)
+  reggeized_meson(const reggeized_meson & old)
   : vector_exchange(old), alpha(old.alpha)
   {};
 

@@ -5,11 +5,11 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#include "amplitudes/reggeized_meson_exchange.hpp"
+#include "amplitudes/reggeized_meson.hpp"
 
 // ---------------------------------------------------------------------------
 // Assemble the helicity amplitude by contracting the lorentz indices
-std::complex<double> reggeized_meson_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
+std::complex<double> reggeized_meson::helicity_amplitude(std::vector<int> helicities, double s, double zs)
 {
   int lam_gam = helicities[0];
   int lam_targ = helicities[1];
@@ -28,7 +28,7 @@ std::complex<double> reggeized_meson_exchange::helicity_amplitude(std::vector<in
 
 // ---------------------------------------------------------------------------
 // Helicity amplitude in terms of t-channel (unrotated) helicities
-std::complex<double> reggeized_meson_exchange::t_channel_amplitude(std::vector<int> helicities, double s, double zs)
+std::complex<double> reggeized_meson::t_channel_amplitude(std::vector<int> helicities, double s, double zs)
 {
   // Net helicities
   int lam  = helicities[0] - helicities[2];
@@ -71,7 +71,7 @@ std::complex<double> reggeized_meson_exchange::t_channel_amplitude(std::vector<i
 
 //------------------------------------------------------------------------------
 // Half angle factors
-std::complex<double> reggeized_meson_exchange::half_angle_factor(int lam, int lamp, std::complex<double> z_t)
+std::complex<double> reggeized_meson::half_angle_factor(int lam, int lamp, std::complex<double> z_t)
 {
   std::complex<double> sinhalf = sqrt((xr - z_t) / 2.);
   std::complex<double> coshalf = sqrt((xr + z_t) / 2.);
@@ -85,7 +85,7 @@ std::complex<double> reggeized_meson_exchange::half_angle_factor(int lam, int la
 
 // ---------------------------------------------------------------------------
 // Usual Reggeon Propagator
-std::complex<double> reggeized_meson_exchange::regge_propagator(double t)
+std::complex<double> reggeized_meson::regge_propagator(double t)
 {
   std::complex<double> alpha_t = alpha->eval(t);
 

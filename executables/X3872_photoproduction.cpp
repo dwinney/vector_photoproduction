@@ -12,7 +12,7 @@
 #include "regge_trajectory.hpp"
 #include "utilities.hpp"
 
-#include "amplitudes/reggeized_meson_exchange.hpp"
+#include "amplitudes/reggeized_meson.hpp"
 #include "amplitudes/vector_exchange.hpp"
 
 #include "jpacGraph1D.hpp"
@@ -39,7 +39,7 @@ int main( int argc, char** argv )
   linear_trajectory alpha(1, -1, 0.5, 0.9, "EXD_linear");
 
   // Initialize Reggeon amplitude with the above kinematics and regge_trajectory
-  reggeized_meson_exchange regge(ptr, &alpha, "#rho");
+  reggeized_meson regge(ptr, &alpha, "#rho");
   regge.set_params({0.20, 2.4, 14.6});
 
   // Fixed spin rho-exhcange with same couplings for comparison
