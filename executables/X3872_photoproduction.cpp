@@ -36,7 +36,7 @@ int main( int argc, char** argv )
   reaction_kinematics * ptr = new reaction_kinematics(3.872, "X(3872)");
 
   // Linear trajectory for the rho
-  linear_trajectory alpha(1, -1, 0.5, 0.9, "EXD_linear");
+  linear_trajectory alpha(-1, 0.5, 0.9, "EXD_linear");
 
   // Initialize Reggeon amplitude with the above kinematics and regge_trajectory
   reggeized_meson regge(ptr, &alpha, "#rho");

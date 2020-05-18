@@ -29,7 +29,7 @@ class reggeized_meson : public vector_exchange
 {
 public:
   reggeized_meson(reaction_kinematics * xkinem, linear_trajectory * traj, std::string exchange = "")
-  : vector_exchange(xkinem, traj->M_min2, exchange), alpha(traj)
+  : vector_exchange(xkinem, -1., exchange), alpha(traj)
     {};
 
   // Copy constructor
