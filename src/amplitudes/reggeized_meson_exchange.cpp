@@ -5,11 +5,11 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#include "amplitudes/reggeon_exchange.hpp"
+#include "amplitudes/reggeized_meson_exchange.hpp"
 
 // ---------------------------------------------------------------------------
 // Assemble the helicity amplitude by contracting the lorentz indices
-std::complex<double> reggeon_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
+std::complex<double> reggeized_meson_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
 {
   int lam_gam = helicities[0];
   int lam_targ = helicities[1];
@@ -28,7 +28,7 @@ std::complex<double> reggeon_exchange::helicity_amplitude(std::vector<int> helic
 
 // ---------------------------------------------------------------------------
 // Helicity amplitude in terms of t-channel (unrotated) helicities
-std::complex<double> reggeon_exchange::t_channel_amplitude(std::vector<int> helicities, double s, double zs)
+std::complex<double> reggeized_meson_exchange::t_channel_amplitude(std::vector<int> helicities, double s, double zs)
 {
   // Net helicities
   int lam  = helicities[0] - helicities[2];
@@ -69,77 +69,9 @@ std::complex<double> reggeon_exchange::t_channel_amplitude(std::vector<int> heli
   return result;
 };
 
-// ---------------------------------------------------------------------------
-// Photon - Axial Vector - Vector vertex
-// These are the same residues identifies from the fixed spin exchange amplitude
-std::complex<double> reggeon_exchange::top_residue(int lam, double t)
-{
-  std::complex<double> result;
-  switch (std::abs(lam))
-  {
-    case 0:
-    {
-      result = 1.;
-      break;
-    }
-    case 1:
-    {
-      result = sqrt(xr * t) / kinematics->mVec;
-      break;
-    }
-    case 2:
-    {
-      return 0.;
-    }
-    default:
-    {
-      std::cout << "\nreggeon_exchange: invalid helicity flip lambda = " << lam << ". Quitting... \n";
-      exit(0);
-    }
-  }
-
-  std::complex<double> q = (t - kinematics->mVec2) / sqrt(4. * t * xr);
-  return  result * q * gGam;
-};
-
-// ---------------------------------------------------------------------------
-// Nucleon - Nucleon - Vector vertex
-std::complex<double> reggeon_exchange::bottom_residue(int lamp, double t)
-{
-
-  std::complex<double> vector, tensor;
-  // vector coupling
-  switch (std::abs(lamp))
-  {
-    case 0:
-    {
-      vector =  1.;
-      tensor = sqrt(xr * t) / (2. * mPro);
-      break;
-    }
-    case 1:
-    {
-      vector = sqrt(2.) * sqrt(xr * t) / (2. * mPro);
-      tensor = sqrt(2.);
-      break;
-    }
-    default:
-    {
-      std::cout << "\nreggeon_exchange: invalid helicity flip lambda^prime = " << lamp << ". Quitting... \n";
-      exit(0);
-    }
-  }
-
-  std::complex<double> result;
-  result = gV * vector + gT * tensor * sqrt(xr * t) / (2. * mPro);
-  result *= 2. * mPro;
-
-  return result;
-};
-
 //------------------------------------------------------------------------------
 // Half angle factors
-std::complex<double> reggeon_exchange::half_angle_factor(int lam, int lamp, std::complex<double> z_t)
+std::complex<double> reggeized_meson_exchange::half_angle_factor(int lam, int lamp, std::complex<double> z_t)
 {
   std::complex<double> sinhalf = sqrt((xr - z_t) / 2.);
   std::complex<double> coshalf = sqrt((xr + z_t) / 2.);
@@ -153,7 +85,7 @@ std::complex<double> reggeon_exchange::half_angle_factor(int lam, int lamp, std:
 
 // ---------------------------------------------------------------------------
 // Usual Reggeon Propagator
-std::complex<double> reggeon_exchange::regge_propagator(double t)
+std::complex<double> reggeized_meson_exchange::regge_propagator(double t)
 {
   std::complex<double> alpha_t = alpha->eval(t);
 
