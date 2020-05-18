@@ -19,9 +19,9 @@ double reaction_kinematics::t_man(double s, double zs)
 
 double reaction_kinematics::u_man(double s, double zs)
 {
-  double t = t_man(s, zs);
-
-  return 3. * mPro2 + mVec2 - s - t;
+  std::complex<double> kq = initial.momentum("beam", s) * final.momentum("recoil", s);
+  std::complex<double> E1E3 = initial.energy("beam", s) * final.energy("recoil", s);
+  return  mPro2 - 2. * abs(E1E3) + 2. * abs(kq) * zs;
 };
 
 // ---------------------------------------------------------------------------
@@ -35,6 +35,20 @@ std::complex<double> reaction_kinematics::z_t(double s, double zs)
   std::complex<double> result;
   result = 2. * s + t - 2. * mPro2 - mVec2; // s - u
   result /= 4. * p_t * q_t;
+
+  return result;
+};
+
+// Scattering angle in the u-channel
+std::complex<double> reaction_kinematics::z_u(double s, double zs)
+{
+  double u = u_man(s, zs);
+  std::complex<double> p_u = sqrt(xr * Kallen(u, 0., mPro2)) / sqrt(xr * 4. * u);
+  std::complex<double> q_u = sqrt(xr * Kallen(u, mVec2, mPro2)) / sqrt(xr * 4. * u);
+
+  std::complex<double> result;
+  result = -2. * s - u + 2. * mPro2 + mVec2; // t - s
+  result /= 4. * p_u * q_u;
 
   return result;
 };

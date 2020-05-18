@@ -10,10 +10,18 @@
 // Combined amplitude as a Breit-Wigner with the residue as the prodect of hadronic and photo-couplings
 std::complex<double> baryon_resonance::helicity_amplitude(std::vector<int> helicities, double s, double zs)
 {
-  double residue = photo_coupling(helicities, s) * hadronic_decay(helicities, zs);
-  residue *= threshold_factor(s, 1.5);
+  int lam_i = 2 * helicities[0] - helicities[1];
+  int lam_f = 2 * helicities[2] - helicities[3];
 
-  return residue / (s - mRes*mRes - xi * mRes * gamRes);
+  std::complex<double> residue;
+  residue  = photo_coupling(lam_i, s);
+  residue *= hadronic_coupling(lam_f, s);
+  residue *= threshold_factor(s, 1.5);
+  residue *= wigner_d_half(J, lam_f, lam_i, zs);
+
+  residue /= (s - mRes*mRes - xi * mRes * gamRes);
+
+  return residue;
 };
 
 // Ad-hoc threshold factor to kill the resonance at threshold
@@ -26,10 +34,8 @@ double baryon_resonance::threshold_factor(double s, double beta)
 };
 
 // Photoexcitation helicity amplitude for the process gamma p -> R
-double baryon_resonance::photo_coupling(std::vector<int> helicities, double s)
+std::complex<double> baryon_resonance::photo_coupling(int lam_i, double s)
 {
-  int lam_i = 2 * helicities[0] - helicities[1];
-
   int l_min; // lowest allowed relative angular momentum
   double P_t; // Combinatorial factor due to only transverse polarized J/psi contribute
   switch (J)
@@ -52,7 +58,7 @@ double baryon_resonance::photo_coupling(std::vector<int> helicities, double s)
     }
     default:
     {
-      std::cout << "\n baryon_resonance: spin-parity combination for J = " << J << "/2 and P = " << P << "not available.";
+      std::cout << "\nbaryon_resonance: spin-parity combination for J = " << J << "/2 and P = " << P << " not available. ";
       std::cout << "Quiting... \n";
       exit(0);
     }
@@ -62,7 +68,6 @@ double baryon_resonance::photo_coupling(std::vector<int> helicities, double s)
   double a;
   (lam_i == 1) ? (a = R_photo) : (a = sqrt(1. - R_photo * R_photo));
 
-
   // Electromagnetic decay width given by VMD assumption
   double emGamma = (xBR * gamRes) * pow(fJpsi / mJpsi, 2.);
   emGamma *= pow(pi_bar / pf_bar, double(2*l_min +1)) * P_t;
@@ -71,21 +76,25 @@ double baryon_resonance::photo_coupling(std::vector<int> helicities, double s)
   double A_lam = emGamma * M_PI * mRes * double(J + 1) / (2. * mPro * pi_bar * pi_bar);
   A_lam = sqrt(A_lam) * a;
 
-  double result = sqrt(s) * pi_bar / mRes;
-  result *= sqrt(8. * mPro * mRes / real(kinematics->initial.momentum("beam", s)));
-  result *= A_lam;
+  std::complex<double> result = sqrt(xr * s) * pi_bar / mRes;
+  result *= sqrt(xr * 8. * mPro * mRes / kinematics->initial.momentum("beam", s));
+  result *= A_lam * sqrt(M_PI * M_ALPHA);
+
+  // Extra phase for unnatural decays
+  if (naturality == -1)
+  {
+    if (lam_i < 0) {result *= -1.;}
+  }
 
   return result;
 };
 
 // Hadronic decay helicity amplitude for the R -> J/psi p process
-double baryon_resonance::hadronic_decay(std::vector<int> helicities, double zs)
+std::complex<double> baryon_resonance::hadronic_coupling(int lam_f, double s)
 {
-  int lam_i = 2 * helicities[0] - helicities[1];
-  int lam_f = 2 * helicities[2] - helicities[3];
-
   // Hadronic coupling constant g, given in terms of branching ratio xBR
-  double g = 8. * M_PI * xBR * gamRes;
+  std::complex<double> g;
+  g  = 8. * M_PI * xBR * gamRes;
   g *= double(J + 1) / 6.;
   g *= mRes * mRes / pf_bar;
   g = sqrt(g);
@@ -93,9 +102,8 @@ double baryon_resonance::hadronic_decay(std::vector<int> helicities, double zs)
   // Check for extra phase from unnatural decays
   if (naturality == -1)
   {
-    if (helicities[0] < 0) {g *= -1.;}
     if (lam_f < 0) {g *= -1.;}
   }
 
-  return g * std::real(wigner_d_half(J, lam_i, lam_f, zs));
+  return g;
 };

@@ -47,7 +47,6 @@ Optional command line flags are:
 -c [0:180]    # CM scattering angle in degrees (default: 0)
 -f [string]   # Desired filename of output (default: chi_c1_photoproduction.pdf)
 -integ        # Toggle integrated xsection instead of differential
--compare      # Toggle also evaluating observable for fixed-spin exchange as comparison
 ```
 
 ## AMPLITUDES
@@ -62,7 +61,7 @@ Available amplitudes, so far, are those considered in [1,2]:
 * [Single baryon resonance](./include/amplitudes/baryon_resonance.hpp) (s-channel)
 * [Pomeron exchange amplitude](./include/amplitudes/pomeron_exchange.hpp) (t-channel)
 * [Fixed-spin vector meson exchange](./include/amplitudes/vector_exchange.hpp) (t-channel)
-* [Reggeized meson exchange](./include/amplitudes/reggeon_exchange.hpp) (t-channel)
+* [Reggeized meson exchange](./include/amplitudes/reggeized_meson.hpp) (t-channel)
 
 Incoherent (interfering) sums of amplitudes may be constructed through the [`amplitude_sum`](./include/amplitudes/amplitude_sum.hpp) class.
 

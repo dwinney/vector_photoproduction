@@ -8,12 +8,6 @@
 #ifndef _AXIAL_
 #define _AXIAL_
 
-#include <string>
-#include <vector>
-#include <iostream>
-
-#include <iomanip>
-
 #include "amplitude.hpp"
 #include "gamma_technology.hpp"
 
@@ -52,6 +46,10 @@ public:
     gT = params[2];
   };
 
+  // Calculation of the residues analytically
+  std::complex<double> top_residue(int lam, double t);
+  std::complex<double> bottom_residue(int lamp, double t);
+
   // Assemble the helicity amplitude by contracting the lorentz indices
   std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);
 
@@ -65,10 +63,6 @@ private:
 
   // Couplings to the axial-vector/photon and vector/tensor couplings to nucleon
   double gGam = 0., gpGam = 0., gV = 0., gT = 0.;
-
-  // Calculation of the residues analytically
-  std::complex<double> top_residue(int lam, double t);
-  std::complex<double> bottom_residue(int lamp, double t);
 
   // Four-momentum of the exhange
   std::complex<double> exchange_momenta(int mu, double s, double zs);
