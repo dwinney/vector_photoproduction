@@ -22,7 +22,7 @@ std::complex<double> reggeized_baryon::helicity_amplitude(std::vector<int> helic
 
   // To be implimented in the future
 
-  // Sum over all helicities in the t - channel
+  // Sum over all helicities in the u - channel
   return u_channel_amplitude(helicities, s, zs);
 };
 
@@ -41,7 +41,8 @@ std::complex<double> reggeized_baryon::u_channel_amplitude(std::vector<int> heli
 
   // Product of residues
   std::complex<double> result = xr;
-  result = photo_coupling(lam, u) * hadronic_coupling(lamp, u);
+  result  = photo_coupling(lam, u);
+  result *= hadronic_coupling(lamp, u);
 
   // Angular momentum barrier factor
   auto pq = [&](double u)
@@ -50,14 +51,14 @@ std::complex<double> reggeized_baryon::u_channel_amplitude(std::vector<int> heli
     std::complex<double> p = Kallen(xr * u, xr * kinematics->mVec2, xr * mPro2) / sqrt(4. * xr * u);
     return 4. * p * q;
   };
-  if (M == 3)
+  if (M == 1)
   {
     result /= pq(u);
   }
 
   result *= half_angle_factor(lam, lamp, zu);
   result *= regge_propagator(u);
-  result *= pow(2. * s, alpha->eval(u) - double(M / 2.));
+  result *= pow(2. * s, alpha->eval(u) - double(M)/2.);
   return result;
 };
 
@@ -79,7 +80,7 @@ std::complex<double> reggeized_baryon::half_angle_factor(int lam, int lamp, std:
 // Usual Reggeon Propagator
 std::complex<double> reggeized_baryon::regge_propagator(double u)
 {
-  std::complex<double> alpha_u = alpha->eval(u) - 0.5;
+  std::complex<double> alpha_u = alpha->eval(u);
 
   // the gamma function causes problesm for large t so
   if (std::abs(alpha_u) > 30.)
@@ -90,8 +91,8 @@ std::complex<double> reggeized_baryon::regge_propagator(double u)
   {
     std::complex<double> result;
     result  = - alpha->slope();
-    result *= 0.5 * (double(alpha->signature) + exp(-xi * M_PI * alpha_u));
-    result *= cgamma(1. - alpha_u);
+    result *= 0.5 * (double(alpha->signature) + exp(-xi * M_PI * (alpha_u - 0.5)));
+    result *= cgamma(1. - alpha_u + 0.5);
 
     return result;
   }

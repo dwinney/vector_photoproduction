@@ -17,8 +17,8 @@ class reggeized_baryon : public baryon_resonance
 {
 public:
   //Constructor
-  reggeized_baryon(reaction_kinematics * xkinem, linear_trajectory * traj, std::string exchange = "")
-  : baryon_resonance(xkinem, traj->J_min, traj->signature, traj->M_min2, 0., exchange),
+  reggeized_baryon(reaction_kinematics * xkinem, linear_trajectory * traj, int j, double mass, double width, std::string exchange = "")
+  : baryon_resonance(xkinem, j, traj->signature, mass, width, exchange),
     alpha(traj)
   {};
 
