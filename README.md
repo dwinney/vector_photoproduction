@@ -62,7 +62,7 @@ Available amplitudes, so far, are those considered in [1,2]:
 * [Single baryon resonance](./include/amplitudes/baryon_resonance.hpp) (s-channel)
 * [Pomeron exchange amplitude](./include/amplitudes/pomeron_exchange.hpp) (t-channel)
 * [Fixed-spin vector meson exchange](./include/amplitudes/vector_exchange.hpp) (t-channel)
-* [Reggeized meson exchange](./include/amplitudes/reggeon_exchange.hpp) (t-channel)
+* [Reggeized meson exchange](./include/amplitudes/reggeized_meson.hpp) (t-channel)
 
 Incoherent (interfering) sums of amplitudes may be constructed through the [`amplitude_sum`](./include/amplitudes/amplitude_sum.hpp) class.
 
