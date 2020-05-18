@@ -19,9 +19,9 @@ double reaction_kinematics::t_man(double s, double zs)
 
 double reaction_kinematics::u_man(double s, double zs)
 {
-  double t = t_man(s, zs);
-
-  return 3. * mPro2 + mVec2 - s - t;
+  std::complex<double> kq = initial.momentum("beam", s) * final.momentum("recoil", s);
+  std::complex<double> E1E3 = initial.energy("beam", s) * final.energy("recoil", s);
+  return  mPro2 - 2. * abs(E1E3) + 2. * abs(kq) * zs;
 };
 
 // ---------------------------------------------------------------------------
