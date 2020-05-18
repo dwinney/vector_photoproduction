@@ -55,6 +55,7 @@ public:
 
   // Scattering angle in the t-channel
   std::complex<double> z_t(double s, double zs);
+  std::complex<double> z_u(double s, double zs);
 
   // Cosine of crossing angles
   std::complex<double> crossing_angle(std::string particle, double s, double zs);
