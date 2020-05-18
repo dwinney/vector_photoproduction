@@ -47,7 +47,6 @@ Optional command line flags are:
 -c [0:180]    # CM scattering angle in degrees (default: 0)
 -f [string]   # Desired filename of output (default: chi_c1_photoproduction.pdf)
 -integ        # Toggle integrated xsection instead of differential
--compare      # Toggle also evaluating observable for fixed-spin exchange as comparison
 ```
 
 ## AMPLITUDES
