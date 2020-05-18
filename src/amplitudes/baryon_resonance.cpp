@@ -58,7 +58,7 @@ std::complex<double> baryon_resonance::photo_coupling(int lam_i, double s)
     }
     default:
     {
-      std::cout << "\n baryon_resonance: spin-parity combination for J = " << J << "/2 and P = " << P << "not available.";
+      std::cout << "\nbaryon_resonance: spin-parity combination for J = " << J << "/2 and P = " << P << " not available. ";
       std::cout << "Quiting... \n";
       exit(0);
     }
@@ -78,7 +78,7 @@ std::complex<double> baryon_resonance::photo_coupling(int lam_i, double s)
 
   std::complex<double> result = sqrt(xr * s) * pi_bar / mRes;
   result *= sqrt(xr * 8. * mPro * mRes / kinematics->initial.momentum("beam", s));
-  result *= A_lam;
+  result *= A_lam * sqrt(M_PI * M_ALPHA);
 
   // Extra phase for unnatural decays
   if (naturality == -1)
