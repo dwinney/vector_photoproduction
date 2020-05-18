@@ -77,8 +77,8 @@ std::complex<double> reggeized_meson::half_angle_factor(int lam, int lamp, std::
   std::complex<double> coshalf = sqrt((xr + z_t) / 2.);
 
   std::complex<double> result;
-  result  = pow(sinhalf, double(std::abs(lam - lamp)) / 2.);
-  result *= pow(coshalf, double(std::abs(lam + lamp)) / 2.);
+  result  = pow(sinhalf, double(std::abs(lam - lamp)));
+  result *= pow(coshalf, double(std::abs(lam + lamp)));
 
   return result;
 }
