@@ -37,7 +37,7 @@ function(update_deps_file deps)
     include(${deps_file})
 endfunction(update_deps_file)
 
-# Look for and connect ROOT and Boost
+# Look for and connect ROOT
 find_package(ROOT REQUIRED MathMore)
 if (ROOT_FOUND)
     include_directories(${ROOT_INCLUDE_DIRS})

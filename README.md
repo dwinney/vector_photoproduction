@@ -46,7 +46,7 @@ Optional command line flags are:
 ```bash
 -c [0:180]    # CM scattering angle in degrees (default: 0)
 -n [int]      # Number of points to plot with (default: 100)
--f [string]   # Desired filename of output (default: chi_c1_photoproduction.pdf)
+-f [string]   # Desired filename of output (default: X3872_photoproduction.pdf)
 -integ        # Toggle integrated xsection instead of differential
 ```
 
