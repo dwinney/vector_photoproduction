@@ -18,9 +18,15 @@
 
 #include "jpacGraph1D.hpp"
 
+#include <cstring>
+#include <cmath>
+#include <iostream>
+#include <iomanip>
+
 
 int main( int argc, char** argv )
 {
+  int N = 100;
   double theta = 0.;
   bool integ = false;
   std::string filename = "X3872_photoproduction.pdf";
@@ -28,6 +34,7 @@ int main( int argc, char** argv )
   {
     if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
     if (std::strcmp(argv[i],"-f")==0) filename = argv[i+1];
+    if (std::strcmp(argv[i],"-n")==0) N = atoi(argv[i+1]);
     if (std::strcmp(argv[i],"-integ")==0) integ = true;
   }
 
@@ -46,8 +53,6 @@ int main( int argc, char** argv )
 
   std::vector<amplitude*> exchanges = {&rho, &omega};
   amplitude_sum total(ptr, exchanges);
-
-  int N = 4500; // how many points to plot
 
   // ---------------------------------------------------------------------------
   // You shouldnt need to change anything below this line
@@ -128,11 +133,11 @@ int main( int argc, char** argv )
   }
   else
   {
-    plotter->SetYaxis("#sigma   (nb)", 0., 0.05);
+    plotter->SetYaxis("#sigma   (nb)", 0., .12);
   }
 
   plotter->SetXaxis(ROOT_italics("s") + "  (GeV^{2})", ptr->sth, max);
 
-  plotter->SetLegend(0.6, 0.5);
+  plotter->SetLegend(0.73, 0.3);
   plotter->Plot(filename);
 }
