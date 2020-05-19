@@ -1,6 +1,11 @@
 # vector_photoproduction
-Framework for vector meson photo-production amplitudes off a proton.
+Framework for building amplitudes involving vector meson production via quasi-elastic scattering of a real photon on a nucleon target.
 
+<p align="center">
+  <img width="200" src="./doc/FeynmanDiagram.png">
+</p>
+
+Such processes are of interest at many experiments at JLab and the future EIC. 
 ## EXECUTABLES
 Requires [ROOT](https://root.cern.ch/) (tested with version 6.17) with [*MathMore*](https://root.cern.ch/mathmore-library) libraries installed.
 
@@ -68,6 +73,10 @@ Incoherent (interfering) sums of amplitudes may be constructed through the [`amp
 
 ## PLOTTING
 Plots are automatically created using the JPAC collaboration style guidelines. For more information see the [jpacStyle](https://github.com/dwinney/jpacStyle) library.
+
+<p align="center">
+  <img width="275" src="./doc/JPAClogo.png">
+</p>
 
 ## REFERENCES
 * [1] "Theoretical model of the phi meson photoproduction amplitudes" Lesniak and Szczepaniak [[arXiv:hep-ph/0304007]](https://arxiv.org/abs/hep-ph/0304007)
