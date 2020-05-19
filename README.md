@@ -2,7 +2,7 @@
 Framework for vector meson photo-production amplitudes off a proton.
 
 ## EXECUTABLES
-Requires [ROOT](https://root.cern.ch/) (tested with version 6.17) and [BOOST](https://www.boost.org/) (tested with version 1.73) libraries.
+Requires [ROOT](https://root.cern.ch/) (tested with version 6.17) with [*MathMore*](https://root.cern.ch/mathmore-library) libraries installed.
 
 To build any example script in the `executables` folder, for example `test.cpp`, use:
 
@@ -45,6 +45,7 @@ Prediction for the unpolarized cross-section for exclusive X(3872) photoproducti
 Optional command line flags are:
 ```bash
 -c [0:180]    # CM scattering angle in degrees (default: 0)
+-n [int]      # Number of points to plot with (default: 100)
 -f [string]   # Desired filename of output (default: chi_c1_photoproduction.pdf)
 -integ        # Toggle integrated xsection instead of differential
 ```

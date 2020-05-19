@@ -38,19 +38,12 @@ function(update_deps_file deps)
 endfunction(update_deps_file)
 
 # Look for and connect ROOT and Boost
-find_package(ROOT REQUIRED)
+find_package(ROOT REQUIRED MathMore)
 if (ROOT_FOUND)
     include_directories(${ROOT_INCLUDE_DIRS})
     link_directories(${ROOT_LIBRARY_DIRS})
 else()
     message(SEND_ERROR "Root not found!")
-endif()
-
-find_package(Boost REQUIRED)
-if (Boost_FOUND)
-    include_directories(${BOOST_INCLUDE_DIRS})
-else()
-    message(SEND_ERROR "BOOST not found!")
 endif()
 
 # BUILD LIBRARY FROM LOCAL FiLES
