@@ -21,7 +21,9 @@
 
 #include "reaction_kinematics.hpp"
 
-#include <boost/math/quadrature/gauss_kronrod.hpp>
+#include "Math/GSLIntegrator.h"
+#include "Math/IntegrationTypes.h"
+#include "Math/Functor.h"
 
 #include <string>
 

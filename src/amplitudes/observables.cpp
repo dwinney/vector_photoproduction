@@ -42,10 +42,11 @@ double amplitude::integrated_xsection(double s)
     return differential_xsection(s, zs) * jacobian;
   };
 
-  double result;
-  result = boost::math::quadrature::gauss_kronrod<double, 15>::integrate(F, -1, 1, 0, 1.E-9, NULL);
+  ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE);
+  ROOT::Math::Functor1D wF(F);
+  ig.SetFunction(wF);
 
-  return result;
+  return ig.Integral(-1,1);
 };
 
 // ---------------------------------------------------------------------------
