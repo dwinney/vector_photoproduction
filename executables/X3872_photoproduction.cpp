@@ -49,7 +49,7 @@ int main( int argc, char** argv )
   rho.set_params({3.81E-3, 2.4, 14.6});
 
   reggeized_meson omega(ptr, &alpha, "#omega");
-  omega.set_params({-9.51E-3, 16, 0.});
+  omega.set_params({9.51E-3, 16, 0.});
 
   std::vector<amplitude*> exchanges = {&rho, &omega};
   amplitude_sum total(ptr, exchanges);
@@ -133,11 +133,11 @@ int main( int argc, char** argv )
   }
   else
   {
-    plotter->SetYaxis("#sigma   (nb)", 0., .12);
+    plotter->SetYaxis("#sigma   (nb)", 0., .15);
   }
 
   plotter->SetXaxis(ROOT_italics("s") + "  (GeV^{2})", ptr->sth, max);
 
-  plotter->SetLegend(0.73, 0.3);
+  plotter->SetLegend(0.73, 0.2);
   plotter->Plot(filename);
 }
