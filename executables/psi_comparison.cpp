@@ -81,8 +81,8 @@ int main( int argc, char** argv )
   for (int i = 1; i <= N; i++)
   {
     double si = ptr2s->sth + EPS + double(i) * (30. - ptr2s->sth - EPS) / N;
-    double dxsi = M_PI * M_ALPHA * pomeron_2s.differential_xsection(si, zs);
-    double ratioi = dxsi / (pomeron_1s.differential_xsection(si, zs) / 4.);
+    double dxsi = M_PI * M_ALPHA * pomeron_2s.differential_xsection(si, zs) / 4.;
+    double ratioi = dxsi / (M_PI * M_ALPHA * pomeron_1s.differential_xsection(si, zs) / 4.);
 
     //Convert center of mass energy to lab frame energy
     if (LAB == true)
@@ -95,7 +95,7 @@ int main( int argc, char** argv )
     }
 
 
-    dxs.push_back(dxsi / 4.); // divide by 4 to average over final state helicities
+    dxs.push_back(dxsi); // divide by 4 to average over final state helicities
     ratio.push_back(ratioi);
   }
 
@@ -105,7 +105,7 @@ int main( int argc, char** argv )
   plotter->ClearData();
   plotter->AddEntry(s, ratio,"");
   plotter->SetLegend(false);
-  plotter->SetYaxis(ROOT_italics("d#sigma") + "(2S)" + ROOT_italics(" / d#sigma") + "(1S)", 0., 0.0016);
+  plotter->SetYaxis(ROOT_italics("d#sigma") + "(2S)" + ROOT_italics(" / d#sigma") + "(1S)", 0., 0.018);
   plotter->Plot("psi_dxs_ratio.pdf");
 
   // Clean up pointers
