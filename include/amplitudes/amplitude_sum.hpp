@@ -24,13 +24,13 @@ private:
 
 public:
   // Empty constructor
-  amplitude_sum(reaction_kinematics * xkinem)
-  : amplitude(xkinem)
+  amplitude_sum(reaction_kinematics * xkinem, std::string identifer = "")
+  : amplitude(xkinem, identifer)
   {};
 
   // Constructor with a vector already set up
-  amplitude_sum(reaction_kinematics * xkinem, std::vector<amplitude*> vec)
-  : amplitude(xkinem), amps(vec)
+  amplitude_sum(reaction_kinematics * xkinem, std::vector<amplitude*> vec, std::string identifer = "")
+  : amplitude(xkinem, identifer), amps(vec)
   {};
 
   // Add a new amplitude to the vector

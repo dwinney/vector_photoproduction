@@ -98,8 +98,8 @@ int main( int argc, char** argv )
   exchanges.push_back(&jpsi);
 
   // The total amplitude with all the above exchanges
-  amplitude_sum total(ptr, exchanges);
-
+  amplitude_sum total(ptr, exchanges, "Sum");
+  exchanges.push_back(&total);
   int N = 50; // how many points to plot
 
 // ---------------------------------------------------------------------------
@@ -109,29 +109,6 @@ double zs = cos(theta * deg2rad);
 
 // ---------------------------------------------------------------------------
 // Print the total cross-section
-std::vector<double> s, dxs;
-for (int i = 0; i <= N; i++)
-{
-  double si = (ptr->sth + EPS) + double(i) * (100. - ptr->sth) / N;
-
-  double dxsi;
-  if (INTEG == false)
-  {
-    dxsi = total.differential_xsection(si, zs);
-  }
-  else
-  {
-    dxsi = total.integrated_xsection(si);
-  }
-
-  s.push_back(si);
-  dxs.push_back(dxsi);
-}
-
-plotter->AddEntry(s, dxs, "Sum");
-
-// ---------------------------------------------------------------------------
-// Print contributions from each exchange seperately
 for (int n = 0; n < exchanges.size(); n++)
 {
   std::vector<double> s, dxs;

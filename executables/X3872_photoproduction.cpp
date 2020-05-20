@@ -51,8 +51,9 @@ int main( int argc, char** argv )
   reggeized_meson omega(ptr, &alpha, "#omega");
   omega.set_params({9.51E-3, 16, 0.});
 
-  std::vector<amplitude*> exchanges = {&rho, &omega};
-  amplitude_sum total(ptr, exchanges);
+  std::vector<amplitude*> exchanges = {&omega, &rho};
+  amplitude_sum total(ptr, exchanges, "Sum");
+  exchanges.push_back(&total);
 
   // ---------------------------------------------------------------------------
   // You shouldnt need to change anything below this line
@@ -71,30 +72,8 @@ int main( int argc, char** argv )
     max = 1.E4;
   }
 
-  std::vector<double> s, dxs;
-  for (int i = 0; i < N; i++)
-  {
-    double si = (ptr->sth + 100.*EPS) + double(i) * (max - (ptr->sth + EPS)) / N;
-    s.push_back(si);
-
-    // Divide by 4 to average over helicities in the final state
-    double xsi;
-    if (integ == false)
-    {
-      xsi   = total.differential_xsection(si, zs) / 4.;
-      dxs.push_back(xsi);
-    }
-    else
-    {
-      xsi   = total.integrated_xsection(si) / 4.;
-      dxs.push_back(xsi);
-    }
-  }
-
-  // Initialize plotting object
+  // Plotter objects
   jpacGraph1D* plotter = new jpacGraph1D();
-
-  plotter->AddEntry(s, dxs, "Sum");
 
   // ---------------------------------------------------------------------------
   for (int n = 0; n < exchanges.size(); n++)
