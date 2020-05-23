@@ -61,6 +61,7 @@ The main object of interest is the abstract [`amplitude`](./include/amplitudes/a
 * Differential cross section ( dσ / dt )
 * Integrated total cross section ( σ )
 * Polarization asymmetries ( A_LL and K_LL )
+* Vector meson spin density matrix elements ( rho_λ,λ' )
 
 Available amplitudes, so far, are those considered in [1,2]:
 
