@@ -13,13 +13,13 @@ std::complex<double> baryon_resonance::helicity_amplitude(std::vector<int> helic
   int lam_i = 2 * helicities[0] - helicities[1];
   int lam_f = 2 * helicities[2] - helicities[3];
 
-  std::complex<double> residue;
+  std::complex<double> residue = 1.;
   residue  = photo_coupling(lam_i, s);
   residue *= hadronic_coupling(lam_f, s);
   residue *= threshold_factor(s, 1.5);
-  residue *= wigner_d_half(J, lam_f, lam_i, zs);
 
-  residue /= (s - mRes*mRes - xi * mRes * gamRes);
+  residue *= wigner_d_half(J, lam_f, lam_i, zs);
+  residue /= (s + xi * mRes * gamRes - mRes*mRes);
 
   return residue;
 };
@@ -50,9 +50,9 @@ std::complex<double> baryon_resonance::photo_coupling(int lam_i, double s)
     }
     case 5:
     {
-      if (P == -1)
+      if (P == 1)
         {l_min = 1; P_t = 3./5.;}
-      else if (P == 1)
+      else if (P == -1)
         {l_min = 2; P_t = 1./3.;}
       break;
     }
@@ -66,25 +66,19 @@ std::complex<double> baryon_resonance::photo_coupling(int lam_i, double s)
 
   // A_1/2 or A_3/2 depending on ratio R_photo
   double a;
-  (lam_i == 1) ? (a = R_photo) : (a = sqrt(1. - R_photo * R_photo));
+  (std::abs(lam_i) == 1) ? (a = R_photo) : (a = sqrt(1. - R_photo * R_photo));
 
   // Electromagnetic decay width given by VMD assumption
-  double emGamma = (xBR * gamRes) * pow(fJpsi / mJpsi, 2.);
-  emGamma *= pow(pi_bar / pf_bar, double(2*l_min +1)) * P_t;
+  std::complex<double> emGamma = (xBR * gamRes) * pow(fJpsi / mJpsi, 2.);
+  emGamma *= pow(xr * pi_bar / pf_bar, double(2 * l_min + 1)) * P_t;
 
   // Photo-coupling overall size of |A_1/2|^2 + |A_3/2|^2 is restriced from VMD
-  double A_lam = emGamma * M_PI * mRes * double(J + 1) / (2. * mPro * pi_bar * pi_bar);
-  A_lam = sqrt(A_lam) * a;
+  std::complex<double> A_lam = emGamma * M_PI * mRes * double(J + 1) / (2. * mPro * pi_bar * pi_bar);
+  A_lam = sqrt(xr * A_lam);
 
   std::complex<double> result = sqrt(xr * s) * pi_bar / mRes;
   result *= sqrt(xr * 8. * mPro * mRes / kinematics->initial.momentum("beam", s));
-  result *= A_lam * sqrt(M_PI * M_ALPHA);
-
-  // Extra phase for unnatural decays
-  if (naturality == -1)
-  {
-    if (lam_i < 0) {result *= -1.;}
-  }
+  result *= A_lam * a;
 
   return result;
 };
@@ -96,14 +90,8 @@ std::complex<double> baryon_resonance::hadronic_coupling(int lam_f, double s)
   std::complex<double> g;
   g  = 8. * M_PI * xBR * gamRes;
   g *= double(J + 1) / 6.;
-  g *= mRes * mRes / pf_bar;
-  g = sqrt(g);
-
-  // Check for extra phase from unnatural decays
-  if (naturality == -1)
-  {
-    if (lam_f < 0) {g *= -1.;}
-  }
+  g *= mRes * mRes / kinematics->final.momentum(kinematics->vector_particle, s);
+  g = sqrt(xr * g);
 
   return g;
 };

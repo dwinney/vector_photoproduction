@@ -93,7 +93,11 @@ std::complex<double> wigner_d_half(int j, int lam1, int lam2, std::complex<doubl
       {
         switch (lam2)
         {
-          case 3: result = pow((xr + z) / 2., 1.5); break;
+          case 3:
+          {
+             result = pow((xr + z) / 2., 1.5);
+             break;
+          }
           case 1:
           {
             result = - sqrt(3.) * (xr + z) / 2.;
@@ -104,7 +108,11 @@ std::complex<double> wigner_d_half(int j, int lam1, int lam2, std::complex<doubl
             result = sqrt(3.) * (xr - z) / 2.;
             result *= sqrt((xr + z) / 2.); break;
           }
-          case -3: result = - pow((xr - z) / 2., 1.5); break;
+          case -3:
+          {
+            result = - pow((xr - z) / 2., 1.5);
+            break;
+          }
           default: wigner_error(j, lam1, lam2, true);
         }
       }

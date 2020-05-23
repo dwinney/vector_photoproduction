@@ -65,7 +65,7 @@ std::complex<double> pomeron_exchange::regge_factor(double s, double zs)
   {
     return 0.;
   }
-  
+
   double t = kinematics->t_man(s, zs);
   double t_min = kinematics->t_man(s, 1.);
 
