@@ -12,11 +12,12 @@
 // ---------------------------------------------------------------------------
 
 #include "constants.hpp"
-#include "utilities.hpp"
 #include "reaction_kinematics.hpp"
 #include "amplitudes/baryon_resonance.hpp"
 #include "amplitudes/pomeron_exchange.hpp"
 #include "amplitudes/amplitude_sum.hpp"
+
+#include "jpacGraph1D.hpp"
 
 #include <cstring>
 #include <iostream>
@@ -41,11 +42,11 @@ int main( int argc, char** argv )
 
   // Two different pentaquarks
   // masses and widths from 2015 LHCb paper [2]
-  baryon_resonance P_c1(ptr, 3, -1, 4.45, 0.4, "P_{c}(4450)");
-  baryon_resonance P_c2(ptr, 5, +1, 4.38, 0.1, "P_{c}(4380)");
+  baryon_resonance P_c1(ptr, 3, -1, 4.45, 0.040, "P_{c}(4450)");
+  baryon_resonance P_c2(ptr, 5, +1, 4.38, 0.205, "P_{c}(4380)");
 
   // 2% branching fraction and equal photocouplings for both
-  std::vector<double> params = {0.02, .7071};
+  std::vector<double> params = {0.01, .7071};
   P_c1.set_params(params);
   P_c2.set_params(params);
 
@@ -63,24 +64,27 @@ int main( int argc, char** argv )
   pomeron_exchange background(ptr, &alpha);
 
   // normalization and t-slope
-  std::vector<double> back_params = {0.379, 0.12};
+  std::vector<double> back_params = {0.367, 0.12};
   background.set_params(back_params);
 
   // Add to the sum
   sum.add_amplitude(&background);
 
-  int N = 100; // how many points to plot
+  int N = 200; // how many points to plot
 
 // ---------------------------------------------------------------------------
 // You shouldnt need to change anything below this line
 // ---------------------------------------------------------------------------
+
+// Plotter objects
+jpacGraph1D* plotter = new jpacGraph1D();
 
 // ---------------------------------------------------------------------------
 // Print .dat files of differential cross section and plot it to a .pdf
 
 double zs = cos(theta * deg2rad);
 std::vector<double> s, kll, all;
-for (int i = 0; i < N; i++)
+for (int i = 1; i < N; i++)
 {
   double si = (ptr->sth + 10.*EPS) + double(i) * (30. - (ptr->sth + 10.*EPS)) / N;
   s.push_back((si/mPro - mPro)/2.);
@@ -92,14 +96,14 @@ for (int i = 0; i < N; i++)
   all.push_back(alli);
 }
 
-// Print results
-std::cout << "\n";
-quick_print(s, kll, "pentaquark_KLL");
-quick_plot(s, kll, "pentaquark_KLL");
+plotter->AddEntry(s, kll, "K_{LL}");
+plotter->AddEntry(s, all, "A_{LL}");
 
-quick_print(s, all, "pentaquark_ALL");
-quick_plot(s, all, "pentaquark_ALL");
-std::cout << "\n";
+plotter->SetLegend(0.7, 0.2);
+plotter->SetXaxis("E_{#gamma}  (GeV)", 8.5, 12.);
+plotter->SetYaxis("", -0.1, .1);
+
+plotter->Plot("pentaquark.pdf");
 
 return 1.;
 };
