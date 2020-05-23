@@ -62,6 +62,9 @@ public:
   // Spin asymmetries
   double K_LL(double s, double zs);
   double A_LL(double s, double zs);
+
+  // Spin density matrix elements
+  std::complex<double> SDME(int lam, int lamp, double s, double zs);
 };
 
 #endif
