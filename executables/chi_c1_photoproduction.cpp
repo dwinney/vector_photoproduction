@@ -24,8 +24,6 @@
 
 int main( int argc, char** argv )
 {
-  std::cout << "n";
-
   // Default values
   double theta = 0.;
   bool INTEG = false;
