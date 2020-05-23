@@ -6,6 +6,28 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
+#ifndef _DEBUG_
+#define _DEBUG_
+
+#include <iostream>
+#include <iomanip>
+
+// little function for printing to screen instead of having to copy this line all the time
+template<typename T>
+void debug(T x)
+{
+  std::cout << x << std::endl;
+};
+
+template<typename T, typename F>
+void debug(T x, F y)
+{
+  std::cout << std::left << std::setw(15) << x << std::endl;
+  std::cout << std::left << std::setw(15) << y << std::endl;
+};
+
+#endif
+
 #ifndef CONSTANT
 #define CONSTANT
 
