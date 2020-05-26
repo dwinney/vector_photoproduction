@@ -22,7 +22,7 @@ void debug(T x)
 template<typename T, typename F>
 void debug(T x, F y)
 {
-  std::cout << std::left << std::setw(15) << x << std::endl;
+  std::cout << std::left << std::setw(15) << x;
   std::cout << std::left << std::setw(15) << y << std::endl;
 };
 
