@@ -41,7 +41,24 @@ public:
   // Assemble the helicity amplitude by contracting the spinor indices
   std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);
 
+  // Should be exactly u_man(s, zs);
+  double exchange_mass(double s, double zs);
+
+  // debugging options to make either the photon or vector into scalars
+  void set_debug(int i)
+  {
+    switch (i)
+    {
+      case 3: ScTOP = true; ScBOT = true; break;
+      case 2: ScTOP = true; break;
+      case 1: ScBOT = true; break;
+    }
+  }
+
 private:
+  // TESTING PARAMS
+  bool ScTOP = false, ScBOT = false;
+
   // Exchange nucleon mass
   double mEx2;
 
@@ -49,6 +66,9 @@ private:
   double gGam = 0., gVec = 0.;
 
   // Four-momentum of the exhange (u - channel)
+  std::complex<double> exchange_momentum(int mu, double s, double zs);
+
+  // Slashed momentumn
   std::complex<double> slashed_exchange_momentum(int i, int j, double s, double zs);
 
   // Slashed polarization vectors
