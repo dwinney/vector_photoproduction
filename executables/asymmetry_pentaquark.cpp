@@ -132,7 +132,7 @@ streamObj << W;
 std::string header;
 (LAB == true) ? (header = "E_{#gamma} = ") : (header = "W = ");
 plotter->SetLegend(0.18, 0.7, header + streamObj.str() + " GeV");
-plotter->SetXaxis("#theta  (GeV)", 0., 90.);
+plotter->SetXaxis("#theta", 0., 90.);
 plotter->SetYaxis("#Sigma_{4#pi}", y[0], y[1]);
 
 plotter->Plot(filename.c_str());
