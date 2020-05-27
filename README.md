@@ -22,6 +22,16 @@ make test
 Sensitivity study of double polarized observables to the LHCb pentaquarks in Hall A at JLab.
 Reproduces the results in [2]. See [JPAC page on γp→J/ψp](http://cgl.soic.indiana.edu/jpac/polarizedPenta.php).
 
+#### [asymmetry_pentaquark](./executables/asymmetry_pentaquark.cpp)
+Sensitivity study of the beam asymmetry to the LHCb pentaquarks at GlueX at JLab.
+
+Optional command line flags are:
+```bash
+-e [double]   # Fixed photon lab energy in GeV (default: 9 GeV)
+-f [string]   # Desired filename of output (default: 5q_beam_asymmetry.pdf)
+```
+Outputs beam asymmetry for each signal and background component as well as the incoherent sum as a function of CM angle.
+
 #### [psi_comparison](./executables/psi_comparison.cpp)
 Comparison of the unpolarized cross sections for the photoproduction of the Psi(1S) and Psi(2S) states near threshold in the GlueX kinematics.
 
