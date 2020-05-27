@@ -66,19 +66,23 @@ Optional command line flags are:
 ```
 
 ## AMPLITUDES
-The main object of interest is the abstract [`amplitude`](./include/amplitudes/amplitude.hpp) class. This allows you to build observables from helicity amplitudes:
+The main object of interest is the abstract [`amplitude`](./include/amplitudes/amplitude.hpp) class. This allows you to build [observables](./src/amplitudes/observables.cpp) from helicity amplitudes:
 
 * Differential cross section ( dσ / dt )
 * Integrated total cross section ( σ )
 * Polarization asymmetries ( A_LL and K_LL )
-* Vector meson spin density matrix elements ( ρ_λ,λ' )
+* Spin density matrix elements ( ρ^α_λ,λ' )
+* Integrated beam asymmetry ( Σ_4π )
+* Parity asymmetry ( P_σ )
 
-Available amplitudes, so far, are those considered in [1,2]:
+Available amplitudes, so far, include:
 
 * [Single baryon resonance](./include/amplitudes/baryon_resonance.hpp) (s-channel)
-* [Pomeron exchange amplitude](./include/amplitudes/pomeron_exchange.hpp) (t-channel)
-* [Fixed-spin vector meson exchange](./include/amplitudes/vector_exchange.hpp) (t-channel)
+* [Pomeron exchange](./include/amplitudes/pomeron_exchange.hpp) (t-channel)
+* [(fixed-spin) Vector meson exchange](./include/amplitudes/vector_exchange.hpp) (t-channel)
 * [Reggeized meson exchange](./include/amplitudes/reggeized_meson.hpp) (t-channel)
+* [(fixed-spin) Dirac fermion exchange](./include/amplitudes/fermion_exchange.hpp) (u-channel)
+* [Reggezized baryon exchange](./include/amplitudes/reggeized_baryon.hpp) (u-channel)
 
 Incoherent (interfering) sums of amplitudes may be constructed through the [`amplitude_sum`](./include/amplitudes/amplitude_sum.hpp) class.
 
