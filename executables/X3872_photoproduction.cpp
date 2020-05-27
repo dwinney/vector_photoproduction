@@ -28,12 +28,14 @@ int main( int argc, char** argv )
 {
   int N = 100;
   double theta = 0.;
+  double y[2] = {0., 0.15};
   bool integ = false;
   std::string filename = "X3872_photoproduction.pdf";
   for (int i = 0; i < argc; i++)
   {
     if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
     if (std::strcmp(argv[i],"-f")==0) filename = argv[i+1];
+    if (std::strcmp(argv[i],"-y")==0) y_range(argv[i+1], y);
     if (std::strcmp(argv[i],"-n")==0) N = atoi(argv[i+1]);
     if (std::strcmp(argv[i],"-integ")==0) integ = true;
   }
@@ -63,14 +65,7 @@ int main( int argc, char** argv )
   // Print contributions from each exchange seperately
   double zs = cos(theta * deg2rad);
   double max;
-  if (integ == true)
-  {
-    max = 200.;
-  }
-  else
-  {
-    max = 1.E4;
-  }
+  (integ == true) ? (max = 200.) : (max = 1.E4);
 
   // Plotter objects
   jpacGraph1D* plotter = new jpacGraph1D();
@@ -107,12 +102,12 @@ int main( int argc, char** argv )
  // Tweak the axes
   if (integ == false)
   {
-    plotter->SetYaxis(ROOT_italics("d#sigma/dt") + "  (nb GeV^{-2})", 0., 2.0);
+    plotter->SetYaxis(ROOT_italics("d#sigma/dt") + "  (nb GeV^{-2})", y[0], y[1]);
     plotter->SetXlogscale(true);
   }
   else
   {
-    plotter->SetYaxis("#sigma   (nb)", 0., .15);
+    plotter->SetYaxis("#sigma   (nb)", y[0], y[1]);
   }
 
   plotter->SetXaxis(ROOT_italics("s") + "  (GeV^{2})", ptr->sth, max);

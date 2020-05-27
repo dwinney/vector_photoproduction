@@ -40,6 +40,12 @@ cmake ..
 make test
 ````
 
+All executables have the following two optional flags for customizing the plotted output
+```bash
+-f string             # Desired filename of output (default: executable_name.pdf)
+-y [double:double]    # Manually set the y-range for plotting
+```
+
 #### [polarized_pentaquark](./executables/polarized_pentaquark.cpp)
 Sensitivity study of double polarized observables to the LHCb pentaquarks in Hall A at JLab.
 Reproduces the results in [2]. See [JPAC page on γp→J/ψp](http://cgl.soic.indiana.edu/jpac/polarizedPenta.php).
@@ -49,19 +55,18 @@ Sensitivity study of the beam asymmetry to the LHCb pentaquarks at GlueX at JLab
 
 Optional command line flags are:
 ```bash
--e [double]   # Fixed CM energy in GeV (default: 4.45 GeV)
+-e double     # Fixed CM energy in GeV (default: 4.45 GeV)
 -lab          # Toggle whether input energy value (see above) is in lab frame (default: false)
--f [string]   # Desired filename of output (default: 5q_beam_asymmetry.pdf)
 -10q          # Toggle plotting two P_c states at the same BR (default: false)
 ```
-Outputs beam asymmetry for each signal and background component as well as the incoherent sum as a function of CM angle.
+Outputs beam asymmetry for single P_c(4450) state at fixed energy as a function of theta or if `-10q` is passed, plots individual signal / background components and incoherent sum as a function of CM angle for P_c(4450) and P_c(4380) at equal BR. 
 
 #### [psi_comparison](./executables/psi_comparison.cpp)
 Comparison of the unpolarized cross sections for the photoproduction of the Psi(1S) and Psi(2S) states near threshold in the GlueX kinematics.
 
 Optional command line flags are:
 ```bash
--c [0:180]    # CM scattering angle in degrees (default: 0)  
+-c double    # CM scattering angle in degrees (default: 0)  
 -lab          # Toggle plotting with lab photon energy on x-axis (default: false)
 ```
 Outputs PSI(2S) unpolarized cross-section and ratio of (2S)/(1S) plotted in pdfs.
@@ -71,8 +76,7 @@ Analytical model for the unpolarized cross section near threshold of axial vecto
 
 Optional command line flags are:
 ```bash
--c [0:180]    # CM scattering angle in degrees (default: 0)
--f [string]   # Desired filename of output (default: chi_c1_photoproduction.pdf)
+-c double    # CM scattering angle in degrees (default: 0)
 -integ        # Toggle integrated xsection instead of differential
 -feyn         # Toggle evaluating amplitude with covariant rules (included for debugging)
 ```
@@ -83,9 +87,8 @@ Prediction for the unpolarized cross-section for exclusive X(3872) photoproducti
 
 Optional command line flags are:
 ```bash
--c [0:180]    # CM scattering angle in degrees (default: 0)
--n [int]      # Number of points to plot with (default: 100)
--f [string]   # Desired filename of output (default: X3872_photoproduction.pdf)
+-c double    # CM scattering angle in degrees (default: 0)
+-n int      # Number of points to plot with (default: 100)
 -integ        # Toggle integrated xsection instead of differential
 ```
 

@@ -28,39 +28,24 @@ int main( int argc, char** argv )
   double theta = 0.;
   bool INTEG = false;
   bool FEYN = false;
-  double upper_limit = 7.;
+  double y[2] = {0., 7.};
   std::string filename = "chi_c1_photoproduction.pdf";
-  std::string ylabel = ROOT_italics("d#sigma/dt") + "  (" + ROOT_italics("nB") + " / GeV^{2})";
+  std::string ylabel = ROOT_italics("d#sigma/dt") + "  (" + ROOT_italics("nb") + " / GeV^{2})";
   // ---------------------------------------------------------------------------
   // Parse command line arguments
   for (int i = 0; i < argc; i++)
   {
     // File name of output
-    if (std::strcmp(argv[i],"-f")==0)
-    {
-      filename = argv[i+1];
-    }
-    // Scattering angle in CoM
-    if (std::strcmp(argv[i],"-c")==0)
-    {
-      theta = atof(argv[i+1]);
-      if (std::abs(theta) < 90.)
-      {
-        upper_limit = .5;
-      }
-    }
-    // Plot ixs or dxs
+    if (std::strcmp(argv[i],"-f")==0) filename = argv[i+1];
+    if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
+    if (std::strcmp(argv[i],"-y")==0) y_range(argv[i+1], y);
     if (std::strcmp(argv[i],"-integ")==0)
     {
        INTEG = true;
-       upper_limit = 13.;
-       ylabel = ROOT_italics("#sigma") + "  (" + ROOT_italics("nB") + ")";
+       ylabel = ROOT_italics("#sigma") + "  (" + ROOT_italics("nb") + ")";
     }
     // Use feynman rules or analytic expressions
-    if (std::strcmp(argv[i],"-feyn")==0)
-    {
-      FEYN = true;
-    }
+    if (std::strcmp(argv[i],"-feyn")==0) FEYN = true;
   }
 
   // ---------------------------------------------------------------------------
@@ -69,7 +54,7 @@ int main( int argc, char** argv )
   plotter->SetXaxis(ROOT_italics("s") + "  (GeV^{2})", 19.5, 100.);
 
   // To change the range of the Y-axis or the position of the Legend change the arguments here
-  plotter->SetYaxis(ylabel , 0., upper_limit);
+  plotter->SetYaxis(ylabel , y[0], y[1]);
   plotter->SetLegend(0.2, .75);
 
   // Set up kinematics for the chi_c1

@@ -26,9 +26,13 @@
 int main( int argc, char** argv )
 {
   double theta = 0.;
+  double y[2] = {-0.1, 0.1};
+  std::string filename = "polarized_pentaquark.pdf";
   for (int i = 0; i < argc; i++)
   {
     if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
+    if (std::strcmp(argv[i],"-f")==0) filename = argv[i+1];
+    if (std::strcmp(argv[i],"-y")==0) y_range(argv[i+1], y);
   }
 
   // Set up Kinematics
@@ -101,9 +105,9 @@ plotter->AddEntry(s, all, "A_{LL}");
 
 plotter->SetLegend(0.7, 0.2);
 plotter->SetXaxis("E_{#gamma}  (GeV)", 8.5, 12.);
-plotter->SetYaxis("", -0.1, .1);
+plotter->SetYaxis("", y[0], y[1]);
 
-plotter->Plot("pentaquark.pdf");
+plotter->Plot(filename);
 
 return 1.;
 };
