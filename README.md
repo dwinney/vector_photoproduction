@@ -49,8 +49,10 @@ Sensitivity study of the beam asymmetry to the LHCb pentaquarks at GlueX at JLab
 
 Optional command line flags are:
 ```bash
--e [double]   # Fixed photon lab energy in GeV (default: 9 GeV)
+-e [double]   # Fixed CM energy in GeV (default: 4.45 GeV)
+-lab          # Toggle whether input energy value (see above) is in lab frame (default: false)
 -f [string]   # Desired filename of output (default: 5q_beam_asymmetry.pdf)
+-10q          # Toggle plotting two P_c states at the same BR (default: false)
 ```
 Outputs beam asymmetry for each signal and background component as well as the incoherent sum as a function of CM angle.
 
