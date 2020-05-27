@@ -73,7 +73,7 @@ double amplitude::K_LL(double s, double zs)
 }
 
 // ---------------------------------------------------------------------------
-// Polarizatiopn asymmetry between beam and target proton
+// Polarization asymmetry between beam and target proton
 double amplitude::A_LL(double s, double zs)
 {
   double sigmapp = 0., sigmapm = 0.;
@@ -96,9 +96,15 @@ double amplitude::A_LL(double s, double zs)
 }
 
 // ---------------------------------------------------------------------------
-// Polarizatiopn asymmetry between beam and target proton
-std::complex<double> amplitude::SDME(int lam, int lamp, double s, double zs)
+// Photon spin-density matrix elements
+std::complex<double> amplitude::SDME(int alpha, int lam, int lamp, double s, double zs)
 {
+  if (alpha < 0 || alpha > 2 || std::abs(lam) > 1 || std::abs(lamp) > 1)
+  {
+    std::cout << "\nError! Invalid parameter passed to SDME. Quitting...\n";
+    exit(1);
+  };
+
   // Phase and whether to conjugate at the end
   bool CONJ = false;
   double phase = 1.;
@@ -132,11 +138,13 @@ std::complex<double> amplitude::SDME(int lam, int lamp, double s, double zs)
 
   // These are the indexes of the amplitudes in reaction_kinematics that have
   // lambda_V = +1
-  std::vector<int> iters = {0, 1, 6, 7, 12, 13, 18, 19};
+  std::vector<int> pos_iters = {0, 1, 6, 7, 12, 13, 18, 19};
+  std::vector<int> neg_iters = {12, 13, 18, 19, 0, 1, 6, 7};
 
   // j and k filter the right helicity combinations for 00, 1-1, 10, 11
   int j, k;
   (lam == 0) ? (k = 2) : (k = 0);
+
   switch (lamp)
   {
     case -1: { j = 4; break; }
@@ -144,7 +152,7 @@ std::complex<double> amplitude::SDME(int lam, int lamp, double s, double zs)
     case 1:  { j = 0; break; }
     default:
     {
-     std::cout << "\nSDME: Invalid parameter. J/Psi helicity projection alpha = 0 or 1.";
+     std::cout << "\nSDME: Invalid parameter. J/Psi helicity projection lamp = 0 or 1.";
      std::cout << " Quitting... \n";
      exit(1);
     }
@@ -152,11 +160,17 @@ std::complex<double> amplitude::SDME(int lam, int lamp, double s, double zs)
 
   // Sum over the appropriate amplitude combinations
   std::complex<double> result = 0.;
-  for (int i = 0; i < iters.size(); i++)
+  for (int i = 0; i < 8; i++)
   {
+    int index;
+    (alpha == 0) ? (index = pos_iters[i]) : (index = neg_iters[i]);
+
     std::complex<double> amp_i, amp_j;
-    amp_i = helicity_amplitude(kinematics->helicities[iters[i] + k], s, zs);
-    amp_j = helicity_amplitude(kinematics->helicities[iters[i] + j], s, zs);
+    amp_i = helicity_amplitude(kinematics->helicities[index + k], s, zs);
+    amp_j = helicity_amplitude(kinematics->helicities[pos_iters[i] + j], s, zs);
+    
+    (alpha == 2) ? (amp_j *= xi * double(kinematics->helicities[pos_iters[i] + j][0])) : (amp_j *= xr);
+
     result += real(amp_i * conj(amp_j));
   }
 
@@ -169,4 +183,24 @@ std::complex<double> amplitude::SDME(int lam, int lamp, double s, double zs)
   result *= phase;
 
   return result;
+};
+
+// ---------------------------------------------------------------------------
+// Integrated beam asymmetry Sigma_4pi
+double amplitude::beam_asymmetry(double s, double zs)
+{
+  double rho100 = real(SDME(1, 0, 0, s, zs));
+  double rho111 = real(SDME(1, 1, 1, s, zs));
+
+  return - rho100 - 2. * rho111;
+};
+
+// ---------------------------------------------------------------------------
+// Parity asymmetry P_sigma
+double amplitude::parity_asymmetry(double s, double zs)
+{
+  double rho100 = real(SDME(1, 0, 0, s, zs));
+  double rho11m1 = real(SDME(1, 1, -1, s, zs));
+
+  return 2. * rho11m1 - rho100;
 };
