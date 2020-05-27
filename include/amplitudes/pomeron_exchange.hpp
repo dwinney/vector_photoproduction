@@ -30,8 +30,8 @@ class pomeron_exchange : public amplitude
 {
 public:
   // Constructor
-  pomeron_exchange(reaction_kinematics * xkinem, regge_trajectory * alpha)
-  : amplitude(xkinem), pomeron_traj(alpha)
+  pomeron_exchange(reaction_kinematics * xkinem, regge_trajectory * alpha, std::string name = "")
+  : amplitude(xkinem, name), pomeron_traj(alpha)
   {};
 
   // Copy constructor
