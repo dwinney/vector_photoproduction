@@ -48,11 +48,11 @@ int main( int argc, char** argv )
 
   // Feed in other two parameters (normalization and t-slope)
   // Best fit from [1]
-  std::vector<double> params_1s = {0.379, 0.12};
+  std::vector<double> params_1s = {sqrt(4. * M_PI * M_ALPHA) * 0.379, 0.12};
   pomeron_1s.set_params(params_1s);
 
   // Same t-slope but coupling is scaled by 1/4
-  std::vector<double> params_2s = {0.379 / 4., 0.12};
+  std::vector<double> params_2s = {sqrt(4. * M_PI * M_ALPHA) * 0.379 / 4., 0.12};
   pomeron_2s.set_params(params_2s);
 
   int N = 100; // how many points to plot
@@ -64,7 +64,6 @@ int main( int argc, char** argv )
   // Initialize two plotting objects for the ratio and the dxs
   jpacGraph1D* plotter = new jpacGraph1D();
   plotter->SetLegend(0.2, .8);
-  plotter->SetYaxis(ROOT_italics("d#sigma/dt") + " (" + ROOT_italics("nB") + " / GeV^{2})", 0., 0.035);
 
   if (LAB == true)
   {
@@ -76,13 +75,14 @@ int main( int argc, char** argv )
   }
 
   double zs = cos(theta * deg2rad);
-  std::vector<double> s, dxs, ratio;
+  std::vector<double> s, dxs1, dxs2, ratio;
 
   for (int i = 1; i <= N; i++)
   {
     double si = ptr2s->sth + EPS + double(i) * (30. - ptr2s->sth - EPS) / N;
-    double dxsi = M_PI * M_ALPHA * pomeron_2s.differential_xsection(si, zs) / 4.;
-    double ratioi = dxsi / (M_PI * M_ALPHA * pomeron_1s.differential_xsection(si, zs) / 4.);
+    double dxsi1 = pomeron_1s.differential_xsection(si, zs) / 4.;
+    double dxsi2 = pomeron_2s.differential_xsection(si, zs) / 4.;
+    double ratioi = dxsi2 / dxsi1;
 
     //Convert center of mass energy to lab frame energy
     if (LAB == true)
@@ -94,12 +94,18 @@ int main( int argc, char** argv )
       s.push_back(sqrt(si));
     }
 
-
-    dxs.push_back(dxsi); // divide by 4 to average over final state helicities
+    dxs1.push_back(dxsi1);
+    dxs2.push_back(dxsi2);
     ratio.push_back(ratioi);
   }
 
-  plotter->AddEntry(s, dxs, "#psi(2S)");
+  plotter->SetYaxis(ROOT_italics("d#sigma/dt") + " (" + ROOT_italics("nb") + " / GeV^{2})");
+
+  plotter->AddEntry(s, dxs1, "#psi(1S)");
+  plotter->Plot("psi1S_dxs.pdf");
+
+  plotter->ClearData();
+  plotter->AddEntry(s, dxs2, "#psi(2S)");
   plotter->Plot("psi2S_dxs.pdf");
 
   plotter->ClearData();
