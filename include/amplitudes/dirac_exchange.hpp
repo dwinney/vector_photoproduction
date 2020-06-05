@@ -53,7 +53,7 @@ public:
     }
   }
 
-private:
+protected:
   // DEBUGGING PARAMS
   bool ScTOP = false, ScBOT = false;
 
