@@ -23,8 +23,7 @@ Available amplitudes, so far, include:
 * [Pomeron exchange](./include/amplitudes/pomeron_exchange.hpp) (t-channel)
 * [(fixed-spin) Vector meson exchange](./include/amplitudes/vector_exchange.hpp) (t-channel)
 * [Reggeized meson exchange](./include/amplitudes/reggeized_meson.hpp) (t-channel)
-* [(fixed-spin) Dirac fermion exchange](./include/amplitudes/fermion_exchange.hpp) (u-channel)
-* [Reggeized baryon exchange](./include/amplitudes/reggeized_baryon.hpp) (u-channel)
+* [(fixed-spin) Dirac fermion exchange](./include/amplitudes/dirac_exchange.hpp) (u-channel)
 
 Incoherent (interfering) sums of amplitudes may be constructed through the [`amplitude_sum`](./include/amplitudes/amplitude_sum.hpp) class.
 
@@ -59,7 +58,7 @@ Optional command line flags are:
 -lab          # Toggle whether input energy value (see above) is in lab frame (default: false)
 -10q          # Toggle plotting two P_c states at the same BR (default: false)
 ```
-Outputs beam asymmetry for single P_c(4450) state at fixed energy as a function of theta or if `-10q` is passed, plots individual signal / background components and incoherent sum as a function of CM angle for P_c(4450) and P_c(4380) at equal BR. 
+Outputs beam asymmetry for single P_c(4450) state at fixed energy as a function of theta or if `-10q` is passed, plots individual signal / background components and incoherent sum as a function of CM angle for P_c(4450) and P_c(4380) at equal BR.
 
 #### [psi_comparison](./executables/psi_comparison.cpp)
 Comparison of the unpolarized cross sections for the photoproduction of the Psi(1S) and Psi(2S) states near threshold in the GlueX kinematics.
