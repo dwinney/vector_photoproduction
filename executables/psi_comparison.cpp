@@ -67,11 +67,11 @@ int main( int argc, char** argv )
 
   if (LAB == true)
   {
-    plotter->SetXaxis(ROOT_italics("E_{#gamma}") + " (GeV)", 10.5, 16.);
+    plotter->SetXaxis("E_{#gamma} (GeV)", 10.5, 16.);
   }
   else
   {
-    plotter->SetXaxis(ROOT_italics("#sqrt{s}") + " (GeV)", 4.6 , 5.55);
+    plotter->SetXaxis("W (GeV)", 4.6 , 5.55);
   }
 
   double zs = cos(theta * deg2rad);
@@ -81,7 +81,7 @@ int main( int argc, char** argv )
   {
     double si = ptr2s->sth + EPS + double(i) * (30. - ptr2s->sth - EPS) / N;
     double dxsi1 = pomeron_1s.differential_xsection(si, zs) / 4.;
-    double dxsi2 = pomeron_2s.differential_xsection(si, zs) / 4.;
+    double dxsi2 = pomeron_2s.differential_xsection(si, zs) * 100. / 4.;
     double ratioi = dxsi2 / dxsi1;
 
     //Convert center of mass energy to lab frame energy
@@ -99,19 +99,17 @@ int main( int argc, char** argv )
     ratio.push_back(ratioi);
   }
 
-  plotter->SetYaxis(ROOT_italics("d#sigma/dt") + " (" + ROOT_italics("nb") + " / GeV^{2})");
 
   plotter->AddEntry(s, dxs1, "#psi(1S)");
-  plotter->Plot("psi1S_dxs.pdf");
-
-  plotter->ClearData();
-  plotter->AddEntry(s, dxs2, "#psi(2S)");
-  plotter->Plot("psi2S_dxs.pdf");
+  plotter->AddEntry(s, dxs2, "#psi(2S) x 100");
+  plotter->SetYaxis("d#sigma/dt  (nb GeV^{-2})", 0., 15.);
+  plotter->SetLegend(0.2, 0.7);
+  plotter->Plot("psi_dxs.pdf");
 
   plotter->ClearData();
   plotter->AddEntry(s, ratio,"");
   plotter->SetLegend(false);
-  plotter->SetYaxis(ROOT_italics("d#sigma") + "(2S)" + ROOT_italics(" / d#sigma") + "(1S)", 0., 0.018);
+  plotter->SetYaxis("d#sigma(2S)/d#sigma(1S) x 100", 0., 2.);
   plotter->Plot("psi_dxs_ratio.pdf");
 
   // Clean up pointers
