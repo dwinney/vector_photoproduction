@@ -29,7 +29,7 @@ class vector_exchange : public amplitude
 public:
   // Constructor
   vector_exchange(reaction_kinematics * xkinem, double mass, std::string exchange = "", bool iffeyn = false)
-  : amplitude(xkinem, exchange), mEx2(mass*mass), FEYN(iffeyn)
+  : amplitude(xkinem, exchange, 3), mEx2(mass*mass), FEYN(iffeyn)
   {};
 
   // Copy constructor
@@ -41,7 +41,7 @@ public:
   // Setting utility
   void set_params(std::vector<double> params)
   {
-    check_Nparams(3, params);
+    check_Nparams(params);
     gGam = params[0];
     gV = params[1];
     gT = params[2];

@@ -25,12 +25,12 @@ private:
 public:
   // Empty constructor
   amplitude_sum(reaction_kinematics * xkinem, std::string identifer = "")
-  : amplitude(xkinem, identifer)
+  : amplitude(xkinem, identifer, 0)
   {};
 
   // Constructor with a vector already set up
   amplitude_sum(reaction_kinematics * xkinem, std::vector<amplitude*> vec, std::string identifer = "")
-  : amplitude(xkinem, identifer), amps(vec)
+  : amplitude(xkinem, identifer, 0), amps(vec)
   {};
 
   // Add a new amplitude to the vector
@@ -47,6 +47,9 @@ public:
       amps.push_back(new_sum.amps[i]);
     }
   };
+
+  // TODO: Add a set_params which timesi in one vector and allocates approriaten number of
+  // params to each sub amplitude 
 
   // Evaluate the sum for given set of helicites, energy, and cos
   std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);

@@ -35,13 +35,13 @@ public:
   : kinematics(xkinem)
   {};
 
-  amplitude(reaction_kinematics * xkinem, std::string id)
-  : kinematics(xkinem), identifier(id)
+  amplitude(reaction_kinematics * xkinem, std::string id, int N)
+  : kinematics(xkinem), identifier(id), Nparams(N)
   {};
 
   // Copy constructor
   amplitude(const amplitude & old)
-  : kinematics(old.kinematics), identifier(old.identifier)
+  : kinematics(old.kinematics), identifier(old.identifier), Nparams(old.Nparams)
   {};
 
   // Kinematics object for thresholds and etc.
@@ -73,9 +73,10 @@ public:
 
   // ---------------------------------------------------------------------------
   // Nparams error message
-  void check_Nparams(int n, std::vector<double> params)
+  int Nparams = 0;
+  void check_Nparams(std::vector<double> params)
   {
-    if (n != params.size())
+    if (params.size() != Nparams)
     {
       std::cout << "\nWarning! Invalid number of parameters (" << params.size() << ") passed to " << identifier << ".\n";
     }

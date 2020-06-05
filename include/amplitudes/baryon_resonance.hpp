@@ -36,7 +36,7 @@ private:
 public:
   // Constructor
   baryon_resonance(reaction_kinematics * xkinem, int j, int p, double mass, double width, std::string name = "")
-  : amplitude(xkinem, name), mRes(mass), gamRes(width), J(j), P(p),
+  : amplitude(xkinem, name, 2), mRes(mass), gamRes(width), J(j), P(p),
     naturality(p * pow(-1, (j-1)/2))
   {
     pi_bar = - real(kinematics->initial.momentum("target", mass * mass));
@@ -53,7 +53,7 @@ public:
   // Setting utility
   void set_params(std::vector<double> params)
   {
-    check_Nparams(2, params);
+    check_Nparams(params);
     xBR = params[0];
     R_photo = params[1];
   };

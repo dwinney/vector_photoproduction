@@ -22,7 +22,7 @@ class dirac_exchange : public amplitude
 public:
   // constructor
   dirac_exchange(reaction_kinematics * xkinem, double mass, std::string name = "")
-  : amplitude(xkinem, name),
+  : amplitude(xkinem, name, 2),
     mEx(mass), mEx2(mass*mass)
   {};
 
@@ -35,7 +35,7 @@ public:
   // Setting utility
   void set_params(std::vector<double> params)
   {
-    check_Nparams(2, params);
+    check_Nparams(params);
     gGam = params[0];
     gVec = params[1];
   };

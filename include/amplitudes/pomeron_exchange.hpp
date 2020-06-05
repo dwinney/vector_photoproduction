@@ -31,7 +31,7 @@ class pomeron_exchange : public amplitude
 public:
   // Constructor
   pomeron_exchange(reaction_kinematics * xkinem, regge_trajectory * alpha, std::string name = "")
-  : amplitude(xkinem, name), pomeron_traj(alpha)
+  : amplitude(xkinem, name, 2), pomeron_traj(alpha)
   {};
 
   // Copy constructor
@@ -43,7 +43,7 @@ public:
   // Setting utility
   void set_params(std::vector<double> params)
   {
-    check_Nparams(2, params);
+    check_Nparams(params);
     norm = params[0];
     b0 = params[1];
   };
