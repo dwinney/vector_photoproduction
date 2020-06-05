@@ -5,11 +5,11 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#include "amplitudes/fermion_exchange.hpp"
+#include "amplitudes/dirac_exchange.hpp"
 
 //------------------------------------------------------------------------------
 // Combine everything and contract indices
-std::complex<double> fermion_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
+std::complex<double> dirac_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
 {
   int lam_gam = helicities[0];
   int lam_targ = helicities[1];
@@ -21,9 +21,9 @@ std::complex<double> fermion_exchange::helicity_amplitude(std::vector<int> helic
   {
     for (int j = 0; j < 4; j++)
     {
-      std::complex<double> temp = 1.;
-      temp *= top_vertex(i, lam_gam, lam_rec, s, zs);
-      temp *= fermion_propagator(i, j, s, zs);
+      std::complex<double> temp;
+      temp  = top_vertex(i, lam_gam, lam_rec, s, zs);
+      temp *= dirac_propagator(i, j, s, zs);
       temp *= bottom_vertex(j, lam_vec, lam_targ, s, zs);
 
       result += temp;
@@ -37,7 +37,7 @@ std::complex<double> fermion_exchange::helicity_amplitude(std::vector<int> helic
 //------------------------------------------------------------------------------
 // Photon fermion fermion vertex
 // (ubar epsilon-slashed)
-std::complex<double> fermion_exchange::top_vertex(int i, int lam_gam, int lam_rec, double s, double zs)
+std::complex<double> dirac_exchange::top_vertex(int i, int lam_gam, int lam_rec, double s, double zs)
 {
   if (ScTOP == true)
   {
@@ -61,7 +61,7 @@ std::complex<double> fermion_exchange::top_vertex(int i, int lam_gam, int lam_re
 //------------------------------------------------------------------------------
 // Vector fermion fermion vertex
 // (epsilon*-slashed u)
-std::complex<double> fermion_exchange::bottom_vertex(int j, int lam_vec, int lam_targ, double s, double zs)
+std::complex<double> dirac_exchange::bottom_vertex(int j, int lam_vec, int lam_targ, double s, double zs)
 {
   if (ScBOT == true)
   {
@@ -83,7 +83,7 @@ std::complex<double> fermion_exchange::bottom_vertex(int j, int lam_vec, int lam
 };
 
 //------------------------------------------------------------------------------
-double fermion_exchange::exchange_mass(double s, double zs)
+double dirac_exchange::exchange_mass(double s, double zs)
 {
     double result = 0.;
     for (int mu = 0; mu < 4; mu++)
@@ -98,16 +98,16 @@ double fermion_exchange::exchange_mass(double s, double zs)
     return result;
 }
 
-std::complex<double> fermion_exchange::exchange_momentum(int mu, double s, double zs)
+std::complex<double> dirac_exchange::exchange_momentum(int mu, double s, double zs)
 {
   std::complex<double> qGamma_mu, qRec_mu;
   qGamma_mu   = kinematics->initial.component(mu, "beam", s, 1.);
   qRec_mu     = kinematics->final.component(mu, "recoil", s, zs);
 
-  return (qGamma_mu - qRec_mu);
+  return qRec_mu - qGamma_mu;
 };
 
-std::complex<double> fermion_exchange::slashed_exchange_momentum(int i, int j, double s, double zs)
+std::complex<double> dirac_exchange::slashed_exchange_momentum(int i, int j, double s, double zs)
 {
   std::complex<double> result = 0.;
   for (int mu = 0; mu < 4; mu++)
@@ -125,7 +125,7 @@ std::complex<double> fermion_exchange::slashed_exchange_momentum(int i, int j, d
 
 //------------------------------------------------------------------------------
 // Slashed polarization vectors
-std::complex<double> fermion_exchange::slashed_eps(int i, int j, double lam, polarization_vector eps, bool STAR, double s, double zs)
+std::complex<double> dirac_exchange::slashed_eps(int i, int j, double lam, polarization_vector eps, bool STAR, double s, double zs)
 {
   std::complex<double> result = 0.;
   for (int mu = 0; mu < 4; mu++)
@@ -150,14 +150,14 @@ std::complex<double> fermion_exchange::slashed_eps(int i, int j, double lam, pol
 
 
 //------------------------------------------------------------------------------
-std::complex<double> fermion_exchange::fermion_propagator(int i, int j, double s, double zs)
+std::complex<double> dirac_exchange::dirac_propagator(int i, int j, double s, double zs)
 {
   std::complex<double> result;
   result = slashed_exchange_momentum(i, j, s, zs);
 
   if (i == j)
   {
-    result += mEx2;
+    result += mEx;
   }
 
   result /= exchange_mass(s, zs) - mEx2;

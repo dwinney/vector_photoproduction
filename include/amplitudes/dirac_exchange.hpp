@@ -17,16 +17,17 @@
 #include "amplitude.hpp"
 #include "gamma_technology.hpp"
 
-class fermion_exchange : public amplitude
+class dirac_exchange : public amplitude
 {
 public:
   // constructor
-  fermion_exchange(reaction_kinematics * xkinem, double mass, std::string name = "")
-  : amplitude(xkinem, name), mEx2(mass*mass)
+  dirac_exchange(reaction_kinematics * xkinem, double mass, std::string name = "")
+  : amplitude(xkinem, name),
+    mEx(mass), mEx2(mass*mass)
   {};
 
   // Copy constructor
-  fermion_exchange(const fermion_exchange & old)
+  dirac_exchange(const dirac_exchange & old)
   : amplitude(old), mEx2(old.mEx2),
     gGam(old.gGam), gVec(old.gVec)
   {};
@@ -41,9 +42,6 @@ public:
   // Assemble the helicity amplitude by contracting the spinor indices
   std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);
 
-  // Should be exactly u_man(s, zs);
-  double exchange_mass(double s, double zs);
-
   // debugging options to make either the photon or vector into scalars
   void set_debug(int i)
   {
@@ -56,17 +54,20 @@ public:
   }
 
 private:
-  // TESTING PARAMS
+  // DEBUGGING PARAMS
   bool ScTOP = false, ScBOT = false;
 
   // Exchange nucleon mass
-  double mEx2;
+  double mEx, mEx2;
 
   // couplings
   double gGam = 0., gVec = 0.;
 
   // Four-momentum of the exhange (u - channel)
   std::complex<double> exchange_momentum(int mu, double s, double zs);
+
+  // Should be exactly u_man(s, zs);
+  double exchange_mass(double s, double zs);
 
   // Slashed momentumn
   std::complex<double> slashed_exchange_momentum(int i, int j, double s, double zs);
@@ -81,7 +82,7 @@ private:
   std::complex<double> bottom_vertex(int j, int lam_vec, int lam_targ, double s, double zs);
 
   // Spin-1/2 propagator
-  std::complex<double> fermion_propagator(int i, int j, double s, double zs);
+  std::complex<double> dirac_propagator(int i, int j, double s, double zs);
 };
 
 #endif
