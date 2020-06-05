@@ -26,6 +26,14 @@ void debug(T x, F y)
   std::cout << std::left << std::setw(15) << y << std::endl;
 };
 
+template<typename T, typename F, typename G>
+void debug(T x, F y, G z)
+{
+  std::cout << std::left << std::setw(15) << x;
+  std::cout << std::left << std::setw(15) << y;
+  std::cout << std::left << std::setw(15) << z << std::endl;
+};
+
 #endif
 
 #ifndef CONSTANT
