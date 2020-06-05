@@ -50,6 +50,7 @@ public:
   // Some saveable string by which to identify the amplitude
   std::string identifier;
 
+  // How the calculate the helicity amplitude
   virtual std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs) = 0;
 
   // ---------------------------------------------------------------------------
@@ -69,6 +70,16 @@ public:
   // Asymmetries
   double beam_asymmetry(double s, double zs);
   double parity_asymmetry(double s, double zs);
+
+  // ---------------------------------------------------------------------------
+  // Nparams error message
+  void check_Nparams(int n, std::vector<double> params)
+  {
+    if (n != params.size())
+    {
+      std::cout << "\nWarning! Invalid number of parameters (" << params.size() << ") passed to " << identifier << ".\n";
+    }
+  }
 
 };
 

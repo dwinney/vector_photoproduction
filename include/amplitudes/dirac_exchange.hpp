@@ -35,6 +35,7 @@ public:
   // Setting utility
   void set_params(std::vector<double> params)
   {
+    check_Nparams(2, params);
     gGam = params[0];
     gVec = params[1];
   };

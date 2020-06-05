@@ -43,8 +43,8 @@ int main( int argc, char** argv )
   linear_trajectory alpha(+1, 0.941, 0.364, "pomeron");
 
   // Create amplitudes with kinematics and same trajectory
-  pomeron_exchange pomeron_1s(ptr1s, &alpha);
-  pomeron_exchange pomeron_2s(ptr2s, &alpha);
+  pomeron_exchange pomeron_1s(ptr1s, &alpha, "#psi(1S)");
+  pomeron_exchange pomeron_2s(ptr2s, &alpha, "#psi(2S)");
 
   // Feed in other two parameters (normalization and t-slope)
   // Best fit from [1]

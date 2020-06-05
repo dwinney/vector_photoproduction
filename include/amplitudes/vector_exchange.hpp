@@ -41,6 +41,7 @@ public:
   // Setting utility
   void set_params(std::vector<double> params)
   {
+    check_Nparams(3, params);
     gGam = params[0];
     gV = params[1];
     gT = params[2];

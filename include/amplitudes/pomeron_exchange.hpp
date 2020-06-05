@@ -43,6 +43,7 @@ public:
   // Setting utility
   void set_params(std::vector<double> params)
   {
+    check_Nparams(2, params);
     norm = params[0];
     b0 = params[1];
   };

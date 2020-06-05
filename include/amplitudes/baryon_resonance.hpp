@@ -53,6 +53,7 @@ public:
   // Setting utility
   void set_params(std::vector<double> params)
   {
+    check_Nparams(2, params);
     xBR = params[0];
     R_photo = params[1];
   };
