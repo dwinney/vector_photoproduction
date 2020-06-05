@@ -28,9 +28,9 @@ int main( int argc, char** argv )
   double theta = 0.;
   bool INTEG = false;
   bool FEYN = false;
-  double y[2] = {0., 7.};
+  double y[2] = {0., 2.};
   std::string filename = "chi_c1_photoproduction.pdf";
-  std::string ylabel = ROOT_italics("d#sigma/dt") + "  (" + ROOT_italics("nb") + " / GeV^{2})";
+  std::string ylabel = "d#sigma/dt  (nb / GeV^{2})";
   // ---------------------------------------------------------------------------
   // Parse command line arguments
   for (int i = 0; i < argc; i++)
@@ -42,7 +42,7 @@ int main( int argc, char** argv )
     if (std::strcmp(argv[i],"-integ")==0)
     {
        INTEG = true;
-       ylabel = ROOT_italics("#sigma") + "  (" + ROOT_italics("nb") + ")";
+       ylabel = "#sigma  (nb)";
     }
     // Use feynman rules or analytic expressions
     if (std::strcmp(argv[i],"-feyn")==0) FEYN = true;

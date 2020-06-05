@@ -25,6 +25,8 @@ double amplitude::differential_xsection(double s, double zs)
   norm /= real(pow(kinematics->initial.momentum("beam", s), 2.));
   norm /= (2.56819E-6); // Convert from GeV^-2 -> nb
 
+  norm /= 4.; // Average over final state helicites
+
   return norm * sum;
 };
 
@@ -168,7 +170,7 @@ std::complex<double> amplitude::SDME(int alpha, int lam, int lamp, double s, dou
     std::complex<double> amp_i, amp_j;
     amp_i = helicity_amplitude(kinematics->helicities[index + k], s, zs);
     amp_j = helicity_amplitude(kinematics->helicities[pos_iters[i] + j], s, zs);
-    
+
     (alpha == 2) ? (amp_j *= xi * double(kinematics->helicities[pos_iters[i] + j][0])) : (amp_j *= xr);
 
     result += real(amp_i * conj(amp_j));

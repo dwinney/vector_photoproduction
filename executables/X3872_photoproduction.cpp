@@ -81,11 +81,11 @@ int main( int argc, char** argv )
 
       if (integ == false)
       {
-        dxsi = exchanges[n]->differential_xsection(si, zs) / 4.;
+        dxsi = exchanges[n]->differential_xsection(si, zs);
       }
       else
       {
-        dxsi = exchanges[n]->integrated_xsection(si) / 4.;
+        dxsi = exchanges[n]->integrated_xsection(si);
       }
 
       s.push_back(si);

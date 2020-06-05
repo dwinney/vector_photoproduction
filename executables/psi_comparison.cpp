@@ -80,8 +80,8 @@ int main( int argc, char** argv )
   for (int i = 1; i <= N; i++)
   {
     double si = ptr2s->sth + EPS + double(i) * (30. - ptr2s->sth - EPS) / N;
-    double dxsi1 = pomeron_1s.differential_xsection(si, zs) / 4.;
-    double dxsi2 = pomeron_2s.differential_xsection(si, zs) * 100. / 4.;
+    double dxsi1 = pomeron_1s.differential_xsection(si, zs);
+    double dxsi2 = pomeron_2s.differential_xsection(si, zs) * 100.;
     double ratioi = dxsi2 / dxsi1;
 
     //Convert center of mass energy to lab frame energy
