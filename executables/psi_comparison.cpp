@@ -14,7 +14,6 @@
 #include "reaction_kinematics.hpp"
 #include "amplitudes/pomeron_exchange.hpp"
 #include "regge_trajectory.hpp"
-#include "utilities.hpp"
 
 #include "jpacGraph1D.hpp"
 

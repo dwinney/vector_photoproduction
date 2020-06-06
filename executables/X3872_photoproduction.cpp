@@ -10,7 +10,6 @@
 #include "constants.hpp"
 #include "reaction_kinematics.hpp"
 #include "regge_trajectory.hpp"
-#include "utilities.hpp"
 
 #include "amplitudes/reggeized_meson.hpp"
 #include "amplitudes/vector_exchange.hpp"
