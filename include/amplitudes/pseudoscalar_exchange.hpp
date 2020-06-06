@@ -1,0 +1,70 @@
+// Charged axial-vector meson photoproduction proceeding through a pseudoscalar (pion) exchange
+//
+// Author:       Daniel Winney (2020)
+// Affiliation:  Joint Physics Analysis Center (JPAC)
+// Email:        dwinney@iu.edu
+// ---------------------------------------------------------------------------
+// References:
+// [1] arXiv:1503.02125 [hep-ph]
+// ---------------------------------------------------------------------------
+
+#ifndef _PSCALAR_
+#define _PSCALAR_
+
+#include "amplitude.hpp"
+#include "gamma_technology.hpp"
+
+// ---------------------------------------------------------------------------
+// pseudoscalar_exchange class describes the amplitude for a fixed-spin-0 exchange
+// in the t-channel. Derived in terms of simple feynman rules at tree level
+//
+// Initialization required a reaction_kinematics object, the mass of the exchange,
+// and an optional string to identify the amplitude with.
+//
+//  Evaluation requires two couplings:
+// photon coupling, gGamma, and nucleon coupling, gNN respectively.
+//
+// Set couplings with amp.set_params({gGamma, gNN});
+// ---------------------------------------------------------------------------
+
+class pseudoscalar_exchange : public amplitude
+{
+public:
+  // constructor
+  pseudoscalar_exchange(reaction_kinematics * xkinem, double mass, std::string name = "")
+  : amplitude(xkinem, name, 2), mEx2(mass*mass)
+  {};
+
+  // Setting utility
+  void set_params(std::vector<double> params)
+  {
+    check_Nparams(params);
+    gPsi = params[0];
+    gNN = params[1];
+  };
+
+  // Assemble the helicity amplitude by contracting the spinor indices
+  std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);
+
+private:
+  // Mass of the exchanged pseudo-scalar
+  double mEx2;
+
+  // Coupling constants
+  double gPsi = 0., gNN = 0.;
+
+  // Pion form factors
+  double LamPi = 0.7; // pi NN vertex cutoff parameter
+  double form_factor(double m, double s, double zs);
+
+  // VMD photon vertex
+  std::complex<double> top_vertex(double lam_gam, double lam_vec, double s, double zs);
+
+  // Nucleon vertex
+  std::complex<double> bottom_vertex(double lam_rec, double lam_targ, double s, double zs);
+
+  // Simple pole propagator
+  double scalar_propagator(double s, double zs);
+};
+
+#endif

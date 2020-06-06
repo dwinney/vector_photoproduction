@@ -21,6 +21,7 @@ Available amplitudes, so far, include:
 
 * [Single baryon resonance](./include/amplitudes/baryon_resonance.hpp) (s-channel)
 * [Pomeron exchange](./include/amplitudes/pomeron_exchange.hpp) (t-channel)
+* [(fixed-spin) Charged pseudo-scalar meson exchange](./include/amplitudes/vector_exchange.hpp) (t-channel)
 * [(fixed-spin) Vector meson exchange](./include/amplitudes/vector_exchange.hpp) (t-channel)
 * [Reggeized meson exchange](./include/amplitudes/reggeized_meson.hpp) (t-channel)
 * [(fixed-spin) Dirac fermion exchange](./include/amplitudes/dirac_exchange.hpp) (u-channel)
