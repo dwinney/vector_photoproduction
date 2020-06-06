@@ -52,6 +52,9 @@ const std::complex<double> xi(0., 1.);
 const std::complex<double> ieps(0., EPS);
 
 // Masses
+const double mPi = 0.138039;
+const double mK = 0.496;
+const double mEta = 0.54753;
 const double mPro = 0.9383;
 const double mJpsi = 3.097;
 const double mPsi2S = 3.686;
