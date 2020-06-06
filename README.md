@@ -93,6 +93,15 @@ Optional command line flags are:
 -integ        # Toggle integrated xsection instead of differential
 ```
 
+#### [Zc_photoproduction](./executables/Zc_photoproduction.cpp)
+Unpolarized cross-section predictions for the photoproduction of the Z_c+(4200) by charged pion exchange. Reproduces the results in [3].
+
+Optional command line flags are:
+```bash
+-n int        # Number of points to plot with (default: 100)
+-m double     # max energy W to plot (default: 25)
+-diff         # Toggle differential xsection instead of integrated
+```
 
 ## PLOTTING
 Plots are automatically created using the JPAC collaboration style guidelines. For more information see the [jpacStyle](https://github.com/dwinney/jpacStyle) library.
@@ -104,3 +113,4 @@ Plots are automatically created using the JPAC collaboration style guidelines. F
 ## REFERENCES
 * [1] "Theoretical model of the phi meson photoproduction amplitudes" Lesniak and Szczepaniak [[arXiv:hep-ph/0304007]](https://arxiv.org/abs/hep-ph/0304007)
 * [2] "Double Polarization Observables in Pentaquark Photoproduction" JPAC Collaboration [[arXiv:1907.09393]](https://arxiv.org/abs/1907.09393)
+* [3] "Photoproduction of the charged charmoniumlike Z+c(4200)" Wang, Chen, and Guskov [[arXiv:1503.02125]](https://arxiv.org/abs/1503.02125)
