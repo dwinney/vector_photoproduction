@@ -26,7 +26,6 @@ int main( int argc, char** argv )
   // Default values
   double theta = 0.;
   bool INTEG = false;
-  bool FEYN = false;
   double y[2] = {0., 2.};
   std::string filename = "chi_c1_photoproduction.pdf";
   std::string ylabel = "d#sigma/dt  (nb / GeV^{2})";
@@ -43,8 +42,6 @@ int main( int argc, char** argv )
        INTEG = true;
        ylabel = "#sigma  (nb)";
     }
-    // Use feynman rules or analytic expressions
-    if (std::strcmp(argv[i],"-feyn")==0) FEYN = true;
   }
 
   // ---------------------------------------------------------------------------
@@ -63,19 +60,19 @@ int main( int argc, char** argv )
   // Which we will sum incoherently
   std::vector<amplitude*> exchanges;
 
-  vector_exchange omega(ptr, .780, "#omega", FEYN);
+  vector_exchange omega(ptr, .780, "#omega");
   omega.set_params({5.2E-4, 16., 0.}); // hadronic and nucleon vector & tensor couplings
   exchanges.push_back(&omega); // Add to the sum vector
 
-  vector_exchange rho(ptr, .770, "#rho", FEYN);
+  vector_exchange rho(ptr, .770, "#rho");
   rho.set_params({9.2E-4, 2.4, 14.6});
   exchanges.push_back(&rho);
 
-  vector_exchange phi(ptr, 1.10, "#phi", FEYN);
+  vector_exchange phi(ptr, 1.10, "#phi");
   phi.set_params({4.2E-4, -6.2, 2.1});
   exchanges.push_back(&phi);
 
-  vector_exchange jpsi(ptr, 3.097, "J/#psi", FEYN);
+  vector_exchange jpsi(ptr, 3.097, "J/#psi");
   jpsi.set_params({1., 3.3E-3, 0.});
   exchanges.push_back(&jpsi);
 
