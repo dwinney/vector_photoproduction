@@ -30,11 +30,12 @@
 class amplitude
 {
 public:
-  // Constructor
+  // Empty Constructor
   amplitude(reaction_kinematics * xkinem)
   : kinematics(xkinem)
   {};
 
+  // Constructor with an amplitude id and number of parameters specified
   amplitude(reaction_kinematics * xkinem, std::string id, int N)
   : kinematics(xkinem), identifier(id), Nparams(N)
   {};
@@ -55,21 +56,33 @@ public:
 
   // ---------------------------------------------------------------------------
   // Observables
+  // Evaluatable in terms of s and zs or an event object (see reaction_kinematics.hpp)
 
   // Differential and total cross-section
   double differential_xsection(double s, double zs);
+  double differential_xsection(event fvecs);
+
+  // integrated crossection
   double integrated_xsection(double s);
+  double integrated_xsection(event fvecs);
 
   // Spin asymmetries
   double K_LL(double s, double zs);
+  double K_LL(event fvecs);
+
   double A_LL(double s, double zs);
+  double A_LL(event fvecs);
 
   // Spin density matrix elements
   std::complex<double> SDME(int alpha, int lam, int lamp, double s, double zs);
+  std::complex<double> SDME(int alpha, int lam, int lamp, event fvecs);
 
   // Asymmetries
   double beam_asymmetry(double s, double zs);
+  double beam_asymmetry(event fvecs);
+
   double parity_asymmetry(double s, double zs);
+  double parity_asymmetry(event fvecs);
 
   // ---------------------------------------------------------------------------
   // Nparams error message

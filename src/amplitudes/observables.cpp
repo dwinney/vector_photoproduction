@@ -30,6 +30,14 @@ double amplitude::differential_xsection(double s, double zs)
   return norm * sum;
 };
 
+double amplitude::differential_xsection(event fvecs)
+{
+  double s   = kinematics->s_man(fvecs);
+  double zs  = kinematics->z_s(fvecs);
+
+  return differential_xsection(s, zs);
+};
+
 // ---------------------------------------------------------------------------
 // Inegrated total cross-section
 // IN NANOBARN
@@ -49,6 +57,13 @@ double amplitude::integrated_xsection(double s)
   ig.SetFunction(wF);
 
   return ig.Integral(-1,1);
+};
+
+double amplitude::integrated_xsection(event fvecs)
+{
+  double s   = kinematics->s_man(fvecs);
+
+  return integrated_xsection(s);
 };
 
 // ---------------------------------------------------------------------------
@@ -74,6 +89,14 @@ double amplitude::K_LL(double s, double zs)
   return (sigmapp - sigmapm) / (sigmapp + sigmapm);
 }
 
+double amplitude::K_LL(event fvecs)
+{
+  double s   = kinematics->s_man(fvecs);
+  double zs  = kinematics->z_s(fvecs);
+
+  return K_LL(s, zs);
+};
+
 // ---------------------------------------------------------------------------
 // Polarization asymmetry between beam and target proton
 double amplitude::A_LL(double s, double zs)
@@ -96,6 +119,14 @@ double amplitude::A_LL(double s, double zs)
 
   return (sigmapp - sigmapm) / (sigmapp + sigmapm);
 }
+
+double amplitude::A_LL(event fvecs)
+{
+  double s   = kinematics->s_man(fvecs);
+  double zs  = kinematics->z_s(fvecs);
+
+  return A_LL(s, zs);
+};
 
 // ---------------------------------------------------------------------------
 // Photon spin-density matrix elements
@@ -187,6 +218,15 @@ std::complex<double> amplitude::SDME(int alpha, int lam, int lamp, double s, dou
   return result;
 };
 
+std::complex<double> amplitude::SDME(int alpha, int lam, int lamp, event fvecs)
+{
+  double s   = kinematics->s_man(fvecs);
+  double zs  = kinematics->z_s(fvecs);
+
+  return SDME(alpha, lam, lamp, s, zs);
+};
+
+
 // ---------------------------------------------------------------------------
 // Integrated beam asymmetry Sigma_4pi
 double amplitude::beam_asymmetry(double s, double zs)
@@ -197,6 +237,15 @@ double amplitude::beam_asymmetry(double s, double zs)
   return - rho100 - 2. * rho111;
 };
 
+double amplitude::beam_asymmetry(event fvecs)
+{
+  double s   = kinematics->s_man(fvecs);
+  double zs  = kinematics->z_s(fvecs);
+
+  return beam_asymmetry(s, zs);
+};
+
+
 // ---------------------------------------------------------------------------
 // Parity asymmetry P_sigma
 double amplitude::parity_asymmetry(double s, double zs)
@@ -205,4 +254,12 @@ double amplitude::parity_asymmetry(double s, double zs)
   double rho11m1 = real(SDME(1, 1, -1, s, zs));
 
   return 2. * rho11m1 - rho100;
+};
+
+double amplitude::parity_asymmetry(event fvecs)
+{
+  double s   = kinematics->s_man(fvecs);
+  double zs  = kinematics->z_s(fvecs);
+
+  return parity_asymmetry(s, zs);
 };
