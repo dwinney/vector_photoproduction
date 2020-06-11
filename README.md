@@ -14,16 +14,15 @@ The main object of interest is the abstract [`amplitude`](./include/amplitudes/a
 * Integrated total cross section ( σ )
 * Polarization asymmetries ( A_LL and K_LL )
 * Spin density matrix elements ( ρ^α_λ,λ' )
-* Integrated beam asymmetry ( Σ_4π )
+* Integrated beam asymmetry ( Σ )
 * Parity asymmetry ( P_σ )
 
 Available amplitudes, so far, include:
 
 * [Single baryon resonance](./include/amplitudes/baryon_resonance.hpp) (s-channel)
 * [Pomeron exchange](./include/amplitudes/pomeron_exchange.hpp) (t-channel)
-* [(fixed-spin) Charged pseudo-scalar meson exchange](./include/amplitudes/vector_exchange.hpp) (t-channel)
-* [(fixed-spin) Vector meson exchange](./include/amplitudes/vector_exchange.hpp) (t-channel)
-* [Reggeized meson exchange](./include/amplitudes/reggeized_meson.hpp) (t-channel)
+* [(fixed-spin and reggeized) Charged pseudo-scalar meson exchange](./include/amplitudes/vector_exchange.hpp) (t-channel)
+* [(fixed-spin and reggeized) Vector meson exchange](./include/amplitudes/vector_exchange.hpp) (t-channel)
 * [(fixed-spin) Dirac fermion exchange](./include/amplitudes/dirac_exchange.hpp) (u-channel)
 * [(fixed-spin) Rarita-Schwinger fermion exchange](./include/amplitudes/rarita_exchange.hpp) (u-channel)
 
@@ -79,7 +78,6 @@ Optional command line flags are:
 ```bash
 -c double    # CM scattering angle in degrees (default: 0)
 -integ        # Toggle integrated xsection instead of differential
--feyn         # Toggle evaluating amplitude with covariant rules (included for debugging)
 ```
 Outputs the differential (or integrated) cross-section to a pdf.
 
