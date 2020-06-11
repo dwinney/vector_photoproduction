@@ -12,6 +12,7 @@
 #define _PSCALAR_
 
 #include "amplitude.hpp"
+#include "regge_trajectory.hpp"
 #include "gamma_technology.hpp"
 
 // ---------------------------------------------------------------------------
@@ -30,9 +31,14 @@
 class pseudoscalar_exchange : public amplitude
 {
 public:
-  // constructor
+  // constructor for fixed meson exchange
   pseudoscalar_exchange(reaction_kinematics * xkinem, double mass, std::string name = "")
-  : amplitude(xkinem, name, 2), mEx2(mass*mass)
+  : amplitude(xkinem, name, 2), mEx2(mass*mass), REGGE(false)
+  {};
+
+  // constructors for regge exchange
+  pseudoscalar_exchange(reaction_kinematics * xkinem, linear_trajectory * traj, std::string name = "")
+  : amplitude(xkinem, name, 2), alpha(traj), REGGE(true)
   {};
 
   // Setting utility
@@ -47,8 +53,14 @@ public:
   std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);
 
 private:
+  // Whether to use fixed-spin propagator or regge
+  bool REGGE;
+
   // Mass of the exchanged pseudo-scalar
   double mEx2;
+
+  // Regge trajectory for the pion
+  linear_trajectory * alpha;
 
   // Coupling constants
   double gPsi = 0., gNN = 0.;
@@ -64,7 +76,7 @@ private:
   std::complex<double> bottom_vertex(double lam_rec, double lam_targ, double s, double zs);
 
   // Simple pole propagator
-  double scalar_propagator(double s, double zs);
+  std::complex<double> scalar_propagator(double s, double zs);
 };
 
 #endif

@@ -33,9 +33,9 @@ std::complex<double> pseudoscalar_exchange::helicity_amplitude(std::vector<int> 
 double pseudoscalar_exchange::form_factor(double m, double s, double zs)
 {
   double result;
-  result  = (m*m - mEx2);
+  result  = (m*m - mPi*mPi);
   result /= (m*m - kinematics->t_man(s,zs));
-  
+
   return result;
 };
 
@@ -107,7 +107,28 @@ std::complex<double> pseudoscalar_exchange::top_vertex(double lam_gam, double la
 
 //------------------------------------------------------------------------------
 // Simple pole propagator
-double pseudoscalar_exchange::scalar_propagator(double s, double zs)
+std::complex<double> pseudoscalar_exchange::scalar_propagator(double s, double zs)
 {
-  return 1. / (kinematics->t_man(s,zs) - mEx2);
+  if (REGGE == false)
+  {
+    return 1. / (kinematics->t_man(s,zs) - mEx2);
+  }
+
+  // Else use the regge propagator
+  std::complex<double> alpha_t = alpha->eval(kinematics->t_man(s,zs));
+
+  // the gamma function causes problesm for large t so
+  if (std::abs(alpha_t) > 30.)
+  {
+    return 0.;
+  }
+  else
+  {
+    std::complex<double> result;
+    result  = alpha->slope();
+    result *= 0.5 * (double(alpha->signature) + exp(-xi * M_PI * alpha_t));
+    result *= cgamma(-alpha_t);
+    result *= pow(xr * s, alpha_t);
+    return result;
+  }
 };
