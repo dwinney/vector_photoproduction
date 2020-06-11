@@ -38,25 +38,27 @@ int main( int argc, char** argv )
     if (std::strcmp(argv[i],"-10q")==0) TENQ = true;
   }
 
-  // Set up Kinematics
+  // Set up Kinematics for jpsi in final state
   reaction_kinematics * ptr = new reaction_kinematics(mJpsi, "jpsi");
   std::vector<amplitude*> amps;
 
   // ---------------------------------------------------------------------------
-  // T - CHANNEL
+  // T - CHANNEL // this is the same for all cases
 
   // Set up pomeron trajectory
+  // best fit values from [1]
   linear_trajectory alpha(+1, 0.941, 0.364);
 
   // Create amplitude with kinematics and trajectory
   pomeron_exchange background(ptr, &alpha, "Background");
 
   // normalization and t-slope
+  // best fit values from [1]
   std::vector<double> back_params = {0.367, 0.12};
   background.set_params(back_params);
 
   // ---------------------------------------------------------------------------
-  // S - CHANNEL  // Two different pentaquarks
+  // S - CHANNEL  // Two different pentaquarks (if -10q == true)
 
   // masses and widths from 2015 LHCb paper [2]
   baryon_resonance P_c4450(ptr, 3, -1, 4.45, 0.040, "P_{c}(4450)");
@@ -70,30 +72,30 @@ int main( int argc, char** argv )
   amplitude_sum sum(ptr, {&background, &P_c4450, &P_c4380}, "Sum");
 
   // ---------------------------------------------------------------------------
-  // S - CHANNEL  // 1 5q different BR scenarios
+  // S - CHANNEL  // 1 5q but different BR scenarios (if -10q == false)
 
-    baryon_resonance P_c1(ptr, 3, -1, 4.45, 0.040, "1%");
-    P_c1.set_params({0.01, .7071});
+  baryon_resonance P_c1(ptr, 3, -1, 4.45, 0.040, "1%");
+  P_c1.set_params({0.01, .7071});
 
-    baryon_resonance P_c05(ptr, 3, -1, 4.45, 0.040, "0.5%");
-    P_c05.set_params({0.005, .7071});
+  baryon_resonance P_c05(ptr, 3, -1, 4.45, 0.040, "0.5%");
+  P_c05.set_params({0.005, .7071});
 
-    baryon_resonance P_c01(ptr, 3, -1, 4.45, 0.040, "0.1%");
-    P_c01.set_params({0.001, .7071});
+  baryon_resonance P_c01(ptr, 3, -1, 4.45, 0.040, "0.1%");
+  P_c01.set_params({0.001, .7071});
 
-    // Add to the sum
-    amplitude_sum sum1(ptr, {&background, &P_c1}, "1%");
-    amplitude_sum sum2(ptr, {&background, &P_c05}, "0.5%");
-    amplitude_sum sum3(ptr, {&background, &P_c01}, "0.1%");
+  // Add to the sum
+  amplitude_sum sum1(ptr, {&background, &P_c1}, "1%");
+  amplitude_sum sum2(ptr, {&background, &P_c05}, "0.5%");
+  amplitude_sum sum3(ptr, {&background, &P_c01}, "0.1%");
 
-    if (TENQ == true)
-    {
-      amps = {&sum, &background, &P_c4450, &P_c4380};
-    }
-    else
-    {
-      amps = {&background, &sum1, &sum2, &sum3};
-    }
+  if (TENQ == true)
+  {
+    amps = {&sum, &background, &P_c4450, &P_c4380};
+  }
+  else
+  {
+    amps = {&background, &sum1, &sum2, &sum3};
+  }
 
   int N = 200; // how many points to plot
 
