@@ -28,6 +28,17 @@ Available amplitudes, so far, include:
 
 Incoherent (interfering) sums of amplitudes may be constructed through the [`amplitude_sum`](./include/amplitudes/amplitude_sum.hpp) class.
 
+Observables are evaluated in terms of the center-of-mass energy, _s ,_ and cosine of the scattering angle, _zs_. Alternatively to easily interface with event generators, Lorentz vectors may be passed using the `event` struct. For example:
+```c++
+// In s-channel variables
+double dxs = amp.differential_xsection(s, zs);
+
+// or four-vectors
+TLorentzVector pGamma, pTarget, pVector, pRecoil;
+event fvecs(pGamma, pTarget, pVec, pRecoil);
+double dxs = amp.differential_xsection(fvecs);
+```
+
 ## EXECUTABLES
 Requires [ROOT](https://root.cern.ch/) (tested with version 6.17) with [*MathMore*](https://root.cern.ch/mathmore-library) libraries installed.
 
