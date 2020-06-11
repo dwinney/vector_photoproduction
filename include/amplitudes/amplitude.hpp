@@ -58,6 +58,10 @@ public:
   // Observables
   // Evaluatable in terms of s and zs or an event object (see reaction_kinematics.hpp)
 
+  // Modulus of the amplitude summed over all helicity combinations
+  double probablity_distribution(double s, double zs);
+  double probablity_distribution(event fvecs);
+
   // Differential and total cross-section
   double differential_xsection(double s, double zs);
   double differential_xsection(event fvecs);

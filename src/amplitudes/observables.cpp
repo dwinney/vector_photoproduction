@@ -9,9 +9,8 @@
 #include "amplitudes/amplitude.hpp"
 
 // ---------------------------------------------------------------------------
-// Differential cross section dsigma / dt
-// in NANOBARN
-double amplitude::differential_xsection(double s, double zs)
+// square root of the square of the amplitude summed over all helicities
+double amplitude::probablity_distribution(double s, double zs)
 {
   double sum = 0.;
   for (int i = 0; i < 24; i++)
@@ -19,6 +18,25 @@ double amplitude::differential_xsection(double s, double zs)
     std::complex<double> amp_i = helicity_amplitude(kinematics->helicities[i], s, zs);
     sum += std::real(amp_i * conj(amp_i));
   }
+  return sqrt(sum);
+};
+
+double amplitude::probablity_distribution(event fvecs)
+{
+  double s   = kinematics->s_man(fvecs);
+  double zs  = kinematics->z_s(fvecs);
+
+  return probablity_distribution(s, zs);
+};
+
+// ---------------------------------------------------------------------------
+// Differential cross section dsigma / dt
+// in NANOBARN
+double amplitude::differential_xsection(double s, double zs)
+{
+
+  double sum = probablity_distribution(s, zs);
+  sum *= sum; // helicity summed squared amplitudes
 
   double norm = 1.;
   norm /= 64. * M_PI * s;
@@ -161,13 +179,9 @@ std::complex<double> amplitude::SDME(int alpha, int lam, int lamp, double s, dou
     phase *= pow(-1., double(lam - lamp));
   }
 
-  // Normalization (sum over all amplitudes squared
-  double norm = 0.;
-  for (int i = 0; i < 24; i++)
-  {
-    std::complex<double> amp_i = helicity_amplitude(kinematics->helicities[i], s, zs);
-    norm += std::real(amp_i * conj(amp_i));
-  }
+  // Normalization (sum over all amplitudes squared)
+  double norm = probablity_distribution(s, zs);
+  norm *= norm;
 
   // These are the indexes of the amplitudes in reaction_kinematics that have
   // lambda_V = +1

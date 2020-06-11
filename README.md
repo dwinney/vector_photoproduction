@@ -10,6 +10,7 @@ Such processes are of interest at many experiments at JLab and the future EIC.
 ## AMPLITUDES
 The main object of interest is the abstract [`amplitude`](./include/amplitudes/amplitude.hpp) class. This allows you to build [observables](./src/amplitudes/observables.cpp) from helicity amplitudes:
 
+* Probability distribution ( √ Σ | A |^2 )
 * Differential cross section ( dσ / dt )
 * Integrated total cross section ( σ )
 * Polarization asymmetries ( A_LL and K_LL )
