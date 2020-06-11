@@ -9,6 +9,25 @@
 #include "reaction_kinematics.hpp"
 
 // ---------------------------------------------------------------------------
+// s-channel variables from 4-vectors
+double reaction_kinematics::s_man(event fvecs)
+{
+  return (fvecs.pGam + fvecs.pTarg).M2();
+};
+
+double reaction_kinematics::z_s(event fvecs)
+{
+  double s = s_man(fvecs);
+  double t = (fvecs.pGam - fvecs.qVec).M2();
+  double u = (fvecs.pGam - fvecs.qRec).M2();
+
+  std::complex<double> p = initial.momentum("beam", s);
+  std::complex<double> q = final.energy(vector_particle, s);
+
+  return (t - u) / (4. * abs(p*q));
+};
+
+// ---------------------------------------------------------------------------
 // Invariant variables
 double reaction_kinematics::t_man(double s, double zs)
 {
@@ -24,7 +43,6 @@ double reaction_kinematics::u_man(double s, double zs)
   return mVec2 + 2.*mPro2 - s - t;
 };
 
-// ---------------------------------------------------------------------------
 // Scattering angle in the t-channel
 std::complex<double> reaction_kinematics::z_t(double s, double zs)
 {

@@ -16,8 +16,31 @@
 #include "dirac_spinor.hpp"
 #include "polarization_vector.hpp"
 
+#include "TLorentzVector.h"
+
 #include <vector>
 #include <string>
+
+// Simple struct to pass a full set of 4-vectors
+struct event
+{
+  event(TLorentzVector pG, TLorentzVector pT, TLorentzVector qV, TLorentzVector qR)
+  : pGam(pG), pTarg(pT), qVec(qV), qRec(qR)
+  {};
+
+  TLorentzVector pGam;
+  TLorentzVector pTarg;
+  TLorentzVector qVec;
+  TLorentzVector qRec;
+};
+
+// ---------------------------------------------------------------------------
+// The reaction kinematics object is intended to have all relevant kinematic quantities
+// forthe reaction. Here you'll find the momenta and energies of all particles,
+//  spinors for the nucleons and polarization vectors for the gamma and vector meson
+//
+// Additionally helicity combinations are stored for easier access
+// ---------------------------------------------------------------------------
 
 class reaction_kinematics
 {
@@ -49,11 +72,15 @@ public:
   polarization_vector eps_vec, eps_gamma;
   dirac_spinor target, recoil;
 
+  // Get s, t, u from 4-vectors
+  double s_man(event fvecs);
+  double z_s(event fvecs);
+
   // Invariant variables
   double t_man(double s, double zs);
   double u_man(double s, double zs);
 
-  // Scattering angle in the t-channel
+  // Scattering angles
   std::complex<double> z_t(double s, double zs);
   std::complex<double> z_u(double s, double zs);
 
