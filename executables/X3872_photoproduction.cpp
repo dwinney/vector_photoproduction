@@ -13,6 +13,7 @@
 
 #include "amplitudes/reggeized_meson.hpp"
 #include "amplitudes/vector_exchange.hpp"
+#include "amplitudes/pomeron_exchange.hpp"
 #include "amplitudes/amplitude_sum.hpp"
 
 #include "jpacGraph1D.hpp"
@@ -42,19 +43,24 @@ int main( int argc, char** argv )
   // Set up kinematics for the X(3872)
   reaction_kinematics * ptr = new reaction_kinematics(3.872, "X(3872)");
 
+  amplitude_sum total(ptr, "Sum");
+
   // Linear trajectory for the rho
   linear_trajectory alpha(-1, 0.5, 0.9, "EXD_linear");
 
   // Initialize Reggeon amplitude with the above kinematics and regge_trajectory
   reggeized_meson rho(ptr, &alpha, "#rho");
   rho.set_params({3.81E-3, 2.4, 14.6});
+  total.add_amplitude(&rho);
 
   reggeized_meson omega(ptr, &alpha, "#omega");
   omega.set_params({9.51E-3, 16, 0.});
+  total.add_amplitude(&omega);
 
-  std::vector<amplitude*> exchanges = {&omega, &rho};
-  amplitude_sum total(ptr, exchanges, "Sum");
+  std::vector<amplitude*> exchanges;
   exchanges.push_back(&total);
+  exchanges.push_back(&rho);
+  exchanges.push_back(&omega);
 
   // ---------------------------------------------------------------------------
   // You shouldnt need to change anything below this line

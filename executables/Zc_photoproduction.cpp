@@ -12,6 +12,7 @@
 
 #include "constants.hpp"
 #include "reaction_kinematics.hpp"
+#include "regge_trajectory.hpp"
 #include "amplitudes/pseudoscalar_exchange.hpp"
 
 #include "jpacGraph1D.hpp"
@@ -22,8 +23,8 @@ int main( int argc, char** argv )
 {
   double theta = 0.;
   double max = 25;
-  double y[2] = {0., 0.1};
-  int N = 100;
+  double y[2] = {0., 0.15};
+  int N = 50;
   std::string filename = "pseudoscalar_exchange.pdf";
   bool integ = true;
   for (int i = 0; i < argc; i++)
@@ -39,11 +40,21 @@ int main( int argc, char** argv )
   // Set up kinematics for the chi_c1
   reaction_kinematics * ptr = new reaction_kinematics(4.20, "Z_{c}^{+}(4200)");
 
-  pseudoscalar_exchange amp(ptr, mPi, "#pi meson exchange");
-  amp.set_params({1.731 * 4.20, sqrt(4.*M_PI*14.4)});
+  // Simple pi exchange
+  pseudoscalar_exchange amp0(ptr, mPi, "#pi meson exchange");
 
+  // Compare with the trajectory exchange
+  linear_trajectory alpha(1, -0.7*mPi*mPi, 0.7, "pionic trajectory");
+  pseudoscalar_exchange amp1(ptr, &alpha, "Pionic Regge Trajectory");
+
+  // Same couplings
+  amp0.set_params({1.731 * 4.20, sqrt(4.*M_PI*14.4)});
+  amp1.set_params({1.731 * 4.20, sqrt(4.*M_PI*14.4)});
+
+  // Add to a vector to plot them both
   std::vector<amplitude*> amps;
-  amps.push_back(&amp);
+  amps.push_back(&amp0);
+  amps.push_back(&amp1);
 
   // ---------------------------------------------------------------------------
   // You shouldnt need to change anything below this line
@@ -53,6 +64,7 @@ int main( int argc, char** argv )
 
   for (int n = 0; n < amps.size(); n++)
   {
+    std::cout << "\nPrinting amplitde: " << amps[n]->identifier << ". \n";
     std::vector<double> W, dxs;
     for (int i = 0; i <= N; i++)
     {
@@ -62,11 +74,11 @@ int main( int argc, char** argv )
       double xsi, si = Wi*Wi;
       if (integ == false)
       {
-        xsi = amps[n]->differential_xsection(si, zs) * 1.E-3;
+        xsi = amps[n]->differential_xsection(si, zs) * 1.e-3;
       }
       else
       {
-        xsi = amps[n]->integrated_xsection(si) * 1.E-3;
+        xsi = amps[n]->integrated_xsection(si) * 1.e-3;
       }
 
       dxs.push_back(xsi);
@@ -80,7 +92,7 @@ int main( int argc, char** argv )
   std::string ylabel;
   if (integ == false)
   {
-    ylabel = "d#sigma/du  (#mub GeV^{-2})";
+    ylabel = "d#sigma/dt  (#mub GeV^{-2})";
   }
   else
   {
@@ -89,7 +101,7 @@ int main( int argc, char** argv )
 
   plotter->SetYaxis(ylabel, y[0], y[1]);
   plotter->SetXaxis("W  (GeV)", sqrt(ptr->sth), max);
-  plotter->SetLegend(0.6, 0.65);
+  plotter->SetLegend(0.55, 0.55);
 
   plotter->Plot(filename);
 }
