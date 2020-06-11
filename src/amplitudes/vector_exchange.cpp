@@ -17,14 +17,14 @@ std::complex<double> vector_exchange::helicity_amplitude(std::vector<int> helici
   int lam_rec = helicities[3];
 
   std::complex<double> result = 0.;
-  if (FEYN == true)
+  if (REGGE == false)
   {
     for (int mu = 0; mu < 4; mu++)
     {
       for(int nu = 0; nu < 4; nu++)
       {
         std::complex<double> temp;
-        temp = top_vertex(mu, lam_gam, lam_vec, s, zs);
+        temp  = top_vertex(mu, lam_gam, lam_vec, s, zs);
         temp *= metric[mu];
         temp *= vector_propagator(mu, nu, s, zs);
         temp *= metric[nu];
@@ -41,23 +41,40 @@ std::complex<double> vector_exchange::helicity_amplitude(std::vector<int> helici
 
     int lam  = lam_gam - lam_vec;
     int lamp = (lam_targ - lam_rec) / 2.;
+    int M = std::max(std::abs(lam), std::abs(lamp));
 
     // Product of residues
     result  = top_residue(lam, t);
     result *= bottom_residue(lamp, t);
 
-    // Pole piece
-    result /= t - mEx2;
+    // Angular momentum barrier factor
+    auto pq = [&](double t)
+    {
+      std::complex<double> q = (t - kinematics->mVec2) / sqrt(4. * t * xr);
+      std::complex<double> p = sqrt(xr * t - 4.*mPro2) / 2.;
+      return 2. * p * q;
+    };
 
-    // angular function
-    result *= wigner_d_int(1, lamp, lam, zt);
+    // Theres only a nontrivial barrier factor in the lam = lamp = 0 case
+    if (M == 0)
+    {
+      result /= pq(t);
+    }
+
+    result *= half_angle_factor(lam, lamp, zt);
+    result *= regge_propagator(s, t);
+    result /= pow(s, double(M));
   }
 
   return result;
 };
 
 // ---------------------------------------------------------------------------
-// Analytic residues
+// REGGE EVALUATION
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Analytic residues for Regge form
 std::complex<double> vector_exchange::top_residue(int lam, double t)
 {
   std::complex<double> result;
@@ -122,6 +139,48 @@ std::complex<double> vector_exchange::bottom_residue(int lamp, double t)
 
   return result;
 };
+
+//------------------------------------------------------------------------------
+// Half angle factors
+std::complex<double> vector_exchange::half_angle_factor(int lam, int lamp, std::complex<double> z_t)
+{
+  std::complex<double> sinhalf = sqrt((xr - z_t) / 2.);
+  std::complex<double> coshalf = sqrt((xr + z_t) / 2.);
+
+  std::complex<double> result;
+  result  = pow(sinhalf, double(std::abs(lam - lamp)));
+  result *= pow(coshalf, double(std::abs(lam + lamp)));
+
+  return result;
+};
+
+// ---------------------------------------------------------------------------
+// Usual Reggeon Propagator
+std::complex<double> vector_exchange::regge_propagator(double s, double t)
+{
+  std::complex<double> alpha_t = alpha->eval(t);
+
+  // the gamma function causes problesm for large t so
+  if (std::abs(alpha_t) > 30.)
+  {
+    return 0.;
+  }
+  else
+  {
+    std::complex<double> result;
+    result  = - alpha->slope();
+    result *= 0.5 * (double(alpha->signature) + exp(-xi * M_PI * alpha_t));
+    result *= cgamma(1. - alpha_t);
+    result *= pow(s, alpha_t);
+
+    return result;
+  }
+};
+
+
+// ---------------------------------------------------------------------------
+// FEYNMAN EVALUATION
+// ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
 // Photon - Axial Vector - Vector vertex

@@ -11,7 +11,6 @@
 #include "reaction_kinematics.hpp"
 #include "regge_trajectory.hpp"
 
-#include "amplitudes/reggeized_meson.hpp"
 #include "amplitudes/vector_exchange.hpp"
 #include "amplitudes/pomeron_exchange.hpp"
 #include "amplitudes/amplitude_sum.hpp"
@@ -28,14 +27,14 @@ int main( int argc, char** argv )
 {
   int N = 100;
   double theta = 0.;
-  double y[2] = {0., 0.15};
+  double y[2] = {0., 0.}; bool custom_y = false;
   bool integ = false;
   std::string filename = "X3872_photoproduction.pdf";
   for (int i = 0; i < argc; i++)
   {
     if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
     if (std::strcmp(argv[i],"-f")==0) filename = argv[i+1];
-    if (std::strcmp(argv[i],"-y")==0) y_range(argv[i+1], y);
+    if (std::strcmp(argv[i],"-y")==0) {y_range(argv[i+1], y); custom_y = true;}
     if (std::strcmp(argv[i],"-n")==0) N = atoi(argv[i+1]);
     if (std::strcmp(argv[i],"-integ")==0) integ = true;
   }
@@ -49,11 +48,11 @@ int main( int argc, char** argv )
   linear_trajectory alpha(-1, 0.5, 0.9, "EXD_linear");
 
   // Initialize Reggeon amplitude with the above kinematics and regge_trajectory
-  reggeized_meson rho(ptr, &alpha, "#rho");
+  vector_exchange rho(ptr, &alpha, "#rho");
   rho.set_params({3.81E-3, 2.4, 14.6});
   total.add_amplitude(&rho);
 
-  reggeized_meson omega(ptr, &alpha, "#omega");
+  vector_exchange omega(ptr, &alpha, "#omega");
   omega.set_params({9.51E-3, 16, 0.});
   total.add_amplitude(&omega);
 
@@ -105,14 +104,24 @@ int main( int argc, char** argv )
   // ---------------------------------------------------------------------------
 
  // Tweak the axes
-  if (integ == false)
+ std::string ylabel;
+ if (integ == false)
   {
-    plotter->SetYaxis(ROOT_italics("d#sigma/dt") + "  (nb GeV^{-2})", y[0], y[1]);
+    ylabel = "d#sigma/dt  (nb GeV^{-2})";
     plotter->SetXlogscale(true);
   }
   else
   {
-    plotter->SetYaxis("#sigma   (nb)", y[0], y[1]);
+    ylabel = "#sigma    (nb)";
+  }
+
+  if (custom_y == true)
+  {
+    plotter->SetYaxis(ylabel, y[0], y[1]);
+  }
+  else
+  {
+  plotter->SetYaxis(ylabel);
   }
 
   plotter->SetXaxis(ROOT_italics("s") + "  (GeV^{2})", ptr->sth, max);

@@ -9,6 +9,7 @@
 #define _AXIAL_
 
 #include "amplitude.hpp"
+#include "regge_trajectory.hpp"
 #include "gamma_technology.hpp"
 
 // ---------------------------------------------------------------------------
@@ -27,15 +28,13 @@
 class vector_exchange : public amplitude
 {
 public:
-  // Constructor
-  vector_exchange(reaction_kinematics * xkinem, double mass, std::string exchange = "", bool iffeyn = false)
-  : amplitude(xkinem, exchange, 3), mEx2(mass*mass), FEYN(iffeyn)
+  // Constructor for fixed spin
+  vector_exchange(reaction_kinematics * xkinem, double mass, std::string exchange = "")
+  : amplitude(xkinem, exchange, 3), mEx2(mass*mass), REGGE(false)
   {};
 
-  // Copy constructor
-  vector_exchange(const vector_exchange & old)
-  : amplitude(old), mEx2(old.mEx2),
-    gGam(old.gGam), gV(old.gV), gT(old.gT), FEYN(old.FEYN)
+  vector_exchange(reaction_kinematics * xkinem, linear_trajectory * traj, std::string exchange = "")
+  : amplitude(xkinem, exchange, 3), alpha(traj), REGGE(true)
   {};
 
   // Setting utility
@@ -47,23 +46,21 @@ public:
     gT = params[2];
   };
 
-  // Calculation of the residues analytically
-  std::complex<double> top_residue(int lam, double t);
-  std::complex<double> bottom_residue(int lamp, double t);
-
   // Assemble the helicity amplitude by contracting the lorentz indices
   std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);
 
 private:
-  // Whether to calculate with feynman rules or analytic residues
-  // Give the same result but analytic is faster
-  bool FEYN = false;
-
-  // Mass of the exchange
-  double mEx2;
+  // if using reggeized propagator
+  bool REGGE;
 
   // Couplings to the axial-vector/photon and vector/tensor couplings to nucleon
   double gGam = 0., gpGam = 0., gV = 0., gT = 0.;
+
+  // ---------------------------------------------------------------------------
+  // FIXED SPIN
+
+  // Mass of the exchange
+  double mEx2;
 
   // Four-momentum of the exhange
   std::complex<double> exchange_momenta(int mu, double s, double zs);
@@ -76,6 +73,22 @@ private:
 
   // Vector propogator
   std::complex<double> vector_propagator(int mu, int nu, double s, double zs);
+
+  // ---------------------------------------------------------------------------
+  // REGGEIZED
+
+  // or the regge trajectory of the exchange
+  linear_trajectory * alpha;
+
+  // Calculation of the residues analytically
+  std::complex<double> top_residue(int lam, double t);
+  std::complex<double> bottom_residue(int lamp, double t);
+
+  // Usual reggeon propagator
+  std::complex<double> regge_propagator(double s, double t);
+
+  // Half angle factors
+  std::complex<double> half_angle_factor(int lam, int lamp, std::complex<double> z_t);
 };
 
 #endif
