@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 2.9)
 
-project (vector_photoproduction)
+project (jpacPhoto)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
@@ -60,7 +60,7 @@ file(GLOB_RECURSE PLOTINC "jpacStyle/include/*.hpp")
 file(GLOB_RECURSE PLOTSRC "jpacStyle/src/*.cpp")
 add_library( JpacStyle ${PLOTINC} ${PLOTSRC} )
 
-# GRAB EXECUTABLES
+# GRAB EXECUTABLES and add to the makelist
 include_directories("executables")
 file(GLOB_RECURSE EXE_FILES "executables/*.cpp")
 update_deps_file("${EXE_FILES}")

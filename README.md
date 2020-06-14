@@ -1,4 +1,4 @@
-# vector_photoproduction
+# jpacPhoto
 Framework for building amplitudes involving vector meson production via quasi-elastic scattering of a real photon on a nucleon target.
 
 <p align="center">
@@ -6,6 +6,8 @@ Framework for building amplitudes involving vector meson production via quasi-el
 </p>
 
 Such processes are of interest at many experiments at JLab and the future EIC.
+
+Requires [ROOT](https://root.cern.ch/) (tested with version 6.17) with [*MathMore*](https://root.cern.ch/mathmore-library) libraries installed.
 
 ## AMPLITUDES
 The main object of interest is the abstract [`amplitude`](./include/amplitudes/amplitude.hpp) class. This allows you to build [observables](./src/amplitudes/observables.cpp) from helicity amplitudes:
@@ -41,8 +43,6 @@ double dxs = amp.differential_xsection(fvecs);
 ```
 
 ## EXECUTABLES
-Requires [ROOT](https://root.cern.ch/) (tested with version 6.17) with [*MathMore*](https://root.cern.ch/mathmore-library) libraries installed.
-
 To build any example script in the `executables` folder, for example `test.cpp`, use:
 
 ```bash
@@ -57,6 +57,8 @@ All executables have the following two optional flags for customizing the plotte
 -f string             # Desired filename of output (default: executable_name.pdf)
 -y [double:double]    # Manually set the y-range for plotting
 ```
+
+Alternatively use `make JpacPhoto` to build a library file `libJpacPhoto.a` which may be linked to other code to access header files and classes.
 
 #### [polarized_pentaquark](./executables/polarized_pentaquark.cpp)
 Sensitivity study of double polarized observables to the LHCb pentaquarks in Hall A at JLab.
