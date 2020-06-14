@@ -1,5 +1,5 @@
 # jpacPhoto
-Framework for building amplitudes involving vector meson production via quasi-elastic scattering of a real photon on a nucleon target.
+Framework for Object-Oriented Amplitude Analysis (OOAA) involving single meson production via quasi-elastic scattering of a real photon on a nucleon target. Focus on expandability and easy interfacing with Monte-Carlo tools and event generators.
 
 <p align="center">
   <img width="300" src="./doc/FeynmanDiagram.png">
