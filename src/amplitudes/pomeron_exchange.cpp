@@ -71,7 +71,7 @@ std::complex<double> pomeron_exchange::regge_factor(double s, double zs)
 
   std::complex<double> result = exp(b0 * (t - t_min)) / s;
   result *= pow(s - kinematics->sth, pomeron_traj->eval(t));
-  result *= xi * norm;
+  result *= xi * norm * sqrt(4. * M_PI * M_ALPHA);
 
   return result;
 };
