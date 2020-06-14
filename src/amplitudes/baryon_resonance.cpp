@@ -80,6 +80,9 @@ std::complex<double> baryon_resonance::photo_coupling(int lam_i, double s)
   result *= sqrt(xr * 8. * mPro * mRes / kinematics->initial.momentum("beam", s));
   result *= A_lam * a;
 
+  // FACTPR PF 4 PI SOMETIMES FACTORED OUT
+  result *= sqrt(4. * M_PI * M_ALPHA);
+
   return result;
 };
 
