@@ -17,14 +17,18 @@ double reaction_kinematics::s_man(event fvecs)
 
 double reaction_kinematics::z_s(event fvecs)
 {
-  double s = s_man(fvecs);
-  double t = (fvecs.pGam - fvecs.qVec).M2();
-  double u = (fvecs.pGam - fvecs.qRec).M2();
+  return z_s(fvecs.s_man(), fvecs.t_man());
+};
 
-  std::complex<double> p = initial.momentum("beam", s);
-  std::complex<double> q = final.energy(vector_particle, s);
+double reaction_kinematics::z_s(double s, double t)
+{
+  std::complex<double> kq = initial.momentum("beam", s) * final.momentum(vector_particle, s);
+  std::complex<double> E1E3 = initial.energy("beam", s) * final.energy(vector_particle, s);
 
-  return (t - u) / (4. * abs(p*q));
+  double result = t - mVec2 + 2.*abs(E1E3);
+  result /= 2. * abs(kq);
+
+  return result;
 };
 
 // ---------------------------------------------------------------------------

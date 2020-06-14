@@ -32,6 +32,22 @@ struct event
   TLorentzVector pTarg;
   TLorentzVector qVec;
   TLorentzVector qRec;
+
+  // Mandelstam Variables
+  double s_man()
+  {
+    return (pGam + pTarg).M2();
+  }
+
+  double t_man()
+  {
+    return (pGam - qVec).M2();
+  }
+
+  double u_man()
+  {
+    return (pGam - qRec).M2();
+  }
 };
 
 // ---------------------------------------------------------------------------
@@ -75,6 +91,7 @@ public:
   // Get s, t, u from 4-vectors
   double s_man(event fvecs);
   double z_s(event fvecs);
+  double z_s(double s, double t);
 
   // Invariant variables
   double t_man(double s, double zs);
