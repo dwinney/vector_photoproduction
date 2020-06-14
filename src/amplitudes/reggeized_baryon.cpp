@@ -9,7 +9,7 @@
 #include "amplitudes/reggeized_baryon.hpp"
 
 //------------------------------------------------------------------------------
-std::complex<double> reggeized_baryon::helicity_amplitude(std::vector<int> helicities, double s, double zs)
+std::complex<double> jpacPhoto::reggeized_baryon::helicity_amplitude(std::vector<int> helicities, double s, double zs)
 {
   int lam_gam = helicities[0];
   int lam_targ = helicities[1];
@@ -28,7 +28,7 @@ std::complex<double> reggeized_baryon::helicity_amplitude(std::vector<int> helic
 
 // ---------------------------------------------------------------------------
 // Helicity amplitude in terms of u-channel (unrotated) helicities
-std::complex<double> reggeized_baryon::u_channel_amplitude(std::vector<int> helicities, double s, double zs)
+std::complex<double> jpacPhoto::reggeized_baryon::u_channel_amplitude(std::vector<int> helicities, double s, double zs)
 {
   // Net helicities
   int lam  = 2 * helicities[0] - helicities[3];
@@ -64,7 +64,7 @@ std::complex<double> reggeized_baryon::u_channel_amplitude(std::vector<int> heli
 
 //------------------------------------------------------------------------------
 // Half angle factors
-std::complex<double> reggeized_baryon::half_angle_factor(int lam, int lamp, std::complex<double> zu)
+std::complex<double> jpacPhoto::reggeized_baryon::half_angle_factor(int lam, int lamp, std::complex<double> zu)
 {
   std::complex<double> sinhalf = sqrt((xr - zu) / 2.);
   std::complex<double> coshalf = sqrt((xr + zu) / 2.);
@@ -78,7 +78,7 @@ std::complex<double> reggeized_baryon::half_angle_factor(int lam, int lamp, std:
 
 // ---------------------------------------------------------------------------
 // Usual Reggeon Propagator
-std::complex<double> reggeized_baryon::regge_propagator(double u)
+std::complex<double> jpacPhoto::reggeized_baryon::regge_propagator(double u)
 {
   std::complex<double> alpha_u = alpha->eval(u);
 

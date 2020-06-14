@@ -7,21 +7,23 @@
 
 #include "dirac_spinor.hpp"
 
+using namespace jpacPhoto;
+
 // ---------------------------------------------------------------------------
 // Angular half angle factors
-double dirac_spinor::cos_half(double zs)
+double jpacPhoto::dirac_spinor::cos_half(double zs)
 {
   double result = (1. + zs) / 2.;
   return sqrt(result);
 };
 
-double dirac_spinor::sin_half(double zs)
+double jpacPhoto::dirac_spinor::sin_half(double zs)
 {
   double result = (1. - zs) / 2.;
   return sqrt(result);
 };
 
-std::complex<double> dirac_spinor::momentum(int sign, double s)
+std::complex<double> jpacPhoto::dirac_spinor::momentum(int sign, double s)
 {
   if (ANTI_PARTICLE)
   {
@@ -33,7 +35,7 @@ std::complex<double> dirac_spinor::momentum(int sign, double s)
 }
 // ---------------------------------------------------------------------------
 // Components for both the regular spinor or adjoint
-std::complex<double> dirac_spinor::component(int i, int lambda, double s, double zs)
+std::complex<double> jpacPhoto::dirac_spinor::component(int i, int lambda, double s, double zs)
 {
   if (lambda == 1)
   {
@@ -66,7 +68,7 @@ std::complex<double> dirac_spinor::component(int i, int lambda, double s, double
   }
 };
 
-std::complex<double> dirac_spinor::adjoint_component(int i, int lambda, double s, double zs)
+std::complex<double> jpacPhoto::dirac_spinor::adjoint_component(int i, int lambda, double s, double zs)
 {
   std::complex<double> result = 0.;
   for (int j = 0; j < 4; j++)

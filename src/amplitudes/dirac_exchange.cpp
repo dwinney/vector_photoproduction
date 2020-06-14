@@ -9,7 +9,7 @@
 
 //------------------------------------------------------------------------------
 // Combine everything and contract indices
-std::complex<double> dirac_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
+std::complex<double> jpacPhoto::dirac_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
 {
   int lam_gam = helicities[0];
   int lam_targ = helicities[1];
@@ -37,7 +37,7 @@ std::complex<double> dirac_exchange::helicity_amplitude(std::vector<int> helicit
 //------------------------------------------------------------------------------
 // Photon fermion fermion vertex
 // (ubar epsilon-slashed)
-std::complex<double> dirac_exchange::top_vertex(int i, int lam_gam, int lam_rec, double s, double zs)
+std::complex<double> jpacPhoto::dirac_exchange::top_vertex(int i, int lam_gam, int lam_rec, double s, double zs)
 {
   if (ScTOP == true)
   {
@@ -61,7 +61,7 @@ std::complex<double> dirac_exchange::top_vertex(int i, int lam_gam, int lam_rec,
 //------------------------------------------------------------------------------
 // Vector fermion fermion vertex
 // (epsilon*-slashed u)
-std::complex<double> dirac_exchange::bottom_vertex(int j, int lam_vec, int lam_targ, double s, double zs)
+std::complex<double> jpacPhoto::dirac_exchange::bottom_vertex(int j, int lam_vec, int lam_targ, double s, double zs)
 {
   if (ScBOT == true)
   {
@@ -83,7 +83,7 @@ std::complex<double> dirac_exchange::bottom_vertex(int j, int lam_vec, int lam_t
 };
 
 //------------------------------------------------------------------------------
-double dirac_exchange::exchange_mass(double s, double zs)
+double jpacPhoto::dirac_exchange::exchange_mass(double s, double zs)
 {
     double result = 0.;
     for (int mu = 0; mu < 4; mu++)
@@ -98,7 +98,7 @@ double dirac_exchange::exchange_mass(double s, double zs)
     return result;
 }
 
-std::complex<double> dirac_exchange::exchange_momentum(int mu, double s, double zs)
+std::complex<double> jpacPhoto::dirac_exchange::exchange_momentum(int mu, double s, double zs)
 {
   std::complex<double> qGamma_mu, qRec_mu;
   qGamma_mu   = kinematics->initial.component(mu, "beam", s, 1.);
@@ -107,7 +107,7 @@ std::complex<double> dirac_exchange::exchange_momentum(int mu, double s, double 
   return qRec_mu - qGamma_mu;
 };
 
-std::complex<double> dirac_exchange::slashed_exchange_momentum(int i, int j, double s, double zs)
+std::complex<double> jpacPhoto::dirac_exchange::slashed_exchange_momentum(int i, int j, double s, double zs)
 {
   std::complex<double> result = 0.;
   for (int mu = 0; mu < 4; mu++)
@@ -125,7 +125,7 @@ std::complex<double> dirac_exchange::slashed_exchange_momentum(int i, int j, dou
 
 //------------------------------------------------------------------------------
 // Slashed polarization vectors
-std::complex<double> dirac_exchange::slashed_eps(int i, int j, double lam, polarization_vector eps, bool STAR, double s, double zs)
+std::complex<double> jpacPhoto::dirac_exchange::slashed_eps(int i, int j, double lam, polarization_vector eps, bool STAR, double s, double zs)
 {
   std::complex<double> result = 0.;
   for (int mu = 0; mu < 4; mu++)
@@ -150,7 +150,7 @@ std::complex<double> dirac_exchange::slashed_eps(int i, int j, double lam, polar
 
 
 //------------------------------------------------------------------------------
-std::complex<double> dirac_exchange::dirac_propagator(int i, int j, double s, double zs)
+std::complex<double> jpacPhoto::dirac_exchange::dirac_propagator(int i, int j, double s, double zs)
 {
   std::complex<double> result;
   result = slashed_exchange_momentum(i, j, s, zs);

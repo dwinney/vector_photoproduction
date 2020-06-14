@@ -22,6 +22,8 @@
 #include <iostream>
 #include <iomanip>
 
+using namespace jpacPhoto;
+
 int main( int argc, char** argv )
 {
   double theta = 0.;

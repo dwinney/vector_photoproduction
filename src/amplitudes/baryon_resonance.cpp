@@ -8,7 +8,7 @@
 #include "amplitudes/baryon_resonance.hpp"
 
 // Combined amplitude as a Breit-Wigner with the residue as the prodect of hadronic and photo-couplings
-std::complex<double> baryon_resonance::helicity_amplitude(std::vector<int> helicities, double s, double zs)
+std::complex<double> jpacPhoto::baryon_resonance::helicity_amplitude(std::vector<int> helicities, double s, double zs)
 {
   int lam_i = 2 * helicities[0] - helicities[1];
   int lam_f = 2 * helicities[2] - helicities[3];
@@ -25,7 +25,7 @@ std::complex<double> baryon_resonance::helicity_amplitude(std::vector<int> helic
 };
 
 // Ad-hoc threshold factor to kill the resonance at threshold
-double baryon_resonance::threshold_factor(double s, double beta)
+double jpacPhoto::baryon_resonance::threshold_factor(double s, double beta)
 {
   double result = pow((s - sthPsiPro) / s, beta);
   result /= pow((mRes*mRes - sthPsiPro) / (mRes*mRes), beta);
@@ -34,7 +34,7 @@ double baryon_resonance::threshold_factor(double s, double beta)
 };
 
 // Photoexcitation helicity amplitude for the process gamma p -> R
-std::complex<double> baryon_resonance::photo_coupling(int lam_i, double s)
+std::complex<double> jpacPhoto::baryon_resonance::photo_coupling(int lam_i, double s)
 {
   int l_min; // lowest allowed relative angular momentum
   double P_t; // Combinatorial factor due to only transverse polarized J/psi contribute
@@ -87,7 +87,7 @@ std::complex<double> baryon_resonance::photo_coupling(int lam_i, double s)
 };
 
 // Hadronic decay helicity amplitude for the R -> J/psi p process
-std::complex<double> baryon_resonance::hadronic_coupling(int lam_f, double s)
+std::complex<double> jpacPhoto::baryon_resonance::hadronic_coupling(int lam_f, double s)
 {
   // Hadronic coupling constant g, given in terms of branching ratio xBR
   std::complex<double> g;

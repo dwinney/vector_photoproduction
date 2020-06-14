@@ -10,7 +10,7 @@
 
 // ---------------------------------------------------------------------------
 // square root of the square of the amplitude summed over all helicities
-double amplitude::probablity_distribution(double s, double zs)
+double jpacPhoto::amplitude::probablity_distribution(double s, double zs)
 {
   double sum = 0.;
   for (int i = 0; i < 24; i++)
@@ -21,7 +21,7 @@ double amplitude::probablity_distribution(double s, double zs)
   return sqrt(sum);
 };
 
-double amplitude::probablity_distribution(event fvecs)
+double jpacPhoto::amplitude::probablity_distribution(event fvecs)
 {
   double s   = kinematics->s_man(fvecs);
   double zs  = kinematics->z_s(fvecs);
@@ -32,7 +32,7 @@ double amplitude::probablity_distribution(event fvecs)
 // ---------------------------------------------------------------------------
 // Differential cross section dsigma / dt
 // in NANOBARN
-double amplitude::differential_xsection(double s, double zs)
+double jpacPhoto::amplitude::differential_xsection(double s, double zs)
 {
 
   double sum = probablity_distribution(s, zs);
@@ -48,7 +48,7 @@ double amplitude::differential_xsection(double s, double zs)
   return norm * sum;
 };
 
-double amplitude::differential_xsection(event fvecs)
+double jpacPhoto::amplitude::differential_xsection(event fvecs)
 {
   double s   = kinematics->s_man(fvecs);
   double zs  = kinematics->z_s(fvecs);
@@ -59,7 +59,7 @@ double amplitude::differential_xsection(event fvecs)
 // ---------------------------------------------------------------------------
 // Inegrated total cross-section
 // IN NANOBARN
-double amplitude::integrated_xsection(double s)
+double jpacPhoto::amplitude::integrated_xsection(double s)
 {
   auto F = [&](double zs)
   {
@@ -77,7 +77,7 @@ double amplitude::integrated_xsection(double s)
   return ig.Integral(-1,1);
 };
 
-double amplitude::integrated_xsection(event fvecs)
+double jpacPhoto::amplitude::integrated_xsection(event fvecs)
 {
   double s   = kinematics->s_man(fvecs);
 
@@ -86,7 +86,7 @@ double amplitude::integrated_xsection(event fvecs)
 
 // ---------------------------------------------------------------------------
 // Polarizatiopn asymmetry between beam and recoil proton
-double amplitude::K_LL(double s, double zs)
+double jpacPhoto::amplitude::K_LL(double s, double zs)
 {
   double sigmapp = 0., sigmapm = 0.;
   for (int i = 0; i < 6; i++)
@@ -107,7 +107,7 @@ double amplitude::K_LL(double s, double zs)
   return (sigmapp - sigmapm) / (sigmapp + sigmapm);
 }
 
-double amplitude::K_LL(event fvecs)
+double jpacPhoto::amplitude::K_LL(event fvecs)
 {
   double s   = kinematics->s_man(fvecs);
   double zs  = kinematics->z_s(fvecs);
@@ -117,7 +117,7 @@ double amplitude::K_LL(event fvecs)
 
 // ---------------------------------------------------------------------------
 // Polarization asymmetry between beam and target proton
-double amplitude::A_LL(double s, double zs)
+double jpacPhoto::amplitude::A_LL(double s, double zs)
 {
   double sigmapp = 0., sigmapm = 0.;
   for (int i = 0; i < 6; i++)
@@ -138,7 +138,7 @@ double amplitude::A_LL(double s, double zs)
   return (sigmapp - sigmapm) / (sigmapp + sigmapm);
 }
 
-double amplitude::A_LL(event fvecs)
+double jpacPhoto::amplitude::A_LL(event fvecs)
 {
   double s   = kinematics->s_man(fvecs);
   double zs  = kinematics->z_s(fvecs);
@@ -148,7 +148,7 @@ double amplitude::A_LL(event fvecs)
 
 // ---------------------------------------------------------------------------
 // Photon spin-density matrix elements
-std::complex<double> amplitude::SDME(int alpha, int lam, int lamp, double s, double zs)
+std::complex<double> jpacPhoto::amplitude::SDME(int alpha, int lam, int lamp, double s, double zs)
 {
   if (alpha < 0 || alpha > 2 || std::abs(lam) > 1 || std::abs(lamp) > 1)
   {
@@ -232,7 +232,7 @@ std::complex<double> amplitude::SDME(int alpha, int lam, int lamp, double s, dou
   return result;
 };
 
-std::complex<double> amplitude::SDME(int alpha, int lam, int lamp, event fvecs)
+std::complex<double> jpacPhoto::amplitude::SDME(int alpha, int lam, int lamp, event fvecs)
 {
   double s   = kinematics->s_man(fvecs);
   double zs  = kinematics->z_s(fvecs);
@@ -243,7 +243,7 @@ std::complex<double> amplitude::SDME(int alpha, int lam, int lamp, event fvecs)
 
 // ---------------------------------------------------------------------------
 // Integrated beam asymmetry Sigma_4pi
-double amplitude::beam_asymmetry(double s, double zs)
+double jpacPhoto::amplitude::beam_asymmetry(double s, double zs)
 {
   double rho100 = real(SDME(1, 0, 0, s, zs));
   double rho111 = real(SDME(1, 1, 1, s, zs));
@@ -251,7 +251,7 @@ double amplitude::beam_asymmetry(double s, double zs)
   return - rho100 - 2. * rho111;
 };
 
-double amplitude::beam_asymmetry(event fvecs)
+double jpacPhoto::amplitude::beam_asymmetry(event fvecs)
 {
   double s   = kinematics->s_man(fvecs);
   double zs  = kinematics->z_s(fvecs);
@@ -262,7 +262,7 @@ double amplitude::beam_asymmetry(event fvecs)
 
 // ---------------------------------------------------------------------------
 // Parity asymmetry P_sigma
-double amplitude::parity_asymmetry(double s, double zs)
+double jpacPhoto::amplitude::parity_asymmetry(double s, double zs)
 {
   double rho100 = real(SDME(1, 0, 0, s, zs));
   double rho11m1 = real(SDME(1, 1, -1, s, zs));
@@ -270,7 +270,7 @@ double amplitude::parity_asymmetry(double s, double zs)
   return 2. * rho11m1 - rho100;
 };
 
-double amplitude::parity_asymmetry(event fvecs)
+double jpacPhoto::amplitude::parity_asymmetry(event fvecs)
 {
   double s   = kinematics->s_man(fvecs);
   double zs  = kinematics->z_s(fvecs);

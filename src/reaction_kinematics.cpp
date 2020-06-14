@@ -10,17 +10,17 @@
 
 // ---------------------------------------------------------------------------
 // s-channel variables from 4-vectors
-double reaction_kinematics::s_man(event fvecs)
+double jpacPhoto::reaction_kinematics::s_man(event fvecs)
 {
   return (fvecs.pGam + fvecs.pTarg).M2();
 };
 
-double reaction_kinematics::z_s(event fvecs)
+double jpacPhoto::reaction_kinematics::z_s(event fvecs)
 {
   return z_s(fvecs.s_man(), fvecs.t_man());
 };
 
-double reaction_kinematics::z_s(double s, double t)
+double jpacPhoto::reaction_kinematics::z_s(double s, double t)
 {
   std::complex<double> kq = initial.momentum("beam", s) * final.momentum(vector_particle, s);
   std::complex<double> E1E3 = initial.energy("beam", s) * final.energy(vector_particle, s);
@@ -33,14 +33,14 @@ double reaction_kinematics::z_s(double s, double t)
 
 // ---------------------------------------------------------------------------
 // Invariant variables
-double reaction_kinematics::t_man(double s, double zs)
+double jpacPhoto::reaction_kinematics::t_man(double s, double zs)
 {
   std::complex<double> kq = initial.momentum("beam", s) * final.momentum(vector_particle, s);
   std::complex<double> E1E3 = initial.energy("beam", s) * final.energy(vector_particle, s);
   return mVec*mVec - 2. * abs(E1E3) + 2. * abs(kq) * zs;
 };
 
-double reaction_kinematics::u_man(double s, double zs)
+double jpacPhoto::reaction_kinematics::u_man(double s, double zs)
 {
   double t = t_man(s, zs);
 
@@ -48,11 +48,11 @@ double reaction_kinematics::u_man(double s, double zs)
 };
 
 // Scattering angle in the t-channel
-std::complex<double> reaction_kinematics::z_t(double s, double zs)
+std::complex<double> jpacPhoto::reaction_kinematics::z_t(double s, double zs)
 {
   double t = t_man(s, zs);
   std::complex<double> p_t = sqrt(xr * t - 4. * mPro2) / 2.;
-  std::complex<double> q_t = sqrt(xr * Kallen(t, mVec2, 0.)) / sqrt(xr * 4. * t);
+  std::complex<double> q_t = sqrt(xr * jpacPhoto::Kallen(t, mVec2, 0.)) / sqrt(xr * 4. * t);
 
   std::complex<double> result;
   result = 2. * s + t - 2. * mPro2 - mVec2; // s - u
@@ -61,7 +61,7 @@ std::complex<double> reaction_kinematics::z_t(double s, double zs)
   return result;
 };
 
-std::complex<double> reaction_kinematics::z_u(double s, double zs)
+std::complex<double> jpacPhoto::reaction_kinematics::z_u(double s, double zs)
 {
   // TODO: fix this
   std::cout << "z_u not implimented yet i fucked up here :p\n";
@@ -70,15 +70,15 @@ std::complex<double> reaction_kinematics::z_u(double s, double zs)
 
 // ---------------------------------------------------------------------------
 // Cosine of crossing an
-std::complex<double> reaction_kinematics::crossing_angle(std::string particle, double s, double zs)
+std::complex<double> jpacPhoto::reaction_kinematics::crossing_angle(std::string particle, double s, double zs)
 {
   double t = t_man(s, zs);
 
   std::complex<double> S_gp, S_vp, T_gv, T_pp;
-  S_gp = sqrt(xr * Kallen(s, 0., mPro2));
-  S_vp = sqrt(xr * Kallen(s, mVec2, mPro2));
-  T_gv = sqrt(xr * Kallen(t, 0., mVec2));
-  T_pp = sqrt(xr * Kallen(t, mPro2, mPro2));
+  S_gp = sqrt(xr * jpacPhoto::Kallen(s, 0., mPro2));
+  S_vp = sqrt(xr * jpacPhoto::Kallen(s, mVec2, mPro2));
+  T_gv = sqrt(xr * jpacPhoto::Kallen(t, 0., mVec2));
+  T_pp = sqrt(xr * jpacPhoto::Kallen(t, mPro2, mPro2));
 
   std::complex<double> result;
   if (particle == "beam")

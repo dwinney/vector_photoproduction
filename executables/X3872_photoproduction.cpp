@@ -22,6 +22,7 @@
 #include <iostream>
 #include <iomanip>
 
+using namespace jpacPhoto;
 
 int main( int argc, char** argv )
 {

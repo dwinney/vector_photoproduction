@@ -8,7 +8,7 @@
 #include "misc_math.hpp"
 
 // ---------------------------------------------------------------------------
-double wigner_error(int j, int lam1, int lam2, bool half)
+double jpacPhoto::wigner_error(int j, int lam1, int lam2, bool half)
 {
   // if (half == true)
   // {
@@ -32,7 +32,7 @@ double wigner_error(int j, int lam1, int lam2, bool half)
   return 0.;
 }
 // ---------------------------------------------------------------------------
-std::complex<double> wigner_d_half(int j, int lam1, int lam2, std::complex<double> z)
+std::complex<double> jpacPhoto::wigner_d_half(int j, int lam1, int lam2, std::complex<double> z)
 {
   // if (abs(z) > 1.)
   // {
@@ -222,7 +222,7 @@ std::complex<double> wigner_d_half(int j, int lam1, int lam2, std::complex<doubl
 };
 
 // ---------------------------------------------------------------------------
-std::complex<double> wigner_d_int(int j, int lam1, int lam2, std::complex<double> z)
+std::complex<double> jpacPhoto::wigner_d_int(int j, int lam1, int lam2, std::complex<double> z)
 {
 
   double phase = 1.;

@@ -16,44 +16,46 @@
 // and add them together to get observables!
 // ---------------------------------------------------------------------------
 
-class amplitude_sum : public amplitude
+namespace jpacPhoto
 {
-private:
-  // Store a vector of all the amplitudes you want to sum incoherently
-  std::vector<amplitude*> amps;
-
-public:
-  // Empty constructor
-  amplitude_sum(reaction_kinematics * xkinem, std::string identifer = "")
-  : amplitude(xkinem, identifer, 0)
-  {};
-
-  // Constructor with a vector already set up
-  amplitude_sum(reaction_kinematics * xkinem, std::vector<amplitude*> vec, std::string identifer = "")
-  : amplitude(xkinem, identifer, 0), amps(vec)
-  {};
-
-  // Add a new amplitude to the vector
-  void add_amplitude(amplitude * new_amp)
+  class amplitude_sum : public amplitude
   {
-    amps.push_back(new_amp);
-  };
+  private:
+    // Store a vector of all the amplitudes you want to sum incoherently
+    std::vector<amplitude*> amps;
 
-  // Add all the members of an existing sum to a new sum
-  void add_amplitude(amplitude_sum new_sum)
-  {
-    for (int i = 0; i < new_sum.amps.size(); i++)
+  public:
+    // Empty constructor
+    amplitude_sum(reaction_kinematics * xkinem, std::string identifer = "")
+    : amplitude(xkinem, identifer, 0)
+    {};
+
+    // Constructor with a vector already set up
+    amplitude_sum(reaction_kinematics * xkinem, std::vector<amplitude*> vec, std::string identifer = "")
+    : amplitude(xkinem, identifer, 0), amps(vec)
+    {};
+
+    // Add a new amplitude to the vector
+    void add_amplitude(amplitude * new_amp)
     {
-      amps.push_back(new_sum.amps[i]);
-    }
+      amps.push_back(new_amp);
+    };
+
+    // Add all the members of an existing sum to a new sum
+    void add_amplitude(amplitude_sum new_sum)
+    {
+      for (int i = 0; i < new_sum.amps.size(); i++)
+      {
+        amps.push_back(new_sum.amps[i]);
+      }
+    };
+
+    // TODO: Add a set_params which timesi in one vector and allocates approriaten number of
+    // params to each sub amplitude
+
+    // Evaluate the sum for given set of helicites, energy, and cos
+    std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);
   };
-
-  // TODO: Add a set_params which timesi in one vector and allocates approriaten number of
-  // params to each sub amplitude 
-
-  // Evaluate the sum for given set of helicites, energy, and cos
-  std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);
-
 };
 
 #endif

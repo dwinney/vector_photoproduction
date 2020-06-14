@@ -2,7 +2,7 @@
 #include "misc_math.hpp"
 
 // ------------------------------------------------
-std::complex<double> cgamma(std::complex<double> z,int OPT)
+std::complex<double> jpacPhoto::cgamma(std::complex<double> z,int OPT)
 // OPT = 0 for Gamma ; OPT = 1 for log(Gamma)
 {
   std::complex<double> I(0,1);

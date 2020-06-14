@@ -9,7 +9,7 @@
 
 //------------------------------------------------------------------------------
 // Combine everything and contract indices
-std::complex<double> rarita_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
+std::complex<double> jpacPhoto::rarita_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
 {
   int lam_gam = helicities[0];
   int lam_targ = helicities[1];
@@ -35,7 +35,7 @@ std::complex<double> rarita_exchange::helicity_amplitude(std::vector<int> helici
 
 //------------------------------------------------------------------------------
 // rank-2 traceless tensor
-std::complex<double> rarita_exchange::g_bar(int mu, int nu, double s, double zs)
+std::complex<double> jpacPhoto::rarita_exchange::g_bar(int mu, int nu, double s, double zs)
 {
   std::complex<double> result;
   result = exchange_momentum(mu, s, zs) * exchange_momentum(nu, s, zs) / mEx2;
@@ -49,7 +49,7 @@ std::complex<double> rarita_exchange::g_bar(int mu, int nu, double s, double zs)
 };
 
 // g_bar contracted with gamma^nu
-std::complex<double> rarita_exchange::slashed_g_bar(int mu, int i, int j, double s, double zs)
+std::complex<double> jpacPhoto::rarita_exchange::slashed_g_bar(int mu, int i, int j, double s, double zs)
 {
   std::complex<double> result = 0.;
 
@@ -68,7 +68,7 @@ std::complex<double> rarita_exchange::slashed_g_bar(int mu, int i, int j, double
 
 //------------------------------------------------------------------------------
 // Relative momentum either entering (top vertex) or exiting (bottom vertex) the propagator
-std::complex<double> rarita_exchange::relative_momentum(int mu, double s, double zs, std::string in_out)
+std::complex<double> jpacPhoto::rarita_exchange::relative_momentum(int mu, double s, double zs, std::string in_out)
 {
   std::complex<double> q1_mu, q2_mu;
 
@@ -94,7 +94,7 @@ std::complex<double> rarita_exchange::relative_momentum(int mu, double s, double
 
 //------------------------------------------------------------------------------
 // Rarita-Schwinger Propagator
-std::complex<double> rarita_exchange::rarita_propagator(int i, int j, double s, double zs)
+std::complex<double> jpacPhoto::rarita_exchange::rarita_propagator(int i, int j, double s, double zs)
 {
   std::complex<double> result = 0.;
 
@@ -122,6 +122,6 @@ std::complex<double> rarita_exchange::rarita_propagator(int i, int j, double s, 
   }
 
   result *= dirac_propagator(i, j, s, zs);
-  
+
   return result;
 }

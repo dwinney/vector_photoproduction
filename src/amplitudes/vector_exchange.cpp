@@ -9,7 +9,7 @@
 
 // ---------------------------------------------------------------------------
 // Assemble the helicity amplitude by contracting the lorentz indices
-std::complex<double> vector_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
+std::complex<double> jpacPhoto::vector_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
 {
   int lam_gam = helicities[0];
   int lam_targ = helicities[1];
@@ -75,7 +75,7 @@ std::complex<double> vector_exchange::helicity_amplitude(std::vector<int> helici
 
 // ---------------------------------------------------------------------------
 // Analytic residues for Regge form
-std::complex<double> vector_exchange::top_residue(int lam, double t)
+std::complex<double> jpacPhoto::vector_exchange::top_residue(int lam, double t)
 {
   std::complex<double> result;
   switch (std::abs(lam))
@@ -105,7 +105,7 @@ std::complex<double> vector_exchange::top_residue(int lam, double t)
   return  result * q * gGam;
 };
 
-std::complex<double> vector_exchange::bottom_residue(int lamp, double t)
+std::complex<double> jpacPhoto::vector_exchange::bottom_residue(int lamp, double t)
 {
   std::complex<double> vector, tensor;
   switch (std::abs(lamp))
@@ -142,7 +142,7 @@ std::complex<double> vector_exchange::bottom_residue(int lamp, double t)
 
 //------------------------------------------------------------------------------
 // Half angle factors
-std::complex<double> vector_exchange::half_angle_factor(int lam, int lamp, std::complex<double> z_t)
+std::complex<double> jpacPhoto::vector_exchange::half_angle_factor(int lam, int lamp, std::complex<double> z_t)
 {
   std::complex<double> sinhalf = sqrt((xr - z_t) / 2.);
   std::complex<double> coshalf = sqrt((xr + z_t) / 2.);
@@ -156,7 +156,7 @@ std::complex<double> vector_exchange::half_angle_factor(int lam, int lamp, std::
 
 // ---------------------------------------------------------------------------
 // Usual Reggeon Propagator
-std::complex<double> vector_exchange::regge_propagator(double s, double t)
+std::complex<double> jpacPhoto::vector_exchange::regge_propagator(double s, double t)
 {
   std::complex<double> alpha_t = alpha->eval(t);
 
@@ -185,7 +185,7 @@ std::complex<double> vector_exchange::regge_propagator(double s, double t)
 // ---------------------------------------------------------------------------
 // Photon - Axial Vector - Vector vertex
 // Feynman rules
-std::complex<double> vector_exchange::top_vertex(int mu, int lam_gam, int lam_vec, double s, double zs)
+std::complex<double> jpacPhoto::vector_exchange::top_vertex(int mu, int lam_gam, int lam_vec, double s, double zs)
 {
   // Contract with LeviCivita
   std::complex<double> result = 0.;
@@ -213,7 +213,7 @@ std::complex<double> vector_exchange::top_vertex(int mu, int lam_gam, int lam_ve
 
 // ---------------------------------------------------------------------------
 // Nucleon - Nucleon - Vector vertex
-std::complex<double> vector_exchange::bottom_vertex(int mu, int lam_targ, int lam_rec, double s, double zs)
+std::complex<double> jpacPhoto::vector_exchange::bottom_vertex(int mu, int lam_targ, int lam_rec, double s, double zs)
 {
   // Vector coupling piece
   std::complex<double> vector = 0.;
@@ -257,7 +257,7 @@ std::complex<double> vector_exchange::bottom_vertex(int mu, int lam_targ, int la
 // ---------------------------------------------------------------------------
 // Four-momentum of the exchanged meson.
 // Simply the difference of the photon and axial 4-momenta
-std::complex<double> vector_exchange::exchange_momenta(int mu, double s, double zs)
+std::complex<double> jpacPhoto::vector_exchange::exchange_momenta(int mu, double s, double zs)
 {
   std::complex<double> qGamma_mu, qA_mu;
   qGamma_mu = kinematics->initial.component(mu, "beam", s, 1.);
@@ -268,7 +268,7 @@ std::complex<double> vector_exchange::exchange_momenta(int mu, double s, double 
 
 // ---------------------------------------------------------------------------
 // Propagator of a massive spin-one particle
-std::complex<double> vector_exchange::vector_propagator(int mu, int nu, double s, double zs)
+std::complex<double> jpacPhoto::vector_exchange::vector_propagator(int mu, int nu, double s, double zs)
 {
   std::complex<double> result;
   result = exchange_momenta(mu, s, zs) * exchange_momenta(nu, s, zs) / mEx2;

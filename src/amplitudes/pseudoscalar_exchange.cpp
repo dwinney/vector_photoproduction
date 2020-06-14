@@ -12,7 +12,7 @@
 
 //------------------------------------------------------------------------------
 // Combine everything and contract indices
-std::complex<double> pseudoscalar_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
+std::complex<double> jpacPhoto::pseudoscalar_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
 {
   int lam_gam = helicities[0];
   int lam_targ = helicities[1];
@@ -30,7 +30,7 @@ std::complex<double> pseudoscalar_exchange::helicity_amplitude(std::vector<int> 
 
 //------------------------------------------------------------------------------
 // Pion form factors
-double pseudoscalar_exchange::form_factor(double m, double s, double zs)
+double jpacPhoto::pseudoscalar_exchange::form_factor(double m, double s, double zs)
 {
   double result;
   result  = (m*m - mPi*mPi);
@@ -41,7 +41,7 @@ double pseudoscalar_exchange::form_factor(double m, double s, double zs)
 
 //------------------------------------------------------------------------------
 // Nucleon vertex
-std::complex<double> pseudoscalar_exchange::bottom_vertex(double lam_rec, double lam_targ, double s, double zs)
+std::complex<double> jpacPhoto::pseudoscalar_exchange::bottom_vertex(double lam_rec, double lam_targ, double s, double zs)
 {
   std::complex<double> result = 0.;
   for (int i = 0; i < 4; i++)
@@ -65,7 +65,7 @@ std::complex<double> pseudoscalar_exchange::bottom_vertex(double lam_rec, double
 
 //------------------------------------------------------------------------------
 // Photon vertex
-std::complex<double> pseudoscalar_exchange::top_vertex(double lam_gam, double lam_vec, double s, double zs)
+std::complex<double> jpacPhoto::pseudoscalar_exchange::top_vertex(double lam_gam, double lam_vec, double s, double zs)
 {
   std::complex<double> term1 = 0., term2 = 0.;
   for (int mu = 0; mu < 4; mu++)
@@ -107,7 +107,7 @@ std::complex<double> pseudoscalar_exchange::top_vertex(double lam_gam, double la
 
 //------------------------------------------------------------------------------
 // Simple pole propagator
-std::complex<double> pseudoscalar_exchange::scalar_propagator(double s, double zs)
+std::complex<double> jpacPhoto::pseudoscalar_exchange::scalar_propagator(double s, double zs)
 {
   if (REGGE == false)
   {

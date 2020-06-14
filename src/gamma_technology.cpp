@@ -9,7 +9,7 @@
 
 // ---------------------------------------------------------------------------
 // Rank two gamma tensor
-std::complex<double> sigma(int mu, int nu, int i, int j)
+std::complex<double> jpacPhoto::sigma(int mu, int nu, int i, int j)
 {
   std::complex<double> result = 0.;
   for (int k = 0; k < 4; k++)
@@ -25,7 +25,7 @@ std::complex<double> sigma(int mu, int nu, int i, int j)
 
 // ---------------------------------------------------------------------------
 // Four dimensional Levi-Civita symbol
-double levi_civita(int mu, int alpha, int beta, int gamma)
+double jpacPhoto::levi_civita(int mu, int alpha, int beta, int gamma)
 {
   // Error check
   if ((mu > 3 || alpha > 3 || beta > 3 || gamma > 3) || (mu < 0 || alpha < 0 || beta < 0 || gamma < 0))

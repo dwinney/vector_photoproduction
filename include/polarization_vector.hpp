@@ -18,30 +18,33 @@
 // in the s-channel center of mass frame
 // ---------------------------------------------------------------------------
 
-class polarization_vector
+namespace jpacPhoto
 {
-private:
-    two_body_state state;
-    const std::string particle;
-    const double mass;
+  class polarization_vector
+  {
+  private:
+      two_body_state state;
+      const std::string particle;
+      const double mass;
 
-public:
-  // Constructor
-  polarization_vector(two_body_state xstate, std::string name)
-    : state(xstate), particle(name), mass(state.get_mass(name))
-  {};
+  public:
+    // Constructor
+    polarization_vector(two_body_state xstate, std::string name)
+      : state(xstate), particle(name), mass(state.get_mass(name))
+    {};
 
-  // Copy Constructor
-  polarization_vector(const polarization_vector & old)
-    : state(old.state), particle(old.particle), mass(old.mass)
-  {};
+    // Copy Constructor
+    polarization_vector(const polarization_vector & old)
+      : state(old.state), particle(old.particle), mass(old.mass)
+    {};
 
-  // Destructor
-  ~polarization_vector(){};
+    // Destructor
+    ~polarization_vector(){};
 
-  // Components
-  std::complex<double> component(int i, int lambda, double s, double zs);
-  std::complex<double> conjugate_component(int i, int lambda, double s, double zs);
+    // Components
+    std::complex<double> component(int i, int lambda, double s, double zs);
+    std::complex<double> conjugate_component(int i, int lambda, double s, double zs);
+  };
 };
 
 #endif

@@ -9,7 +9,7 @@
 
 #include "two_body_state.hpp"
 
-double two_body_state::get_mass(std::string name)
+double jpacPhoto::two_body_state::get_mass(std::string name)
 {
   if (name == particle1)
   {
@@ -29,7 +29,7 @@ double two_body_state::get_mass(std::string name)
 // ---------------------------------------------------------------------------
 // return the energy or momentum of a given particle
 
-std::complex<double> two_body_state::energy(std::string name, double s)
+std::complex<double> jpacPhoto::two_body_state::energy(std::string name, double s)
 {
   if (name == particle1)
   {
@@ -46,9 +46,9 @@ std::complex<double> two_body_state::energy(std::string name, double s)
   }
 };
 
-std::complex<double> two_body_state::momentum(std::string name, double s)
+std::complex<double> jpacPhoto::two_body_state::momentum(std::string name, double s)
 {
-  std::complex<double> q = sqrt(Kallen(xr*s, xr*m1*m1, xr*m2*m2)) / (2. * sqrt(xr*s));
+  std::complex<double> q = sqrt(jpacPhoto::Kallen(xr*s, xr*m1*m1, xr*m2*m2)) / (2. * sqrt(xr*s));
 
   if (name == particle1)
   {
@@ -67,7 +67,7 @@ std::complex<double> two_body_state::momentum(std::string name, double s)
 
 // ---------------------------------------------------------------------------
 // The four momenta components in the x-z plane
-std::complex<double> two_body_state::component(int i, std::string name, double s, double zs)
+std::complex<double> jpacPhoto::two_body_state::component(int i, std::string name, double s, double zs)
 {
   switch (i)
   {

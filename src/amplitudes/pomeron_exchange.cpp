@@ -9,7 +9,7 @@
 
 // ---------------------------------------------------------------------------
 // Bottom vertex coupling the target and recoil proton spinors to the vector pomeron
-std::complex<double> pomeron_exchange::bottom_vertex(int mu, int lam_targ, int lam_rec, double s, double zs)
+std::complex<double> jpacPhoto::pomeron_exchange::bottom_vertex(int mu, int lam_targ, int lam_rec, double s, double zs)
 {
   std::complex<double> result = 0.;
   for (int i = 0; i < 4; i++)
@@ -30,7 +30,7 @@ std::complex<double> pomeron_exchange::bottom_vertex(int mu, int lam_targ, int l
 
 // ---------------------------------------------------------------------------
 // Top vertex coupling the photon, pomeron, and vector meson.
-std::complex<double> pomeron_exchange::top_vertex(int mu, int lam_gam, int lam_vec, double s, double zs)
+std::complex<double> jpacPhoto::pomeron_exchange::top_vertex(int mu, int lam_gam, int lam_vec, double s, double zs)
 {
   std::complex<double> sum1 = 0., sum2 = 0.;
   for (int nu = 0; nu < 4; nu++)
@@ -53,7 +53,7 @@ std::complex<double> pomeron_exchange::top_vertex(int mu, int lam_gam, int lam_v
 
 // ---------------------------------------------------------------------------
 // Usual Regge power law behavior, s^alpha(t) with an exponential fall from the forward direction
-std::complex<double> pomeron_exchange::regge_factor(double s, double zs)
+std::complex<double> jpacPhoto::pomeron_exchange::regge_factor(double s, double zs)
 {
   if (s < kinematics->sth)
   {
@@ -78,7 +78,7 @@ std::complex<double> pomeron_exchange::regge_factor(double s, double zs)
 
 // ---------------------------------------------------------------------------
 // Given a set of helicities for each particle, assemble the helicity amplitude by contracting Lorentz indicies
-std::complex<double> pomeron_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
+std::complex<double> jpacPhoto::pomeron_exchange::helicity_amplitude(std::vector<int> helicities, double s, double zs)
 {
   int lam_gam = helicities[0];
   int lam_targ = helicities[1];

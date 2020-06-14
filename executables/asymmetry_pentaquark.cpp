@@ -23,6 +23,8 @@
 #include <iostream>
 #include <iomanip>
 
+using namespace jpacPhoto;
+
 int main( int argc, char** argv )
 {
   double y[2] = {-0.4, 0.3};
@@ -54,7 +56,7 @@ int main( int argc, char** argv )
 
   // normalization and t-slope
   // best fit values from [1]
-  std::vector<double> back_params = {0.367, 0.12};
+  std::vector<double> back_params = { 0.367, 0.12};
   background.set_params(back_params);
 
   // ---------------------------------------------------------------------------

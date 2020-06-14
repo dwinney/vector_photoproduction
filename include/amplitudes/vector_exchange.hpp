@@ -25,70 +25,73 @@
 // Set couplings with amp.set_params({gGamma, gV, gT});
 // ---------------------------------------------------------------------------
 
-class vector_exchange : public amplitude
+namespace jpacPhoto
 {
-public:
-  // Constructor for fixed spin
-  vector_exchange(reaction_kinematics * xkinem, double mass, std::string exchange = "")
-  : amplitude(xkinem, exchange, 3), mEx2(mass*mass), REGGE(false)
-  {};
-
-  vector_exchange(reaction_kinematics * xkinem, linear_trajectory * traj, std::string exchange = "")
-  : amplitude(xkinem, exchange, 3), alpha(traj), REGGE(true)
-  {};
-
-  // Setting utility
-  void set_params(std::vector<double> params)
+  class vector_exchange : public amplitude
   {
-    check_Nparams(params);
-    gGam = params[0];
-    gV = params[1];
-    gT = params[2];
+  public:
+    // Constructor for fixed spin
+    vector_exchange(reaction_kinematics * xkinem, double mass, std::string exchange = "")
+    : amplitude(xkinem, exchange, 3), mEx2(mass*mass), REGGE(false)
+    {};
+
+    vector_exchange(reaction_kinematics * xkinem, linear_trajectory * traj, std::string exchange = "")
+    : amplitude(xkinem, exchange, 3), alpha(traj), REGGE(true)
+    {};
+
+    // Setting utility
+    void set_params(std::vector<double> params)
+    {
+      check_Nparams(params);
+      gGam = params[0];
+      gV = params[1];
+      gT = params[2];
+    };
+
+    // Assemble the helicity amplitude by contracting the lorentz indices
+    std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);
+
+  private:
+    // if using reggeized propagator
+    bool REGGE;
+
+    // Couplings to the axial-vector/photon and vector/tensor couplings to nucleon
+    double gGam = 0., gpGam = 0., gV = 0., gT = 0.;
+
+    // ---------------------------------------------------------------------------
+    // FIXED SPIN
+
+    // Mass of the exchange
+    double mEx2;
+
+    // Four-momentum of the exhange
+    std::complex<double> exchange_momenta(int mu, double s, double zs);
+
+    // Photon - Axial Vector - Vector vertex
+    std::complex<double> top_vertex(int mu, int lam_gam, int lam_vec, double s, double zs);
+
+    // Nucleon - Nucleon - Vector vertex
+    std::complex<double> bottom_vertex(int nu, int lam_targ, int lam_rec, double s, double zs);
+
+    // Vector propogator
+    std::complex<double> vector_propagator(int mu, int nu, double s, double zs);
+
+    // ---------------------------------------------------------------------------
+    // REGGEIZED
+
+    // or the regge trajectory of the exchange
+    linear_trajectory * alpha;
+
+    // Calculation of the residues analytically
+    std::complex<double> top_residue(int lam, double t);
+    std::complex<double> bottom_residue(int lamp, double t);
+
+    // Usual reggeon propagator
+    std::complex<double> regge_propagator(double s, double t);
+
+    // Half angle factors
+    std::complex<double> half_angle_factor(int lam, int lamp, std::complex<double> z_t);
   };
-
-  // Assemble the helicity amplitude by contracting the lorentz indices
-  std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);
-
-private:
-  // if using reggeized propagator
-  bool REGGE;
-
-  // Couplings to the axial-vector/photon and vector/tensor couplings to nucleon
-  double gGam = 0., gpGam = 0., gV = 0., gT = 0.;
-
-  // ---------------------------------------------------------------------------
-  // FIXED SPIN
-
-  // Mass of the exchange
-  double mEx2;
-
-  // Four-momentum of the exhange
-  std::complex<double> exchange_momenta(int mu, double s, double zs);
-
-  // Photon - Axial Vector - Vector vertex
-  std::complex<double> top_vertex(int mu, int lam_gam, int lam_vec, double s, double zs);
-
-  // Nucleon - Nucleon - Vector vertex
-  std::complex<double> bottom_vertex(int nu, int lam_targ, int lam_rec, double s, double zs);
-
-  // Vector propogator
-  std::complex<double> vector_propagator(int mu, int nu, double s, double zs);
-
-  // ---------------------------------------------------------------------------
-  // REGGEIZED
-
-  // or the regge trajectory of the exchange
-  linear_trajectory * alpha;
-
-  // Calculation of the residues analytically
-  std::complex<double> top_residue(int lam, double t);
-  std::complex<double> bottom_residue(int lamp, double t);
-
-  // Usual reggeon propagator
-  std::complex<double> regge_propagator(double s, double t);
-
-  // Half angle factors
-  std::complex<double> half_angle_factor(int lam, int lamp, std::complex<double> z_t);
 };
 
 #endif

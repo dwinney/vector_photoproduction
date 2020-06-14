@@ -17,73 +17,75 @@
 #include "amplitude.hpp"
 #include "gamma_technology.hpp"
 
-class dirac_exchange : public amplitude
+namespace jpacPhoto
 {
-public:
-  // constructor
-  dirac_exchange(reaction_kinematics * xkinem, double mass, std::string name = "")
-  : amplitude(xkinem, name, 2),
-    mEx(mass), mEx2(mass*mass)
-  {};
-
-  // Copy constructor
-  dirac_exchange(const dirac_exchange & old)
-  : amplitude(old), mEx2(old.mEx2),
-    gGam(old.gGam), gVec(old.gVec)
-  {};
-
-  // Setting utility
-  void set_params(std::vector<double> params)
+  class dirac_exchange : public amplitude
   {
-    check_Nparams(params);
-    gGam = params[0];
-    gVec = params[1];
-  };
+  public:
+    // constructor
+    dirac_exchange(reaction_kinematics * xkinem, double mass, std::string name = "")
+    : amplitude(xkinem, name, 2),
+      mEx(mass), mEx2(mass*mass)
+    {};
 
-  // Assemble the helicity amplitude by contracting the spinor indices
-  std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);
+    // Copy constructor
+    dirac_exchange(const dirac_exchange & old)
+    : amplitude(old), mEx2(old.mEx2),
+      gGam(old.gGam), gVec(old.gVec)
+    {};
 
-  // debugging options to make either the photon or vector into scalars
-  void set_debug(int i)
-  {
-    switch (i)
+    // Setting utility
+    void set_params(std::vector<double> params)
     {
-      case 3: ScTOP = true; ScBOT = true; break;
-      case 2: ScTOP = true; break;
-      case 1: ScBOT = true; break;
+      check_Nparams(params);
+      gGam = params[0];
+      gVec = params[1];
+    };
+
+    // Assemble the helicity amplitude by contracting the spinor indices
+    std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double zs);
+
+    // debugging options to make either the photon or vector into scalars
+    void set_debug(int i)
+    {
+      switch (i)
+      {
+        case 3: ScTOP = true; ScBOT = true; break;
+        case 2: ScTOP = true; break;
+        case 1: ScBOT = true; break;
+      }
     }
-  }
 
-protected:
-  // DEBUGGING PARAMS
-  bool ScTOP = false, ScBOT = false;
+  protected:
+    // DEBUGGING PARAMS
+    bool ScTOP = false, ScBOT = false;
 
-  // Exchange nucleon mass
-  double mEx, mEx2;
+    // Exchange nucleon mass
+    double mEx, mEx2;
 
-  // couplings
-  double gGam = 0., gVec = 0.;
+    // couplings
+    double gGam = 0., gVec = 0.;
 
-  // Four-momentum of the exhange (u - channel)
-  std::complex<double> exchange_momentum(int mu, double s, double zs);
+    // Four-momentum of the exhange (u - channel)
+    std::complex<double> exchange_momentum(int mu, double s, double zs);
 
-  // Should be exactly u_man(s, zs);
-  double exchange_mass(double s, double zs);
+    // Should be exactly u_man(s, zs);
+    double exchange_mass(double s, double zs);
 
-  // Slashed momentumn
-  std::complex<double> slashed_exchange_momentum(int i, int j, double s, double zs);
+    // Slashed momentumn
+    std::complex<double> slashed_exchange_momentum(int i, int j, double s, double zs);
 
-  // Slashed polarization vectors
-  std::complex<double> slashed_eps(int i, int j, double lam, polarization_vector eps, bool STARRED, double s, double zs);
+    // Slashed polarization vectors
+    std::complex<double> slashed_eps(int i, int j, double lam, polarization_vector eps, bool STARRED, double s, double zs);
 
-  // Photon - excNucleon - recNucleon vertex
-  std::complex<double> top_vertex(int i, int lam_gam, int lam_rec, double s, double zs);
+    // Photon - excNucleon - recNucleon vertex
+    std::complex<double> top_vertex(int i, int lam_gam, int lam_rec, double s, double zs);
 
-  // excNucleon - recNucleon - Vector vertex
-  std::complex<double> bottom_vertex(int j, int lam_vec, int lam_targ, double s, double zs);
+    // excNucleon - recNucleon - Vector vertex
+    std::complex<double> bottom_vertex(int j, int lam_vec, int lam_targ, double s, double zs);
 
-  // Spin-1/2 propagator
-  std::complex<double> dirac_propagator(int i, int j, double s, double zs);
+    // Spin-1/2 propagator
+    std::complex<double> dirac_propagator(int i, int j, double s, double zs);
+  };
 };
-
 #endif

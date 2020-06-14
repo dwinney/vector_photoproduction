@@ -23,6 +23,8 @@
 #include <iostream>
 #include <iomanip>
 
+using namespace jpacPhoto;
+
 int main( int argc, char** argv )
 {
   double theta = 0.;
@@ -68,7 +70,7 @@ int main( int argc, char** argv )
   pomeron_exchange background(ptr, &alpha);
 
   // normalization and t-slope
-  std::vector<double> back_params = {0.367, 0.12};
+  std::vector<double> back_params = {sqrt(4. * M_PI * M_ALPHA) * 0.367, 0.12};
   background.set_params(back_params);
 
   // Add to the sum
