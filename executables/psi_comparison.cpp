@@ -49,11 +49,11 @@ int main( int argc, char** argv )
 
   // Feed in other two parameters (normalization and t-slope)
   // Best fit from [1]
-  std::vector<double> params_1s = {sqrt(4. * M_PI * M_ALPHA) * 0.379, 0.12};
+  std::vector<double> params_1s = {0.379, 0.12};
   pomeron_1s.set_params(params_1s);
 
   // Same t-slope but coupling is scaled by 1/4
-  std::vector<double> params_2s = {sqrt(4. * M_PI * M_ALPHA) * 0.379 / 4., 0.12};
+  std::vector<double> params_2s = {0.379 / 4., 0.12};
   pomeron_2s.set_params(params_2s);
 
   int N = 100; // how many points to plot
