@@ -49,9 +49,9 @@ std::complex<double> jpacPhoto::pseudoscalar_exchange::bottom_vertex(double lam_
     for (int j = 0; j < 4; j++)
     {
       std::complex<double> temp;
-      temp  = kinematics->recoil.adjoint_component(i, lam_rec, s, zs);
+      temp  = kinematics->recoil.adjoint_component(i, lam_rec, s, -zs); // theta_recoil = theta + pi
       temp *= gamma_5[i][j];
-      temp *= kinematics->target.component(j, lam_targ, s, 1.);
+      temp *= kinematics->target.component(j, lam_targ, s, -1.); // theta_target = pi
 
       result += temp;
     }

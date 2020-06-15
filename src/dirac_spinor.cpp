@@ -7,23 +7,9 @@
 
 #include "dirac_spinor.hpp"
 
-using namespace jpacPhoto;
-
 // ---------------------------------------------------------------------------
-// Angular half angle factors
-double jpacPhoto::dirac_spinor::cos_half(double zs)
-{
-  double result = (1. + zs) / 2.;
-  return sqrt(result);
-};
-
-double jpacPhoto::dirac_spinor::sin_half(double zs)
-{
-  double result = (1. - zs) / 2.;
-  return sqrt(result);
-};
-
-std::complex<double> jpacPhoto::dirac_spinor::momentum(int sign, double s)
+// Energy part
+std::complex<double> jpacPhoto::dirac_spinor::omega(int sign, double s)
 {
   if (ANTI_PARTICLE)
   {
@@ -33,38 +19,33 @@ std::complex<double> jpacPhoto::dirac_spinor::momentum(int sign, double s)
   std::complex<double> E = twobody.energy(particle, s);
   return sqrt(E + sign * mass);
 }
+
+// ---------------------------------------------------------------------------
+// Angular half angle factors
+double jpacPhoto::dirac_spinor::xi(int lam, double zs)
+{
+  double result = (1. + double(lam) * zs) / 2.;
+  return sqrt(result);
+};
+
 // ---------------------------------------------------------------------------
 // Components for both the regular spinor or adjoint
 std::complex<double> jpacPhoto::dirac_spinor::component(int i, int lambda, double s, double zs)
 {
-  if (lambda == 1)
+  if (abs(lambda) != 1)
   {
-    switch (i)
-    {
-      case 0: return - momentum(+1, s) * sin_half(zs);
-      case 1: return momentum(+1, s) * cos_half(zs);
-      case 2: return - momentum(-1, s) * sin_half(zs);
-      case 3: return momentum(-1, s) * cos_half(zs);
-      default : std::cout << "dirac_spinor: Invalid component index " << i << " passed as argument. Quitting... \n";
-                exit(0);
-    }
-  }
-  else if (lambda == -1)
-    {
-      switch (i)
-      {
-        case 0: return momentum(+1, s) * cos_half(zs);
-        case 1: return momentum(+1, s) * sin_half(zs);
-        case 2: return - momentum(-1, s) * cos_half(zs);
-        case 3: return - momentum(-1, s) * sin_half(zs);
-        default : std::cout << "dirac_spinor: Invalid component index " << i << " passed as argument. Quitting... \n";
-                  exit(0);
-      }
-    }
-  else
-  {
-    std::cout << "dirac_spinor: Invalid helicity projection passed as argument. Quitting... \n";
+    std::cout << "\ndirac_spinor: Invalid helicity projection passed as argument. Quitting... \n";
     exit(0);
+  }
+
+  switch (i)
+  {
+    case 0: return omega(+1, s) * xi(lambda, zs);
+    case 1: return double(lambda) * omega(+1, s) * xi(-lambda, zs);
+    case 2: return double(lambda) * omega(-1, s) * xi(lambda, zs);
+    case 3: return omega(-1, s) * xi(-lambda, zs);
+    default : std::cout << "dirac_spinor: Invalid component index " << i << " passed as argument. Quitting... \n";
+              exit(0);
   }
 };
 

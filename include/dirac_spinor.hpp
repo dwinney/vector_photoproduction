@@ -31,9 +31,11 @@ namespace jpacPhoto
     //Whether its an anti-particle or not
     const bool ANTI_PARTICLE = false;
 
-    double cos_half(double zs);
-    double sin_half(double zs);
-    std::complex<double> momentum(int sign, double s);
+    // Energy component
+    std::complex<double> omega(int sign, double s);
+
+    // angular component
+    double xi(int lam, double zs);
 
   public:
     // Constructor

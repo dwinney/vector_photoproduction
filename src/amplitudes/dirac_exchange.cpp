@@ -42,15 +42,15 @@ std::complex<double> jpacPhoto::dirac_exchange::top_vertex(int i, int lam_gam, i
   if (ScTOP == true)
   {
     // Scalar for testing purposes
-    return gGam * kinematics->recoil.adjoint_component(i, lam_rec, s, zs);
+    return gGam * kinematics->recoil.adjoint_component(i, lam_rec, s, -zs);
   }
 
   std::complex<double> result = 0.;
   for (int k = 0; k < 4; k++)
   {
     std::complex<double> temp;
-    temp  = kinematics->recoil.adjoint_component(k, lam_rec, s, zs);
-    temp *= slashed_eps(k, i, lam_gam, kinematics->eps_gamma, false, s, 1.);
+    temp  = kinematics->recoil.adjoint_component(k, lam_rec, s, -zs); // theta_recoil = theta + pi
+    temp *= slashed_eps(k, i, lam_gam, kinematics->eps_gamma, false, s, 1.); // theta_gamma = 0
 
     result += temp;
   }
@@ -66,15 +66,15 @@ std::complex<double> jpacPhoto::dirac_exchange::bottom_vertex(int j, int lam_vec
   if (ScBOT == true)
   {
     // Scalar for testing purposes
-    return gVec * kinematics->target.component(j, lam_targ, s , 1.);
+    return gVec * kinematics->target.component(j, lam_targ, s , -1.); // theta_targer = pi
   }
 
   std::complex<double> result = 0.;
   for (int k = 0; k < 4; k++)
   {
     std::complex<double> temp;
-    temp  = slashed_eps(j, k, lam_vec, kinematics->eps_vec, true, s, zs);
-    temp *= kinematics->target.component(k, lam_targ, s , 1.);
+    temp  = slashed_eps(j, k, lam_vec, kinematics->eps_vec, true, s, zs); //theta_vec = theta
+    temp *= kinematics->target.component(k, lam_targ, s , -1.); // theta_target = pi
 
     result += temp;
   }

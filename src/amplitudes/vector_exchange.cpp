@@ -222,9 +222,9 @@ std::complex<double> jpacPhoto::vector_exchange::bottom_vertex(int mu, int lam_t
     for (int j = 0; j < 4; j++)
     {
       std::complex<double> temp;
-      temp = kinematics->recoil.adjoint_component(i, lam_rec, s, zs);
+      temp = kinematics->recoil.adjoint_component(i, lam_rec, s, -zs);
       temp *= gamma_matrices[mu][i][j];
-      temp *= kinematics->target.component(j, lam_targ, s, 1.);
+      temp *= kinematics->target.component(j, lam_targ, s, -1.);
 
       vector += temp;
     }

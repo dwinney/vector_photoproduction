@@ -17,9 +17,14 @@ std::complex<double> jpacPhoto::pomeron_exchange::bottom_vertex(int mu, int lam_
     for (int j = 0; j < 4; j++)
     {
     std::complex<double> temp;
-    temp = kinematics->recoil.adjoint_component(i, lam_rec, s, zs);
+    // Recoil oriented an angle theta + pi
+    temp = kinematics->recoil.adjoint_component(i, lam_rec, s, -zs);
+
+    // vector coupling
     temp *= gamma_matrices[mu][i][j];
-    temp *= kinematics->target.component(j, lam_targ, s, 1.);
+
+    // target oriented in negative z direction
+    temp *= kinematics->target.component(j, lam_targ, s, -1.);
 
     result += temp;
     }
