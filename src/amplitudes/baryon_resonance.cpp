@@ -68,5 +68,8 @@ std::complex<double> jpacPhoto::baryon_resonance::hadronic_coupling(int lam_f, d
   g /= pow(pf_bar, double(2 * l_min + 1));
   g = sqrt(xr * g);
 
-  return g;
+  std::complex<double> gpsi;
+  gpsi = g * pow(kinematics->final.momentum(kinematics->vector_particle, s), l_min);
+
+  return gpsi;
 };
