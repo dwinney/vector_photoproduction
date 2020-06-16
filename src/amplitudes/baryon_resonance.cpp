@@ -36,34 +36,6 @@ double jpacPhoto::baryon_resonance::threshold_factor(double s, double beta)
 // Photoexcitation helicity amplitude for the process gamma p -> R
 std::complex<double> jpacPhoto::baryon_resonance::photo_coupling(int lam_i, double s)
 {
-  int l_min; // lowest allowed relative angular momentum
-  double P_t; // Combinatorial factor due to only transverse polarized J/psi contribute
-  switch (J)
-  {
-    case 3:
-    {
-      if (P == -1)
-        {l_min = 0; P_t = 2./3.;}
-      else if (P == 1)
-        {l_min = 1; P_t = 3./5.;}
-      break;
-    }
-    case 5:
-    {
-      if (P == 1)
-        {l_min = 1; P_t = 3./5.;}
-      else if (P == -1)
-        {l_min = 2; P_t = 1./3.;}
-      break;
-    }
-    default:
-    {
-      std::cout << "\nbaryon_resonance: spin-parity combination for J = " << J << "/2 and P = " << P << " not available. ";
-      std::cout << "Quiting... \n";
-      exit(0);
-    }
-  }
-
   // A_1/2 or A_3/2 depending on ratio R_photo
   double a;
   (std::abs(lam_i) == 1) ? (a = R_photo) : (a = sqrt(1. - R_photo * R_photo));
@@ -92,8 +64,8 @@ std::complex<double> jpacPhoto::baryon_resonance::hadronic_coupling(int lam_f, d
   // Hadronic coupling constant g, given in terms of branching ratio xBR
   std::complex<double> g;
   g  = 8. * M_PI * xBR * gamRes;
-  g *= double(J + 1) / 6.;
-  g *= mRes * mRes / kinematics->final.momentum(kinematics->vector_particle, s);
+  g *=  mRes * mRes * double(J + 1) / 6.;
+  g /= pow(pf_bar, double(2 * l_min + 1));
   g = sqrt(xr * g);
 
   return g;

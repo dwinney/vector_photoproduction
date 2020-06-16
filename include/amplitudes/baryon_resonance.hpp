@@ -27,6 +27,9 @@ namespace jpacPhoto
   private:
     int J, P, naturality; // (2xSpin) and parity of the resonance
     double mRes, gamRes; // Resonant mass and width
+    
+    int l_min; // lowest allowed relative angular momentum
+    double P_t; // Combinatorial factor due to only transverse polarized J/psi contribute
 
     // Couplings
     double xBR; // Hadronic banching fraction to j/psi p
@@ -43,6 +46,32 @@ namespace jpacPhoto
     {
       pi_bar = - real(kinematics->initial.momentum("target", mass * mass));
       pf_bar = - real(kinematics->final.momentum("recoil", mass * mass));
+
+      switch (J)
+      {
+        case 3:
+        {
+          if (P == -1)
+            {l_min = 0; P_t = 2./3.;}
+          else if (P == 1)
+            {l_min = 1; P_t = 3./5.;}
+          break;
+        }
+        case 5:
+        {
+          if (P == 1)
+            {l_min = 1; P_t = 3./5.;}
+          else if (P == -1)
+            {l_min = 2; P_t = 1./3.;}
+          break;
+        }
+        default:
+        {
+          std::cout << "\nbaryon_resonance: spin-parity combination for J = " << J << "/2 and P = " << P << " not available. ";
+          std::cout << "Quiting... \n";
+          exit(0);
+        }
+      }
     };
 
     // Copy Constructor
