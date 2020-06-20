@@ -18,6 +18,7 @@
 #include "amplitudes/amplitude_sum.hpp"
 
 #include "jpacGraph1D.hpp"
+#include "jpacUtils.hpp"
 
 #include <cstring>
 #include <iostream>
@@ -27,22 +28,37 @@ using namespace jpacPhoto;
 
 int main( int argc, char** argv )
 {
-  double y[2] = {-0.4, 0.3};
+
+  // ---------------------------------------------------------------------------
+  // COMMAND LINE OPTIONS
+  // ---------------------------------------------------------------------------
+
+  // Default values
+  double y[2]; bool custom_y = false;
   double W = 4.45;
-  bool LAB = false, TENQ = false;
+  int N = 200; // how many points to plot
+  bool TENQ = false;
   std::string filename = "5q_beam_asymmetry.pdf";
+
+  // Parse input string
   for (int i = 0; i < argc; i++)
   {
     if (std::strcmp(argv[i],"-e")==0) W = atof(argv[i+1]);
     if (std::strcmp(argv[i],"-f")==0) filename = argv[i+1];
-    if (std::strcmp(argv[i],"-y")==0) y_range(argv[i+1], y);
-    if (std::strcmp(argv[i],"-lab")==0) LAB = true;
     if (std::strcmp(argv[i],"-10q")==0) TENQ = true;
+    if (std::strcmp(argv[i],"-y")==0)
+    {
+      custom_y = true;
+      y_range(argv[i+1], y);
+    }
   }
+
+  // ---------------------------------------------------------------------------
+  // AMPLITUDES
+  // ---------------------------------------------------------------------------
 
   // Set up Kinematics for jpsi in final state
   reaction_kinematics * ptr = new reaction_kinematics(mJpsi, "jpsi");
-  std::vector<amplitude*> amps;
 
   // ---------------------------------------------------------------------------
   // T - CHANNEL // this is the same for all cases
@@ -56,7 +72,7 @@ int main( int argc, char** argv )
 
   // normalization and t-slope
   // best fit values from [1]
-  std::vector<double> back_params = { 0.367, 0.12};
+  std::vector<double> back_params = {0.379, 0.12};
   background.set_params(back_params);
 
   // ---------------------------------------------------------------------------
@@ -90,6 +106,10 @@ int main( int argc, char** argv )
   amplitude_sum sum2(ptr, {&background, &P_c05}, "0.5%");
   amplitude_sum sum3(ptr, {&background, &P_c01}, "0.1%");
 
+
+  // ---------------------------------------------------------------------------
+  // Choose which scenario to plot
+  std::vector<amplitude*> amps;
   if (TENQ == true)
   {
     amps = {&sum, &background, &P_c4450, &P_c4380};
@@ -99,47 +119,39 @@ int main( int argc, char** argv )
     amps = {&background, &sum1, &sum2, &sum3};
   }
 
-  int N = 200; // how many points to plot
+  // ---------------------------------------------------------------------------
+  // You shouldnt need to change anything below this line
+  // ---------------------------------------------------------------------------
 
-// ---------------------------------------------------------------------------
-// You shouldnt need to change anything below this line
-// ---------------------------------------------------------------------------
+  // Plotter objects
+  jpacGraph1D* plotter = new jpacGraph1D();
 
-// Plotter objects
-jpacGraph1D* plotter = new jpacGraph1D();
-
-// ---------------------------------------------------------------------------
-// scan over theta
-
-double s;
-(LAB == true) ? (s = 2.*mPro* W + mPro2) : (s = W*W);
-
-for (int n = 0; n < amps.size(); n++)
-{
-  std::vector<double> theta, sigma;
-  for (int i = 1; i <= N; i++)
+  // ---------------------------------------------------------------------------
+  // scan over theta
+  for (int n = 0; n < amps.size(); n++)
   {
-    double theta_i = double(i) * 90. / N;
-    theta.push_back(theta_i);
 
-    double sigma_i = amps[n]->beam_asymmetry(s, cos(theta_i * deg2rad));
-    sigma.push_back(sigma_i);
+    auto F = [&](double theta)
+    {
+      return amps[n]->beam_asymmetry(W*W, cos(theta * deg2rad));
+    };
+
+    std::array<std::vector<double>, 2> x_fx = vec_fill(N, F, 0., 90.);
+    plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->identifier);
   }
 
-  plotter->AddEntry(theta, sigma, amps[n]->identifier);
-}
+  // Add a header to legend to specify the fixed energy
+  std::ostringstream streamObj;
+  streamObj << std::setprecision(4) << W;
+  plotter->SetLegend(0.2, 0.7, "W = " + streamObj.str() + " GeV");
 
-std::ostringstream streamObj;
-streamObj << std::setprecision(4);
-streamObj << W;
+  plotter->SetXaxis("#theta", 0., 90.);
 
-std::string header;
-(LAB == true) ? (header = "E_{#gamma} = ") : (header = "W = ");
-plotter->SetLegend(0.18, 0.7, header + streamObj.str() + " GeV");
-plotter->SetXaxis("#theta", 0., 90.);
-plotter->SetYaxis("#Sigma_{4#pi}", y[0], y[1]);
+  // To change the range of the Y-axis or the position of the Legend change the arguments here
+  (custom_y == true) ? (plotter->SetYaxis("#Sigma", y[0], y[1])) : (plotter->SetYaxis("#Sigma"));
 
-plotter->Plot(filename.c_str());
 
-return 1.;
+  plotter->Plot(filename.c_str());
+
+  return 1.;
 };
