@@ -16,6 +16,7 @@
 #include "amplitudes/amplitude_sum.hpp"
 
 #include "jpacGraph1D.hpp"
+#include "jpacUtils.hpp"
 
 #include <cstring>
 #include <cmath>
@@ -26,23 +27,46 @@ using namespace jpacPhoto;
 
 int main( int argc, char** argv )
 {
-  int N = 100;
-  double theta = 0.;
+
+  // ---------------------------------------------------------------------------
+  // COMMAND LINE OPTIONS
+  // ---------------------------------------------------------------------------
+
+  // Default values
+  int N = 50;
+  double max = 10.;
+  double zs = 1.;
   double y[2] = {0., 0.}; bool custom_y = false;
-  bool integ = false;
+  bool INTEG = false; std::string ylabel = "d#sigma/dt  (nb GeV^{-2})";
   std::string filename = "X3872_photoproduction.pdf";
+
+  // ---------------------------------------------------------------------------
+  // Parse command line arguments
   for (int i = 0; i < argc; i++)
   {
-    if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
+    if (std::strcmp(argv[i],"-c")==0)
+    {
+      zs = cos(atof(argv[i+1]) * deg2rad);
+    }
     if (std::strcmp(argv[i],"-f")==0) filename = argv[i+1];
     if (std::strcmp(argv[i],"-y")==0) {y_range(argv[i+1], y); custom_y = true;}
+    if (std::strcmp(argv[i],"-m")==0) max = atof(argv[i+1]);
     if (std::strcmp(argv[i],"-n")==0) N = atoi(argv[i+1]);
-    if (std::strcmp(argv[i],"-integ")==0) integ = true;
+    if (std::strcmp(argv[i],"-integ")==0)
+    {
+      INTEG = true;
+      ylabel = "#sigma  (nb)";
+    }
   }
+
+  // ---------------------------------------------------------------------------
+  // AMPLITUDES
+  // ---------------------------------------------------------------------------
 
   // Set up kinematics for the X(3872)
   reaction_kinematics * ptr = new reaction_kinematics(3.872, "X(3872)");
 
+  // Sum individual contributions together incoherently
   amplitude_sum total(ptr, "Sum");
 
   // Linear trajectory for the rho
@@ -57,6 +81,7 @@ int main( int argc, char** argv )
   omega.set_params({9.51E-3, 16, 0.});
   total.add_amplitude(&omega);
 
+  // Vector of amplitudes to plot
   std::vector<amplitude*> exchanges;
   exchanges.push_back(&total);
   exchanges.push_back(&rho);
@@ -67,66 +92,38 @@ int main( int argc, char** argv )
   // ---------------------------------------------------------------------------
 
   // ---------------------------------------------------------------------------
-  // Print contributions from each exchange seperately
-  double zs = cos(theta * deg2rad);
-  double max;
-  (integ == true) ? (max = 200.) : (max = 1.E4);
-
-  // Plotter objects
+  // Plotter object
   jpacGraph1D* plotter = new jpacGraph1D();
 
   // ---------------------------------------------------------------------------
+  // Print the desired observable for each amplitude
   for (int n = 0; n < exchanges.size(); n++)
   {
-    std::vector<double> s, dxs;
-    for (int i = 0; i <= N; i++)
+    auto F = [&](double W)
     {
-      double si = (ptr->sth + EPS) + double(i) * (max - (ptr->sth + EPS)) / N;
-      double dxsi;
-
-      if (integ == false)
+      if (INTEG == false)
       {
-        dxsi = exchanges[n]->differential_xsection(si, zs);
+        return exchanges[n]->differential_xsection(W*W, zs);
       }
       else
       {
-        dxsi = exchanges[n]->integrated_xsection(si);
+        return exchanges[n]->integrated_xsection(W*W);
       }
+    };
 
-      s.push_back(si);
-      dxs.push_back(dxsi);
-    }
-
-    plotter->AddEntry(s, dxs, exchanges[n]->identifier);
+    std::array<std::vector<double>, 2> x_fx = vec_fill(N, F, sqrt(ptr->sth) + EPS, max);
+    plotter->AddEntry(x_fx[0], x_fx[1], exchanges[n]->identifier);
   }
 
   // ---------------------------------------------------------------------------
   // Plotting Settings
   // ---------------------------------------------------------------------------
 
- // Tweak the axes
- std::string ylabel;
- if (integ == false)
-  {
-    ylabel = "d#sigma/dt  (nb GeV^{-2})";
-    plotter->SetXlogscale(true);
-  }
-  else
-  {
-    ylabel = "#sigma    (nb)";
-  }
+  // Tweak the axes
+  (custom_y == true) ? (plotter->SetYaxis(ylabel, y[0], y[1])) : (plotter->SetYaxis(ylabel));
 
-  if (custom_y == true)
-  {
-    plotter->SetYaxis(ylabel, y[0], y[1]);
-  }
-  else
-  {
-  plotter->SetYaxis(ylabel);
-  }
+  plotter->SetXaxis("W   (GeV)", sqrt(ptr->sth), max);
 
-  plotter->SetXaxis(ROOT_italics("s") + "  (GeV^{2})", ptr->sth, max);
-
-  plotter->SetLegend(0.73, 0.2);
+  plotter->SetLegend(0.2, 0.7);
   plotter->Plot(filename);
 }
