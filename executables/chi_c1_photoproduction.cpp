@@ -15,6 +15,7 @@
 #include "amplitudes/amplitude_sum.hpp"
 
 #include "jpacGraph1D.hpp"
+#include "jpacUtils.hpp"
 
 #include <cstring>
 #include <cmath>
@@ -25,12 +26,19 @@ using namespace jpacPhoto;
 
 int main( int argc, char** argv )
 {
+  // ---------------------------------------------------------------------------
+  // COMMAND LINE OPTIONS
+  // ---------------------------------------------------------------------------
+
   // Default values
+  int N = 25; // how many points to plot
   double theta = 0.;
+  double max = 10.;
   bool INTEG = false;
-  double y[2] = {0., 2.};
+  double y[2] = {0., 2.}; bool custom_y = false;
   std::string filename = "chi_c1_photoproduction.pdf";
   std::string ylabel = "d#sigma/dt  (nb / GeV^{2})";
+
   // ---------------------------------------------------------------------------
   // Parse command line arguments
   for (int i = 0; i < argc; i++)
@@ -38,7 +46,13 @@ int main( int argc, char** argv )
     // File name of output
     if (std::strcmp(argv[i],"-f")==0) filename = argv[i+1];
     if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
-    if (std::strcmp(argv[i],"-y")==0) y_range(argv[i+1], y);
+    if (std::strcmp(argv[i],"-n")==0) N = atoi(argv[i+1]);
+    if (std::strcmp(argv[i],"-m")==0) max = atof(argv[i+1]);
+    if (std::strcmp(argv[i],"-y")==0)
+    {
+      custom_y = true;
+      y_range(argv[i+1], y);
+    }
     if (std::strcmp(argv[i],"-integ")==0)
     {
        INTEG = true;
@@ -47,13 +61,8 @@ int main( int argc, char** argv )
   }
 
   // ---------------------------------------------------------------------------
-  // Plotter object
-  jpacGraph1D* plotter = new jpacGraph1D();
-  plotter->SetXaxis(ROOT_italics("s") + "  (GeV^{2})", 19.5, 100.);
-
-  // To change the range of the Y-axis or the position of the Legend change the arguments here
-  plotter->SetYaxis(ylabel , y[0], y[1]);
-  plotter->SetLegend(0.2, .75);
+  // AMPLITUDES
+  // ---------------------------------------------------------------------------
 
   // Set up kinematics for the chi_c1
   reaction_kinematics * ptr = new reaction_kinematics(3.510, "chi_c1");
@@ -81,38 +90,44 @@ int main( int argc, char** argv )
   // The total amplitude with all the above exchanges
   amplitude_sum total(ptr, exchanges, "Sum");
   exchanges.push_back(&total);
-  int N = 50; // how many points to plot
+
 
 // ---------------------------------------------------------------------------
 // You shouldnt need to change anything below this line
 // ---------------------------------------------------------------------------
 double zs = cos(theta * deg2rad);
 
+// Plotter object
+jpacGraph1D* plotter = new jpacGraph1D();
+
 // ---------------------------------------------------------------------------
-// Print the total cross-section
+// Print the desired observable for each amplitude
 for (int n = 0; n < exchanges.size(); n++)
 {
-  std::vector<double> s, dxs;
-  for (int i = 0; i <= N; i++)
+  auto F = [&](double W)
   {
-    double si = (ptr->sth + EPS) + double(i) * (100. - (ptr->sth + EPS)) / N;
-    double dxsi;
-
     if (INTEG == false)
     {
-      dxsi = exchanges[n]->differential_xsection(si, zs);
+      return exchanges[n]->differential_xsection(W*W, zs);
     }
     else
     {
-      dxsi = exchanges[n]->integrated_xsection(si);
+      return exchanges[n]->integrated_xsection(W*W);
     }
+  };
 
-    s.push_back(si);
-    dxs.push_back(dxsi);
-  }
-
-  plotter->AddEntry(s, dxs, exchanges[n]->identifier);
+  std::array<std::vector<double>, 2> x_fx = vec_fill(N, F, sqrt(ptr->sth), max);
+  plotter->AddEntry(x_fx[0], x_fx[1], exchanges[n]->identifier);
 }
+
+// Set up X-axis
+plotter->SetXaxis("W  (GeV)", sqrt(ptr->sth), max);
+
+// To change the range of the Y-axis or the position of the Legend change the arguments here
+(custom_y == true) ? (plotter->SetYaxis(ylabel, y[0], y[1])) : (plotter->SetYaxis(ylabel));
+
+// Position of the legend
+plotter->SetLegend(0.2, .75);
 
 // Output to file
 plotter->Plot(filename);
