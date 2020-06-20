@@ -222,9 +222,9 @@ std::complex<double> jpacPhoto::vector_exchange::bottom_vertex(int mu, int lam_t
     for (int j = 0; j < 4; j++)
     {
       std::complex<double> temp;
-      temp = kinematics->recoil.adjoint_component(i, lam_rec, s, -zs);
+      temp = kinematics->recoil.adjoint_component(i, lam_rec, s, -zs); // theta_rec = theta + pi
       temp *= gamma_matrices[mu][i][j];
-      temp *= kinematics->target.component(j, lam_targ, s, -1.);
+      temp *= kinematics->target.component(j, lam_targ, s, -1.); // theta_targ = pi
 
       vector += temp;
     }
@@ -243,9 +243,9 @@ std::complex<double> jpacPhoto::vector_exchange::bottom_vertex(int mu, int lam_t
       }
 
       std::complex<double> temp;
-      temp = kinematics->recoil.adjoint_component(i, lam_rec, s, zs);
+      temp = kinematics->recoil.adjoint_component(i, lam_rec, s, -zs); // theta_rec = theta + pi
       temp *= sigma_q_ij;
-      temp *= kinematics->target.component(j, lam_targ, s, 1.);
+      temp *= kinematics->target.component(j, lam_targ, s, -1.); // theta_targ = pi
 
       tensor += temp;
     }
@@ -279,7 +279,7 @@ std::complex<double> jpacPhoto::vector_exchange::vector_propagator(int mu, int n
   }
 
   // pole piece (zero width here)
-  result /= kinematics->t_man(s,zs) - mEx2;
+  result /= kinematics->t_man(s, zs) - mEx2;
 
   return result;
 };

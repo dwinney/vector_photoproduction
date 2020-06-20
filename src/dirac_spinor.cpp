@@ -17,15 +17,16 @@ std::complex<double> jpacPhoto::dirac_spinor::omega(int sign, double s)
   }
 
   std::complex<double> E = twobody.energy(particle, s);
-  return sqrt(E + sign * mass);
+  return sqrt(E + double(sign) * mass);
 }
 
 // ---------------------------------------------------------------------------
 // Angular half angle factors
 double jpacPhoto::dirac_spinor::xi(int lam, double zs)
 {
-  double result = (1. + double(lam) * zs) / 2.;
-  return sqrt(result);
+  double theta = acos(zs) - M_PI;
+  double result;
+  (lam == -1) ? (result = cos(theta / 2.)) : (result = sin(theta / 2.));
 };
 
 // ---------------------------------------------------------------------------
@@ -38,6 +39,7 @@ std::complex<double> jpacPhoto::dirac_spinor::component(int i, int lambda, doubl
     exit(0);
   }
 
+  // theta - pi convention
   switch (i)
   {
     case 0: return omega(+1, s) * xi(lambda, zs);
@@ -47,14 +49,24 @@ std::complex<double> jpacPhoto::dirac_spinor::component(int i, int lambda, doubl
     default : std::cout << "dirac_spinor: Invalid component index " << i << " passed as argument. Quitting... \n";
               exit(0);
   }
+
+  // theta convention
+  // switch (i)
+  // {
+  //   case 0: return -1. * double(lambda) * omega(+1, s) * xi(-lambda, zs);
+  //   case 1: return                        omega(+1, s) * xi(lambda,  zs);
+  //   case 2: return -1. *                  omega(-1, s) * xi(-lambda, zs);
+  //   case 3: return       double(lambda) * omega(-1, s) * xi(lambda,  zs);
+  //   default : std::cout << "dirac_spinor: Invalid component index " << i << " passed as argument. Quitting... \n";
+  //             exit(0);
+  // }
+
 };
 
 std::complex<double> jpacPhoto::dirac_spinor::adjoint_component(int i, int lambda, double s, double zs)
 {
-  std::complex<double> result = 0.;
-  for (int j = 0; j < 4; j++)
-  {
-    result += conj(component(j, lambda, s, zs)) * gamma_matrices[0][j][i];
-  }
-  return result;
+  double phase;
+  (i == 2 || i == 3) ? (phase = -1.) : (phase = 1.);
+
+  return phase * component(i, lambda, s, zs);
 };
