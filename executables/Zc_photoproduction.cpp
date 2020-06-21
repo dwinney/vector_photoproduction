@@ -9,6 +9,12 @@
 // References:
 // [1] arXiv:1503.02125 [hep-ph]
 // ---------------------------------------------------------------------------
+// COMMAND LINE OPTIONS:
+// -c double          # Change CM angle in degree (default: 0)
+// -n int             # Number of points to plot (default: 25)
+// -m double          # Maximum CM angle to plot (default: 10 GeV)
+// -diff              # Plot differential xsection (default: false)
+// ---------------------------------------------------------------------------
 
 #include "constants.hpp"
 #include "reaction_kinematics.hpp"

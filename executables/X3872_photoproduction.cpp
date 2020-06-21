@@ -6,6 +6,12 @@
 // Affiliation:  Joint Physics Analysis Center (JPAC)
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
+// COMMAND LINE OPTIONS:
+// -c double          # Change CM angle in degree (default: 0)
+// -n int             # Number of points to plot (default: 25)
+// -m double          # Maximum CM angle to plot (default: 10 GeV)
+// -integ             # Plot integrated xsection (default: false)
+// ---------------------------------------------------------------------------
 
 #include "constants.hpp"
 #include "reaction_kinematics.hpp"
@@ -36,7 +42,7 @@ int main( int argc, char** argv )
   int N = 50;
   double max = 10.;
   double zs = 1.;
-  double y[2] = {0., 0.}; bool custom_y = false;
+  double y[2]; bool custom_y = false;
   bool INTEG = false; std::string ylabel = "d#sigma/dt  (nb GeV^{-2})";
   std::string filename = "X3872_photoproduction.pdf";
 

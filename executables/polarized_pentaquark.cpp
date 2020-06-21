@@ -10,6 +10,14 @@
 // [1] 10.1103/PhysRevD.100.034019
 // [2] 10.1103/PhysRevLett.115.072001
 // ---------------------------------------------------------------------------
+// COMMAND LINE OPTIONS:
+// -c double          # Change CM angle in degree (default: 0)
+// -n int             # Number of points to plot (default: 100)
+// -m double          # Maximum CM angle to plot (default: 5 GeV)
+// -integ             # Plot integrated xsection (default: false)
+// -10q               # Plot 2 Pentaquark Scenario at fixed BR (default: false)
+// -o string          # Desired observable: options "dxs", "kll", or "all" (default: dxs)
+// ---------------------------------------------------------------------------
 
 #include "constants.hpp"
 #include "reaction_kinematics.hpp"
@@ -35,8 +43,7 @@ int main( int argc, char** argv )
   // Default values
   double zs = 1.;
   double y[2]; bool custom_y = false;
-  double W = 4.45;
-  int N = 200; // how many points to plot
+  int N = 100; // how many points to plot
   bool TENQ = false;
   double max = 5.;
   std::string filename = "polarized_5q.pdf";
@@ -46,7 +53,6 @@ int main( int argc, char** argv )
   for (int i = 0; i < argc; i++)
   {
     if (std::strcmp(argv[i],"-c")==0) zs = cos(atof(argv[i+1]) * deg2rad);
-    if (std::strcmp(argv[i],"-e")==0) W = atof(argv[i+1]);
     if (std::strcmp(argv[i],"-m")==0) max = atof(argv[i+1]);
     if (std::strcmp(argv[i],"-f")==0) filename = argv[i+1];
     if (std::strcmp(argv[i],"-o")==0) observable = argv[i+1];

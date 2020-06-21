@@ -34,12 +34,12 @@ Incoherent (interfering) sums of amplitudes may be constructed through the [`amp
 Observables are evaluated in terms of the center-of-mass energy, _s ,_ and cosine of the scattering angle, _zs_. Alternatively to easily interface with event generators, Lorentz vectors may be passed using the `event` struct. For example:
 ```c++
 // In s-channel variables
-double dxs = amp.differential_xsection(s, zs);
+double dxs = amplitude.differential_xsection(s, zs);
 
 // or four-vectors
 TLorentzVector pGamma, pTarget, pVector, pRecoil;
 event fvecs(pGamma, pTarget, pVec, pRecoil);
-double dxs = amp.differential_xsection(fvecs);
+double dxs = amplitude.differential_xsection(fvecs);
 ```
 
 ## EXECUTABLES
@@ -57,63 +57,30 @@ All executables have the following two optional flags for customizing the plotte
 -f string             # Desired filename of output (default: executable_name.pdf)
 -y [double:double]    # Manually set the y-range for plotting
 ```
+See documentation in each respective `.cpp` file for additional flag options.
 
-Alternatively use `make JpacPhoto` to build a library file `libJpacPhoto.a` which may be linked to other code to access header files and classes.
+Alternatively use `make JpacPhoto` to build a library file `libJpacPhoto.a` which may then be linked to other code to access header files and classes.
 
 #### [polarized_pentaquark](./executables/polarized_pentaquark.cpp)
-Sensitivity study of double polarized observables to the LHCb pentaquarks in Hall A at JLab.
+Sensitivity study of double polarized observables, ALL and KLL, to the LHCb pentaquarks in Hall A at JLab.
 Reproduces the results in [2]. See [JPAC page on γp→J/ψp](http://cgl.soic.indiana.edu/jpac/polarizedPenta.php).
 
 #### [asymmetry_pentaquark](./executables/asymmetry_pentaquark.cpp)
-Sensitivity study of the beam asymmetry to the LHCb pentaquarks at GlueX at JLab.
+Sensitivity study of the beam asymmetry to different LHCb pentaquark scenarios at GlueX at JLab.
 
-Optional command line flags are:
-```bash
--e double     # Fixed CM energy in GeV (default: 4.45 GeV)
--lab          # Toggle whether input energy value (see above) is in lab frame (default: false)
--10q          # Toggle plotting two P_c states at the same BR (default: false)
-```
-Outputs beam asymmetry for single P_c(4450) state at fixed energy as a function of theta or if `-10q` is passed, plots individual signal / background components and incoherent sum as a function of CM angle for P_c(4450) and P_c(4380) at equal BR.
 
 #### [psi_comparison](./executables/psi_comparison.cpp)
 Comparison of the unpolarized cross sections for the photoproduction of the Psi(1S) and Psi(2S) states near threshold in the GlueX kinematics.
 
-Optional command line flags are:
-```bash
--c double    # CM scattering angle in degrees (default: 0)  
--lab          # Toggle plotting with lab photon energy on x-axis (default: false)
-```
-Outputs PSI(2S) unpolarized cross-section and ratio of (2S)/(1S) plotted in pdfs.
 
 #### [chi_c1_photoproduction](./executables/chi_c1_photoproduction.cpp)
 Analytical model for the unpolarized cross section near threshold of axial vector states. Decomposed into different exchanges in the t-channel (e.g. omega, rho, phi).
 
-Optional command line flags are:
-```bash
--c double    # CM scattering angle in degrees (default: 0)
--integ        # Toggle integrated xsection instead of differential
-```
-Outputs the differential (or integrated) cross-section to a pdf.
-
 #### [X3872_photoproduction](./executables/X3872_photoproduction.cpp)
 Prediction for the unpolarized cross-section for exclusive X(3872) photoproduction at low momentum transfer and high energies of interest for the future EIC.
 
-Optional command line flags are:
-```bash
--c double    # CM scattering angle in degrees (default: 0)
--n int      # Number of points to plot with (default: 100)
--integ        # Toggle integrated xsection instead of differential
-```
-
 #### [Zc_photoproduction](./executables/Zc_photoproduction.cpp)
-Unpolarized cross-section predictions for the photoproduction of the Z_c+(4200) by charged pion exchange. Reproduces the results in [3].
-
-Optional command line flags are:
-```bash
--n int        # Number of points to plot with (default: 100)
--m double     # max energy W to plot (default: 25)
--diff         # Toggle differential xsection instead of integrated
-```
+Unpolarized cross-section predictions for the photoproduction of the Z_c+(3900) and Z_c+(4200) by charged pion exchange. Reproduces the results in [3] with up to date widths and .
 
 ## PLOTTING
 Plots are automatically created using the JPAC collaboration style guidelines. For more information see the [jpacStyle](https://github.com/dwinney/jpacStyle) library.

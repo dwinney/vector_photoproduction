@@ -8,6 +8,12 @@
 // References:
 // [1] 10.1103/PhysRevD.96.093008
 // ---------------------------------------------------------------------------
+// COMMAND LINE OPTIONS:
+// -c double          # Change CM angle in degree (default: 0)
+// -n int             # Number of points to plot (default: 25)
+// -m double          # Maximum CM angle to plot (default: 10 GeV)
+// -integ             # Plot integrated xsection (default: false)
+// ---------------------------------------------------------------------------
 
 #include "constants.hpp"
 #include "reaction_kinematics.hpp"
