@@ -39,27 +39,27 @@ std::complex<double> jpacPhoto::dirac_spinor::component(int i, int lambda, doubl
     exit(0);
   }
 
-  // theta - pi convention
-  switch (i)
-  {
-    case 0: return omega(+1, s) * xi(lambda, zs);
-    case 1: return double(lambda) * omega(+1, s) * xi(-lambda, zs);
-    case 2: return double(lambda) * omega(-1, s) * xi(lambda, zs);
-    case 3: return omega(-1, s) * xi(-lambda, zs);
-    default : std::cout << "dirac_spinor: Invalid component index " << i << " passed as argument. Quitting... \n";
-              exit(0);
-  }
-
-  // theta convention
+  // // theta - pi convention
   // switch (i)
   // {
-  //   case 0: return -1. * double(lambda) * omega(+1, s) * xi(-lambda, zs);
-  //   case 1: return                        omega(+1, s) * xi(lambda,  zs);
-  //   case 2: return -1. *                  omega(-1, s) * xi(-lambda, zs);
-  //   case 3: return       double(lambda) * omega(-1, s) * xi(lambda,  zs);
+  //   case 0: return omega(+1, s) * xi(lambda, zs);
+  //   case 1: return double(lambda) * omega(+1, s) * xi(-lambda, zs);
+  //   case 2: return double(lambda) * omega(-1, s) * xi(lambda, zs);
+  //   case 3: return omega(-1, s) * xi(-lambda, zs);
   //   default : std::cout << "dirac_spinor: Invalid component index " << i << " passed as argument. Quitting... \n";
   //             exit(0);
   // }
+
+  // theta convention
+  switch (i)
+  {
+    case 0: return -1. * double(lambda) * omega(+1, s) * xi(-lambda, zs);
+    case 1: return                        omega(+1, s) * xi(lambda,  zs);
+    case 2: return -1. *                  omega(-1, s) * xi(-lambda, zs);
+    case 3: return       double(lambda) * omega(-1, s) * xi(lambda,  zs);
+    default : std::cout << "dirac_spinor: Invalid component index " << i << " passed as argument. Quitting... \n";
+              exit(0);
+  }
 
 };
 
