@@ -40,7 +40,7 @@ int main( int argc, char** argv )
   // ---------------------------------------------------------------------------
 
   // Default values
-  double zs = 1., theta = 0.;
+  double theta = 0.;
   double y[2]; bool custom_y = false;
   int N = 100; // how many points to plot
   double max = 5.;
@@ -50,11 +50,7 @@ int main( int argc, char** argv )
   // Parse input string
   for (int i = 0; i < argc; i++)
   {
-    if (std::strcmp(argv[i],"-c")==0)
-    {
-      theta = atof(argv[i+1]);
-      zs = cos(theta * deg2rad);
-    };
+    if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
     if (std::strcmp(argv[i],"-m")==0) max = atof(argv[i+1]);
     if (std::strcmp(argv[i],"-f")==0) filename = argv[i+1];
     if (std::strcmp(argv[i],"-o")==0) observable = argv[i+1];
@@ -119,20 +115,21 @@ int main( int argc, char** argv )
     // find the desired observable
     auto F = [&](double W)
     {
+      double t = ptr->t_man(W*W, theta * deg2rad);
       if (observable == "dxs")
       {
         ylabel = "d#sigma/dt    (nb GeV^{-2})";
-        return amps[n]->differential_xsection(W*W, zs);
+        return amps[n]->differential_xsection(W*W, t);
       }
       else if (observable == "kll")
       {
         ylabel = "K_{LL}";
-        return amps[n]->K_LL(W*W, zs);
+        return amps[n]->K_LL(W*W, t);
       }
       else if (observable == "all")
       {
         ylabel = "A_{LL}";
-        return amps[n]->A_LL(W*W, zs);
+        return amps[n]->A_LL(W*W, t);
       }
       else
       {
