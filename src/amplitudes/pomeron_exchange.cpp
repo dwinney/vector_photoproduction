@@ -19,6 +19,15 @@ std::complex<double> jpacPhoto::pomeron_exchange::helicity_amplitude(std::vector
   double theta = kinematics->theta_s(s,t);
 
   std::complex<double> result = 0.;
+
+  // IF using helicity conserving delta fuction model
+  if (DELTA == true)
+  {
+    (lam_gam == lam_vec && lam_rec == lam_targ) ? (result = regge_factor(s,t)) : (result = 0.);
+    return result;
+  }
+
+  // else use Lesniak-Szczepaniak Model
   for (int mu = 0; mu < 4; mu++)
   {
     std::complex<double> temp = regge_factor(s, t);
@@ -54,6 +63,9 @@ std::complex<double> jpacPhoto::pomeron_exchange::bottom_vertex(int mu, int lam_
     result += temp;
     }
   }
+
+  // Divide by s to remove the energy dependence left over by the spinors
+  result /= s;
 
   return result;
 };
@@ -91,14 +103,14 @@ std::complex<double> jpacPhoto::pomeron_exchange::regge_factor(double s, double 
     exit(0);
   }
 
-  if (s - kinematics->sth < 0.001)
+  if (s - kinematics->sth < 0.0001)
   {
     return 0.;
   }
 
   double t_min = kinematics->t_man(s, 0.); // t_min = t(theta = 0)
 
-  std::complex<double> result = exp(b0 * (t - t_min)) / s;
+  std::complex<double> result = exp(b0 * (t - t_min));
   result *= pow(s - kinematics->sth, pomeron_traj->eval(t));
   result *= xi * norm * sqrt(4. * M_PI * M_ALPHA);
 

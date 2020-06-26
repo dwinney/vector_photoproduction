@@ -32,14 +32,8 @@ namespace jpacPhoto
   {
   public:
     // Constructor
-    pomeron_exchange(reaction_kinematics * xkinem, regge_trajectory * alpha, std::string name = "")
-    : amplitude(xkinem, name, 2), pomeron_traj(alpha)
-    {};
-
-    // Copy constructor
-    pomeron_exchange(const pomeron_exchange & old)
-    : amplitude(old),
-      norm(old.norm), b0(old.b0)
+    pomeron_exchange(reaction_kinematics * xkinem, regge_trajectory * alpha, bool OLDMODEL = false, std::string name = "")
+    : amplitude(xkinem, name, 2), pomeron_traj(alpha), DELTA(OLDMODEL)
     {};
 
     // Setting utility
@@ -54,7 +48,7 @@ namespace jpacPhoto
     std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double t);
 
   private:
-
+    bool DELTA = false;
     double norm, b0; // Regge factor parameters: normalization and t-slope
     regge_trajectory * pomeron_traj;
 
