@@ -24,6 +24,11 @@
 
 namespace jpacPhoto
 {
+
+  // Photon lab energy
+  double E_lab(double s);
+  double W_cm(double egam);
+
   // Simple struct to pass a full set of 4-vectors
   struct event
   {
@@ -87,6 +92,8 @@ namespace jpacPhoto
 
     // inital and final state kinematics
     const double sth = (mVec + mPro) * (mVec + mPro);
+    const double Wth = (mVec + mPro);
+    
     two_body_state initial, final;
     polarization_vector eps_vec, eps_gamma;
     dirac_spinor target, recoil;
@@ -107,9 +114,6 @@ namespace jpacPhoto
 
     // Cosine of crossing angles
     std::complex<double> crossing_angle(std::string particle, double s, double theta);
-
-    // Photon lab energy
-    double E_gam(double s);
 
     // Helicity configurations
     // Photon [0], Incoming Proton [1], Vector meson [2], Outgoing Proton [3]
