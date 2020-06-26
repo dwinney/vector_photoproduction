@@ -108,6 +108,9 @@ namespace jpacPhoto
     // Cosine of crossing angles
     std::complex<double> crossing_angle(std::string particle, double s, double theta);
 
+    // Photon lab energy
+    double E_gam(double s);
+
     // Helicity configurations
     // Photon [0], Incoming Proton [1], Vector meson [2], Outgoing Proton [3]
     std::vector< std::vector<int> > helicities =

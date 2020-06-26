@@ -48,6 +48,13 @@ double jpacPhoto::reaction_kinematics::u_man(double s, double theta)
 };
 
 // ---------------------------------------------------------------------------
+// Photon lab energy
+doube jpacPhoto::reaction_kinematics::E_gam(double s)
+{
+  return (s / mPro - mPro) / 2.;
+};
+
+// ---------------------------------------------------------------------------
 // Scattering angles
 double jpacPhoto::reaction_kinematics::theta_s(double s, double t)
 {
