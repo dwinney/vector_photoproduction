@@ -15,6 +15,7 @@
 // -m double          # Maximum CM angle to plot (default: 10 GeV)
 // -diff              # Plot differential xsection (default: false)
 // -y "[y1:y2]"       # Custom y bounds in output plot
+// -lab               # Display E_lab in the x-axis (default: false)
 // ---------------------------------------------------------------------------
 
 #include "constants.hpp"
@@ -40,7 +41,8 @@ int main( int argc, char** argv )
   double max = 25;
   double y[2]; bool custom_y = false;
   int N = 50;
-  std::string ylabel = "#sigma  (nb)";
+  std::string xlabel = "W   [GeV]"; bool LAB = false;
+  std::string ylabel = "#sigma(#gamma N #rightarrow Z_{c}^{+} N)   [nb]";
   std::string filename = "Zc_photoproduction.pdf";
   bool INTEG = true;
 
@@ -60,7 +62,12 @@ int main( int argc, char** argv )
     if (std::strcmp(argv[i],"-diff")==0)
     {
       INTEG = false;
-      ylabel = "d#sigma/dt  (#mub GeV^{-2})";
+      ylabel = "d#sigma/dt  [#mub GeV^{-2}]";
+    }
+    if (std::strcmp(argv[i],"-lab")==0)
+    {
+      LAB = true;
+      xlabel = "E_{#gamma}   [GeV]";
     }
   }
 
@@ -78,7 +85,7 @@ int main( int argc, char** argv )
   reaction_kinematics * ptr3900 = new reaction_kinematics(3.9, "Z_{c}^{+}(3900)");
 
   // Amplitudes
-  pseudoscalar_exchange Z3900(ptr3900, mPi, "Z_{c}^{+}(3900), #pi exchange");
+  pseudoscalar_exchange Z3900(ptr3900, mPi, "Z_{c}^{+}(3900)");
   pseudoscalar_exchange Z3900R(ptr3900, &alpha, "Z_{c}^{+}(3900), Reggeon exchange");
 
   // Couplings for 4 MeV width
@@ -93,7 +100,7 @@ int main( int argc, char** argv )
   reaction_kinematics * ptr4200 = new reaction_kinematics(4.20, "Z_{c}^{+}(4200)");
 
   // Amplitudes
-  pseudoscalar_exchange Z4200(ptr4200, mPi, "Z_{c}^{+}(4200), #pi exchange");
+  pseudoscalar_exchange Z4200(ptr4200, mPi, "Z_{c}^{+}(4200)");
   pseudoscalar_exchange Z4200R(ptr4200, &alpha, "Z_{c}^{+}(4200), Reggeon exchange");
 
   // Couplings
@@ -103,10 +110,10 @@ int main( int argc, char** argv )
 
   // Add to a vector to plot them both
   std::vector<amplitude*> amps;
-  amps.push_back(&Z4200);
-  amps.push_back(&Z4200R);
   amps.push_back(&Z3900);
-  amps.push_back(&Z3900R);
+  amps.push_back(&Z4200);
+  // amps.push_back(&Z4200R);
+  // amps.push_back(&Z3900R);
 
   // ---------------------------------------------------------------------------
   // You shouldnt need to change anything below this line
@@ -120,32 +127,41 @@ int main( int argc, char** argv )
   for (int n = 0; n < amps.size(); n++)
   {
     std::cout << std::endl << "Printing amplitude: " << amps[n]->identifier << "\n";
-    auto F = [&](double W)
+
+    double low;
+    (LAB == true) ? (low = E_lab(amps[n]->kinematics->Wth) + EPS)
+                  : (low = amps[n]->kinematics->Wth + EPS);
+    auto F = [&](double x)
     {
+      double s;
+      (LAB == false) ? (s = x*x) : (s = W_cm(x) * W_cm(x));
+
       if (INTEG == false)
       {
-        double t = amps[n]->kinematics->t_man(W*W, theta * deg2rad);
-        return amps[n]->differential_xsection(W*W, t);
+        double t = amps[n]->kinematics->t_man(s, theta * deg2rad);
+        return amps[n]->differential_xsection(s, t);
       }
       else
       {
-        return amps[n]->integrated_xsection(W*W);
+        return amps[n]->integrated_xsection(s);
       }
     };
 
 
-    std::array<std::vector<double>, 2> x_fx = vec_fill(N, F, sqrt(amps[n]->kinematics->sth) + EPS, max, true);
+    std::array<std::vector<double>, 2> x_fx = vec_fill(N, F, low, max, true);
     plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->identifier);
   }
 
-  // Set up X-axis
-  plotter->SetXaxis("W  (GeV)", sqrt(ptr3900->sth), max);
+  double low;
+  (LAB == true) ? (low = E_lab(ptr3900->Wth) + EPS)
+                : (low = ptr3900->Wth + EPS);
+  plotter->SetXaxis(xlabel, low, max);
 
   // To change the range of the Y-axis or the position of the Legend change the arguments here
   (custom_y == true) ? (plotter->SetYaxis(ylabel, y[0], y[1])) : (plotter->SetYaxis(ylabel));
 
   // Position of the legend
-  plotter->SetLegend(0.5, 0.65);
+  plotter->SetLegend(0.2, 0.65);
 
   // Output to file
   plotter->Plot(filename);
