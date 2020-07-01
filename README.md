@@ -31,15 +31,15 @@ Available amplitudes, so far, include:
 
 Incoherent (interfering) sums of amplitudes may be constructed through the [`amplitude_sum`](./include/amplitudes/amplitude_sum.hpp) class.
 
-Observables are evaluated in terms of the center-of-mass energy, _s ,_ and cosine of the scattering angle, _zs_. Alternatively to easily interface with event generators, Lorentz vectors may be passed using the `event` struct. For example:
+Observables are evaluated in terms of the invariant center-of-mass energy, s, and momentum transfer, t. Alternatively to easily interface with event generators, Lorentz vectors may be passed using the `event` struct to calculate s and/or t. For example:
 ```c++
-// In s-channel variables
-double dxs = amplitude.differential_xsection(s, zs);
-
-// or four-vectors
+// From four-vectors:
 TLorentzVector pGamma, pTarget, pVector, pRecoil;
 event fvecs(pGamma, pTarget, pVec, pRecoil);
-double dxs = amplitude.differential_xsection(fvecs);
+double s = fvecs.s_man(), t = fvecs.t_man();
+
+// Observable from s and t
+double dxs = amplitude.differential_xsection(s, t);
 ```
 
 ## EXECUTABLES
@@ -51,15 +51,9 @@ cd build
 cmake ..
 make test
 ````
-
-All executables have the following two optional flags for customizing the plotted output
-```bash
--f string             # Desired filename of output (default: executable_name.pdf)
--y [double:double]    # Manually set the y-range for plotting
-```
-See documentation in each respective `.cpp` file for additional flag options.
-
 Alternatively use `make JpacPhoto` to build a library file `libJpacPhoto.a` which may then be linked to other code to access header files and classes.
+
+See documentation in each respective `.cpp` file for additional flag options.
 
 #### [polarized_pentaquark](./executables/polarized_pentaquark.cpp)
 Sensitivity study of double polarized observables, ALL and KLL, to the LHCb pentaquarks in Hall A at JLab.
