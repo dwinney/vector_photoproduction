@@ -73,7 +73,7 @@ int main( int argc, char** argv )
   linear_trajectory alpha(+1, 0.941, 0.364);
 
   // Create amplitude with kinematics and trajectory
-  pomeron_exchange background(ptr, &alpha, "Background");
+  pomeron_exchange background(ptr, &alpha, false, "Background");
 
   // normalization and t-slope
   // best fit values from [1]

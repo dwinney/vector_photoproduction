@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
-// Comparing the photoproduction cross-sections of the Jpsi 1s and 2s states
-// near threshold at GlueX
+// Comparing the photoproduction cross-sections of the Y exotic states with
+// j/psi at EIC energies
 //
 // Author:       Daniel Winney (2020)
 // Affiliation:  Joint Physics Analysis Center (JPAC)
@@ -14,7 +14,6 @@
 // -c double          # Change CM angle in degree (default: 0)
 // -n int             # Number of points to plot (default: 100)
 // -m double          # Maximum energy to plot (default: 5.55 GeV)
-// -ratio             # Plot ratio of 2S / 1S dxs (default: false)
 // -y "[y1:y2]"       # Custom y bounds in output plot (default: ROOT's auto range)
 // -lab               # Display E_lab in the x-axis (default: false)
 // ---------------------------------------------------------------------------
@@ -41,7 +40,7 @@ int main( int argc, char** argv )
   double theta = 0.;
   double max = 25;
   int N = 25; // how many points to plot
-  std::string ylabel = "#sigma (#gamma N #rightarrow Y N)   [nb]"; bool INTEG = true;
+  std::string ylabel = "#sigma (#gamma p #rightarrow Y p)   [nb]"; bool INTEG = true;
   double y[2]; bool custom_y = false;
   std::string xlabel = "W   [GeV]"; bool LAB = false;
   std::string filename = "Y4220_photoproduction.pdf";
@@ -70,11 +69,20 @@ int main( int argc, char** argv )
   // Set up pomeron trajectory
   // Here we use (real) linear trajectory with intercept and slope only free param
 
-  // Best fit values from [1] from high energy
-  linear_trajectory alpha2016(+1, 1.1, 0.11, "pomeron");
-
   // Best fit values from [2] from near threshold data
-  linear_trajectory alpha2019(+1, .94, 0.36, "pomeron");
+  linear_trajectory alpha(+1, .94, 0.36, "pomeron (2019)");
+
+  // Best fit values from [1] from high energy data
+  linear_trajectory alpha2(+1, 1.1, 0.11, "pomeron (2016)");
+
+  // ---------------------------------------------------------------------------
+  // J/Psi
+  // ---------------------------------------------------------------------------
+  // Set up kinematics, determined entirely by vector meson mass
+  reaction_kinematics * kPsi = new reaction_kinematics(mJpsi, "J/#psi");
+
+  pomeron_exchange Psi(kPsi, &alpha, false, "J/#psi");
+  Psi.set_params({.379, .12});
 
   // ---------------------------------------------------------------------------
   // Y(4260)
@@ -82,21 +90,22 @@ int main( int argc, char** argv )
   // Set up kinematics, determined entirely by vector meson mass
   reaction_kinematics * kY = new reaction_kinematics(4.220, "Y(4220)");
 
-  pomeron_exchange Y(kY, &alpha2019, false, "Y(4220) (2016 fit)");
-  Y.set_params({2.35, .12});
+  pomeron_exchange Y(kY, &alpha, false, "2019 fit");
+  Y.set_params({1.54 * .379, .12});
 
-  pomeron_exchange Y2(kY, &alpha2016, true, "Y(4220) (2019 fit)");
-  Y2.set_params({2.35, 1.0});
+  pomeron_exchange Y2(kY, &alpha2, true, "2016 fit");
+  Y2.set_params({1.54 * .159, 1.01});
 
+  // ---------------------------------------------------------------------------
+  // Amplitudes to plot
+  std::vector<amplitude*> amps;
+  // amps.push_back(&Psi);
+  // amps.push_back(&Y);
+  amps.push_back(&Y2);
 
   // ---------------------------------------------------------------------------
   // You shouldnt need to change anything below this line
   // ---------------------------------------------------------------------------
-
-  // Amplitudes to plot
-  std::vector<amplitude*> amps;
-  amps.push_back(&Y);
-  amps.push_back(&Y2);
 
   // Initialize objects to plot
   jpacGraph1D* plotter = new jpacGraph1D();
@@ -105,6 +114,8 @@ int main( int argc, char** argv )
   // Print the desired observable for each amplitude
   for (int n = 0; n < amps.size(); n++)
   {
+    std::cout << std::endl << "Printing amplitude: " << amps[n]->identifier << "\n";
+
     double low;
     (LAB == true) ? (low = E_lab(amps[n]->kinematics->Wth) + EPS)
                   : (low = amps[n]->kinematics->Wth + EPS);
@@ -136,13 +147,26 @@ int main( int argc, char** argv )
   // Tweak the axes
   (custom_y == true) ? (plotter->SetYaxis(ylabel, y[0], y[1])) : (plotter->SetYaxis(ylabel));
 
+  // Set x-range from threshold to max
   double low;
   (LAB == true) ? (low = E_lab(kY->Wth) + EPS)
                 : (low = kY->Wth + EPS);
   plotter->SetXaxis(xlabel, low, max);
 
-  plotter->SetLegend(0.6, 0.7);
+  // Scale the second y-axis to the BR of the final decay chain
+  // BR(Y -> jpsi pi pi) x BR(jpsi -> l- l+) in pb
+  if (INTEG == true && custom_y == true)
+  {
+    double BRs = (9.2 / 280.) * .12 * 1E3;
+    plotter->AddSecondScale(BRs * y[0],  BRs * y[1], "#sigma (#gamma p #rightarrow Y p #rightarrow J/#psi #pi #pi p #rightarrow l^{+} l^{-} #pi #pi p)    [pb]");
+  }
+
+  // Remove legend
+  plotter->SetLegend(false);
+
+  // Output to file
   plotter->Plot(filename);
 
+  delete plotter, kY, kPsi;
   return 1.;
 };

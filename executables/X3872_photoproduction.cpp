@@ -12,6 +12,7 @@
 // -m double          # Maximum energy to plot (default: 10 GeV)
 // -integ             # Plot integrated xsection (default: false)
 // -y "[y1:y2]"       # Custom y bounds in output plot
+// -lab               # Display E_lab in the x-axis (default: false)
 // ---------------------------------------------------------------------------
 
 #include "constants.hpp"
@@ -41,10 +42,11 @@ int main( int argc, char** argv )
 
   // Default values
   int N = 50;
-  double max = 10.;
+  double max = 25.;
   double theta = 0.;
   double y[2]; bool custom_y = false;
-  bool INTEG = false; std::string ylabel = "d#sigma/dt  (nb GeV^{-2})";
+  std::string xlabel = "W   [GeV]"; bool LAB = false;
+  bool INTEG = false; std::string ylabel = "d#sigma/dt  [nb GeV^{-2}]";
   std::string filename = "X3872_photoproduction.pdf";
 
   // ---------------------------------------------------------------------------
@@ -59,7 +61,12 @@ int main( int argc, char** argv )
     if (std::strcmp(argv[i],"-integ")==0)
     {
       INTEG = true;
-      ylabel = "#sigma  (nb)";
+      ylabel = "#sigma (#gamma p #rightarrow X p)   [nb]";
+    }
+    if (std::strcmp(argv[i],"-lab")==0)
+    {
+      LAB = true;
+      xlabel = "E_{#gamma}   [GeV]";
     }
   }
 
@@ -86,10 +93,10 @@ int main( int argc, char** argv )
   total.add_amplitude(&omega);
 
   // Vector of amplitudes to plot
-  std::vector<amplitude*> exchanges;
-  exchanges.push_back(&total);
-  exchanges.push_back(&rho);
-  exchanges.push_back(&omega);
+  std::vector<amplitude*> amps;
+  amps.push_back(&total);
+  amps.push_back(&rho);
+  amps.push_back(&omega);
 
   // ---------------------------------------------------------------------------
   // You shouldnt need to change anything below this line
@@ -101,23 +108,32 @@ int main( int argc, char** argv )
 
   // ---------------------------------------------------------------------------
   // Print the desired observable for each amplitude
-  for (int n = 0; n < exchanges.size(); n++)
+  for (int n = 0; n < amps.size(); n++)
   {
-    auto F = [&](double W)
+    std::cout << std::endl << "Printing amplitude: " << amps[n]->identifier << "\n";
+
+    double low;
+    (LAB == true) ? (low = E_lab(amps[n]->kinematics->Wth) + EPS)
+                  : (low = amps[n]->kinematics->Wth + EPS);
+
+    auto F = [&](double x)
     {
+      double s;
+      (LAB == false) ? (s = x*x) : (s = W_cm(x) * W_cm(x));
+
       if (INTEG == false)
       {
-        double t = ptr->t_man(W*W, theta);
-        return exchanges[n]->differential_xsection(W*W, t);
+        double t = amps[n]->kinematics->t_man(s, theta * deg2rad);
+        return amps[n]->differential_xsection(s, t);
       }
       else
       {
-        return exchanges[n]->integrated_xsection(W*W);
+        return amps[n]->integrated_xsection(s);
       }
     };
 
-    std::array<std::vector<double>, 2> x_fx = vec_fill(N, F, sqrt(ptr->sth) + EPS, max);
-    plotter->AddEntry(x_fx[0], x_fx[1], exchanges[n]->identifier);
+    std::array<std::vector<double>, 2> x_fx = vec_fill(N, F, low, max, true);
+    plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->identifier);
   }
 
   // ---------------------------------------------------------------------------
@@ -127,8 +143,12 @@ int main( int argc, char** argv )
   // Tweak the axes
   (custom_y == true) ? (plotter->SetYaxis(ylabel, y[0], y[1])) : (plotter->SetYaxis(ylabel));
 
-  plotter->SetXaxis("W   (GeV)", sqrt(ptr->sth), max);
+  double low;
+  (LAB == true) ? (low = E_lab(ptr->Wth) + EPS)
+                : (low = ptr->Wth + EPS);
+  plotter->SetXaxis(xlabel, low, max);
 
-  plotter->SetLegend(0.2, 0.7);
+  plotter->SetLegend(false);
+  // plotter->SetLegend(0.2, 0.7);
   plotter->Plot(filename);
 }

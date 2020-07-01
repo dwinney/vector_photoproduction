@@ -42,7 +42,7 @@ int main( int argc, char** argv )
   double y[2]; bool custom_y = false;
   int N = 50;
   std::string xlabel = "W   [GeV]"; bool LAB = false;
-  std::string ylabel = "#sigma(#gamma N #rightarrow Z_{c}^{+} N)   [nb]";
+  std::string ylabel = "#sigma(#gamma p #rightarrow Z n)   [nb]";
   std::string filename = "Zc_photoproduction.pdf";
   bool INTEG = true;
 
@@ -85,13 +85,12 @@ int main( int argc, char** argv )
   reaction_kinematics * ptr3900 = new reaction_kinematics(3.9, "Z_{c}^{+}(3900)");
 
   // Amplitudes
-  pseudoscalar_exchange Z3900(ptr3900, mPi, "Z_{c}^{+}(3900)");
-  pseudoscalar_exchange Z3900R(ptr3900, &alpha, "Z_{c}^{+}(3900), Reggeon exchange");
+  pseudoscalar_exchange Z3900(ptr3900, mPi, "#pi exchange");
+  pseudoscalar_exchange Z3900R(ptr3900, &alpha, "Reggeon exchange");
 
   // Couplings for 4 MeV width
   Z3900.set_params({0.67 * 3.90, sqrt(4.*M_PI*14.4)});
   Z3900R.set_params({0.67 * 3.90, sqrt(4.*M_PI*14.4)});
-
 
   // ---------------------------------------------------------------------------
   // ZC(4200)
@@ -106,14 +105,15 @@ int main( int argc, char** argv )
   // Couplings
   Z4200.set_params({1.731 * 4.20, sqrt(4.*M_PI*14.4)});
   Z4200R.set_params({1.731 * 4.20, sqrt(4.*M_PI*14.4)});
-  // ---------------------------------------------------------------------------
 
-  // Add to a vector to plot them both
+  // ---------------------------------------------------------------------------
+  // Choose which amplitudes to plot
+
   std::vector<amplitude*> amps;
   amps.push_back(&Z3900);
-  amps.push_back(&Z4200);
-  // amps.push_back(&Z4200R);
   // amps.push_back(&Z3900R);
+  // amps.push_back(&Z4200);
+  // amps.push_back(&Z4200R);
 
   // ---------------------------------------------------------------------------
   // You shouldnt need to change anything below this line
@@ -152,6 +152,11 @@ int main( int argc, char** argv )
     plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->identifier);
   }
 
+  // ---------------------------------------------------------------------------
+  // Plotting Settings
+  // ---------------------------------------------------------------------------
+
+  // Set x-range from threshold to max
   double low;
   (LAB == true) ? (low = E_lab(ptr3900->Wth) + EPS)
                 : (low = ptr3900->Wth + EPS);
@@ -160,8 +165,16 @@ int main( int argc, char** argv )
   // To change the range of the Y-axis or the position of the Legend change the arguments here
   (custom_y == true) ? (plotter->SetYaxis(ylabel, y[0], y[1])) : (plotter->SetYaxis(ylabel));
 
-  // Position of the legend
-  plotter->SetLegend(0.2, 0.65);
+  // Scale the second y-axis to the BR of the final decay chain
+  // BR(Z -> jpsi pi) x BR(jpsi -> l- l+) in pb
+  if (INTEG == true && custom_y == true)
+  {
+    double BRs = (1./ 7.) * .12 * 1E3;
+    plotter->AddSecondScale(BRs * y[0],  BRs * y[1], "#sigma (#gamma p #rightarrow Z n #rightarrow J/#psi #pi n #rightarrow l^{+} l^{-} #pi n)    [pb]");
+  }
+
+  // Position of the legend only if need legend (more than 1 entry)
+  (amps.size() > 1) ? (plotter->SetLegend(0.55, 0.55)) : (plotter->SetLegend(false));
 
   // Output to file
   plotter->Plot(filename);

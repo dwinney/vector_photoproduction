@@ -44,7 +44,6 @@ int main( int argc, char** argv )
   {
     if (std::strcmp(argv[i],"-c")==0) theta = atof(argv[i+1]);
     if (std::strcmp(argv[i],"-n")==0) N = atoi(argv[i+1]);
-    if (std::strcmp(argv[i],"-integ")==0) N = atoi(argv[i+1]);
     if (std::strcmp(argv[i],"-m")==0) max = atof(argv[i+1]);
     if (std::strcmp(argv[i],"-y")==0) {y_range(argv[i+1], y); custom_y = true;}
     if (std::strcmp(argv[i],"-ratio")==0)
@@ -68,7 +67,7 @@ int main( int argc, char** argv )
   reaction_kinematics * ptr1S = new reaction_kinematics(3.097, "#psi(1S)");
 
   // Create amplitudes with kinematics and trajectory
-  pomeron_exchange pomeron_1S(ptr1S, &alpha, "#psi(1S)");
+  pomeron_exchange pomeron_1S(ptr1S, &alpha, false, "#psi(1S)");
 
   // Feed in other two parameters (normalization and t-slope)
   // Best fit from [1]
@@ -82,7 +81,7 @@ int main( int argc, char** argv )
   reaction_kinematics * ptr2S = new reaction_kinematics(3.686, "#psi(2S)");
 
   // trajectory is the same but new kinematics for bigger phase-space
-  pomeron_exchange pomeron_2S(ptr2S, &alpha, "100 x #psi(2S)");
+  pomeron_exchange pomeron_2S(ptr2S, &alpha, false, "100 x #psi(2S)");
 
   // Same t-slope but coupling is scaled by 1/4, multiplied by 10 for comparision
   pomeron_2S.set_params({10. * 0.379 / 4., 0.12});
