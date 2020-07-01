@@ -70,10 +70,10 @@ int main( int argc, char** argv )
   // Here we use (real) linear trajectory with intercept and slope only free param
 
   // Best fit values from [2] from near threshold data
-  linear_trajectory alpha(+1, .94, 0.36, "pomeron (2019)");
+  linear_trajectory alpha19(+1, .94, 0.36, "pomeron (2019)");
 
   // Best fit values from [1] from high energy data
-  linear_trajectory alpha2(+1, 1.1, 0.11, "pomeron (2016)");
+  linear_trajectory alpha16(+1, 1.1, 0.11, "pomeron (2016)");
 
   // ---------------------------------------------------------------------------
   // J/Psi
@@ -81,19 +81,24 @@ int main( int argc, char** argv )
   // Set up kinematics, determined entirely by vector meson mass
   reaction_kinematics * kPsi = new reaction_kinematics(mJpsi, "J/#psi");
 
-  pomeron_exchange Psi(kPsi, &alpha, false, "J/#psi");
+  // Reproduces near threshold j/psi data
+  pomeron_exchange Psi(kPsi, &alpha19, false, "J/#psi");
   Psi.set_params({.379, .12});
 
   // ---------------------------------------------------------------------------
-  // Y(4260)
+  // Y(4220)
   // ---------------------------------------------------------------------------
   // Set up kinematics, determined entirely by vector meson mass
   reaction_kinematics * kY = new reaction_kinematics(4.220, "Y(4220)");
 
-  pomeron_exchange Y(kY, &alpha, false, "2019 fit");
+  // Pomeron exchange fit to near threshold
+  // helicity nonconserving
+  pomeron_exchange Y(kY, &alpha19, false, "2019 fit");
   Y.set_params({1.54 * .379, .12});
 
-  pomeron_exchange Y2(kY, &alpha2, true, "2016 fit");
+  // Pomeron exchange for higher energies
+  // helicity conserving + alpha intercept > 1
+  pomeron_exchange Y2(kY, &alpha16, true, "2016 fit");
   Y2.set_params({1.54 * .159, 1.01});
 
   // ---------------------------------------------------------------------------

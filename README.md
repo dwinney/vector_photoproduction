@@ -73,6 +73,9 @@ Analytical model for the unpolarized cross section near threshold of axial vecto
 #### [X3872_photoproduction](./executables/X3872_photoproduction.cpp)
 Prediction for the unpolarized cross-section for exclusive X(3872) photoproduction at low momentum transfer and high energies of interest for the future EIC.
 
+#### [Y4220_photoproduction](./executables/Y4220_photoproduction.cpp)
+Prediction for exclusive J/psi and Y(4220) photoproduction at the EIC. 
+
 #### [Zc_photoproduction](./executables/Zc_photoproduction.cpp)
 Unpolarized cross-section predictions for the photoproduction of the Z_c+(3900) and Z_c+(4200) by charged pion exchange. Reproduces the results in [3] with up to date widths and .
 
