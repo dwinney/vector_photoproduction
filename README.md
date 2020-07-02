@@ -53,6 +53,11 @@ make test
 ````
 Alternatively use `make JpacPhoto` to build a library file `libJpacPhoto.a` which may then be linked to other code to access header files and classes.
 
+All executables have the following two optional flags for customizing the plotted output
+```bash
+-f string             # Desired filename of output (default: executable_name.pdf)
+-y [double:double]    # Manually set the y-range for plotting
+```
 See documentation in each respective `.cpp` file for additional flag options.
 
 #### [polarized_pentaquark](./executables/polarized_pentaquark.cpp)
@@ -74,10 +79,10 @@ Analytical model for the unpolarized cross section near threshold of axial vecto
 Prediction for the unpolarized cross-section for exclusive X(3872) photoproduction at low momentum transfer and high energies of interest for the future EIC.
 
 #### [Y4220_photoproduction](./executables/Y4220_photoproduction.cpp)
-Prediction for exclusive J/psi and Y(4220) photoproduction at the EIC. 
+Prediction for exclusive J/psi and Y(4220) photoproduction at the EIC.
 
 #### [Zc_photoproduction](./executables/Zc_photoproduction.cpp)
-Unpolarized cross-section predictions for the photoproduction of the Z_c+(3900) and Z_c+(4200) by charged pion exchange. Reproduces the results in [3] with up to date widths and .
+Unpolarized cross-section predictions for the photoproduction of the Z_c+(3900) and Z_c+(4200) by charged pion exchange. Reproduces the results in [3] with up to date decay widths.
 
 ## PLOTTING
 Plots are automatically created using the JPAC collaboration style guidelines. For more information see the [jpacStyle](https://github.com/dwinney/jpacStyle) library.
@@ -85,6 +90,8 @@ Plots are automatically created using the JPAC collaboration style guidelines. F
 <p align="center">
   <img width="275" src="./doc/JPAClogo.png">
 </p>
+
+NOTE: When cloning, Git does not automatically download submodules. If jpacStyle files are not automatically downloaded use `git submodule update --init --recursive`.
 
 ## REFERENCES
 * [1] "Theoretical model of the phi meson photoproduction amplitudes" Lesniak and Szczepaniak [[arXiv:hep-ph/0304007]](https://arxiv.org/abs/hep-ph/0304007)
