@@ -89,4 +89,6 @@ double jpacPhoto::levi_civita(int mu, int alpha, int beta, int gamma)
       return -1.;
     }
   }
+
+  return 0.;
 };
