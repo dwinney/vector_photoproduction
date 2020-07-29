@@ -2,9 +2,6 @@ cmake_minimum_required (VERSION 2.9)
 
 project (jpacPhoto)
 
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED YES)
-
 #Compare the new contents with the existing file, if it exists and is the
 # same we don't want to trigger a make by changing its timestamp.
 function(update_file path content)
@@ -51,14 +48,14 @@ include_directories("include")
 include_directories("src")
 file(GLOB_RECURSE INC "include/*.hpp")
 file(GLOB_RECURSE SRC "src/*.cpp")
-add_library( JpacPhoto ${INC} ${SRC} )
+add_library( JpacPhoto SHARED ${INC} ${SRC} )
 
 # BUILD THE PLOTTING LIBRARY AS WELL
 include_directories("jpacStyle/include")
 include_directories("jpacStyle/src")
 file(GLOB_RECURSE PLOTINC "jpacStyle/include/*.hpp")
 file(GLOB_RECURSE PLOTSRC "jpacStyle/src/*.cpp")
-add_library( JpacStyle ${PLOTINC} ${PLOTSRC} )
+add_library( JpacStyle SHARED ${PLOTINC} ${PLOTSRC} )
 
 # GRAB EXECUTABLES and add to the makelist
 include_directories("executables")
@@ -70,5 +67,4 @@ foreach( exefile ${EXE_FILES} )
     target_link_libraries( ${exename} JpacPhoto)
     target_link_libraries( ${exename} JpacStyle)
     target_link_libraries( ${exename} ${ROOT_LIBRARIES})
-    target_link_libraries( ${exename} ${BOOST_LIBRARIES})
 endforeach( exefile ${EXE_FILES} )
