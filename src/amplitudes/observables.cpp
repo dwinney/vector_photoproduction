@@ -10,7 +10,7 @@
 
 // ---------------------------------------------------------------------------
 // Square of the spin averaged amplitude squared
-double jpacPhoto::amplitude::probablity_distribution(double s, double t)
+double jpacPhoto::amplitude::probability_distribution(double s, double t)
 {
   double sum = 0.;
   for (int i = 0; i < 24; i++)
@@ -28,7 +28,7 @@ double jpacPhoto::amplitude::probablity_distribution(double s, double t)
 // in NANOBARN
 double jpacPhoto::amplitude::differential_xsection(double s, double t)
 {
-  double sum = probablity_distribution(s, t);
+  double sum = probability_distribution(s, t);
 
   double norm = 1.;
   norm /= 64. * M_PI * s;
@@ -138,7 +138,7 @@ std::complex<double> jpacPhoto::amplitude::SDME(int alpha, int lam, int lamp, do
   }
 
   // Normalization (sum over all amplitudes squared)
-  double norm = probablity_distribution(s, t);
+  double norm = probability_distribution(s, t);
   norm *= norm;
 
   // These are the indexes of the amplitudes in reaction_kinematics that have
