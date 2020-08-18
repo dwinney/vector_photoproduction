@@ -8,24 +8,27 @@
 #include "amplitudes/baryon_resonance.hpp"
 
 // Combined amplitude as a Breit-Wigner with the residue as the prodect of hadronic and photo-couplings
-std::complex<double> jpacPhoto::baryon_resonance::helicity_amplitude(std::vector<int> helicities, double s, double t)
+std::complex<double> jpacPhoto::baryon_resonance::helicity_amplitude(std::vector<int> helicities, double xs, double xt)
 {
   int lam_i = 2 * helicities[0] - helicities[1];
   int lam_f = 2 * helicities[2] - helicities[3];
 
-  std::complex<double> residue = 1.;
-  residue  = photo_coupling(lam_i, s);
-  residue *= hadronic_coupling(lam_f, s);
-  residue *= threshold_factor(s, 1.5);
+  // update save values of energies and angle
+  s = xs; t = xt; theta = kinematics->theta_s(xs, xt);
 
-  residue *= wigner_d_half(J, lam_i, lam_f, kinematics->theta_s(s,t));
+  std::complex<double> residue = 1.;
+  residue  = photo_coupling(lam_i);
+  residue *= hadronic_coupling(lam_f);
+  residue *= threshold_factor(1.5);
+
+  residue *= wigner_d_half(J, lam_i, lam_f, theta);
   residue /= (s + xi * mRes * gamRes - mRes*mRes);
 
   return residue;
 };
 
 // Ad-hoc threshold factor to kill the resonance at threshold
-double jpacPhoto::baryon_resonance::threshold_factor(double s, double beta)
+double jpacPhoto::baryon_resonance::threshold_factor(double beta)
 {
   double result = pow((s - kinematics->sth()) / s, beta);
   result /= pow((mRes*mRes - kinematics->sth()) / (mRes*mRes), beta);
@@ -34,7 +37,7 @@ double jpacPhoto::baryon_resonance::threshold_factor(double s, double beta)
 };
 
 // Photoexcitation helicity amplitude for the process gamma p -> R
-std::complex<double> jpacPhoto::baryon_resonance::photo_coupling(int lam_i, double s)
+std::complex<double> jpacPhoto::baryon_resonance::photo_coupling(int lam_i)
 {
   // A_1/2 or A_3/2 depending on ratio R_photo
   double a;
@@ -59,7 +62,7 @@ std::complex<double> jpacPhoto::baryon_resonance::photo_coupling(int lam_i, doub
 };
 
 // Hadronic decay helicity amplitude for the R -> J/psi p process
-std::complex<double> jpacPhoto::baryon_resonance::hadronic_coupling(int lam_f, double s)
+std::complex<double> jpacPhoto::baryon_resonance::hadronic_coupling(int lam_f)
 {
   // Hadronic coupling constant g, given in terms of branching ratio xBR
   std::complex<double> g;

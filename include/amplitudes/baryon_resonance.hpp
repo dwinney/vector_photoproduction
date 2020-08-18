@@ -38,14 +38,17 @@ namespace jpacPhoto
     // Initial and final CoM momenta evaluated at resonance energy.
     double pi_bar, pf_bar;
 
+    // saved energies and angle
+    double s, t, theta;
+
   public:
     // Constructor
     baryon_resonance(reaction_kinematics * xkinem, int j, int p, double mass, double width, std::string name = "")
     : amplitude(xkinem, name, 2), mRes(mass), gamRes(width), J(j), P(p),
       naturality(p * pow(-1, (j-1)/2))
     {
-      pi_bar = - real(kinematics->initial->momentum(mass * mass));
-      pf_bar = - real(kinematics->final->momentum(mass * mass));
+      pi_bar = real(kinematics->initial->momentum(mass * mass));
+      pf_bar = real(kinematics->final->momentum(mass * mass));
 
       switch (J)
       {
@@ -83,13 +86,13 @@ namespace jpacPhoto
     };
 
     // Photoexcitation helicity amplitude for the process gamma p -> R
-    std::complex<double> photo_coupling(int lam_i, double s);
+    std::complex<double> photo_coupling(int lam_i);
 
     // Hadronic decay helicity amplitude for the R -> J/psi p process
-    std::complex<double> hadronic_coupling(int lam_f, double s);
+    std::complex<double> hadronic_coupling(int lam_f);
 
     // Ad-hoc threshold factor to kill the resonance at threshold
-    double threshold_factor(double s, double beta);
+    double threshold_factor(double beta);
 
     // Combined total amplitude including Breit Wigner pole
     std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double t);
