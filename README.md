@@ -18,7 +18,7 @@ mkdir build && cd build
 cmake ..
 cmake --build . --target install
 ```
-This will create a `jpacPhoto/lib/libjpacPhoto.so` and `jpacPhoto/lib/libjpacStyle.so` libraries that can be linked to other code. All executables (e.g. to reproduce plots and results in [[1]](https://arxiv.org/abs/1907.09393) and [[2]](https://arxiv.org/abs/2008.01001)) will also be build in `jpacPhoto/bin`.
+This will create a `jpacPhoto/lib` with libraries that can be linked to other code. The full suite of executables (e.g. to reproduce plots and results in [[1]](https://arxiv.org/abs/1907.09393) and [[2]](https://arxiv.org/abs/2008.01001)) will also be built in `jpacPhoto/bin`.
 
 Note: cloning with the `--recursive` flag is required to initiate the `jpacStyle` submodule. Compiling can also be sped up with the optional `-jN` flag where N is the number of available cores.
 
@@ -30,7 +30,8 @@ The main object of interest is the abstract [`amplitude`](./include/amplitudes/a
 * Integrated total cross section ( σ )
 * Polarization asymmetries ( A_LL and K_LL )
 * Spin density matrix elements ( ρ^α_λ,λ' )
-* Integrated beam asymmetry ( Σ )
+* Integrated beam asymmetry ( Σ_4pi )
+* Beam asymmetry in the y-direction ( Σ_y )
 * Parity asymmetry ( P_σ )
 
 Available amplitudes, so far, include:
@@ -39,6 +40,7 @@ Available amplitudes, so far, include:
 * [Pomeron exchange](./include/amplitudes/pomeron_exchange.hpp) (t-channel)
 * [(fixed-spin and reggeized) Charged pseudo-scalar meson exchange](./include/amplitudes/vector_exchange.hpp) (t-channel)
 * [(fixed-spin and reggeized) Vector meson exchange](./include/amplitudes/vector_exchange.hpp) (t-channel)
+* [Primakoff effect off nuclear target](./include/amplitudes/primakoff_effect.hpp) (t-channel)
 * [(fixed-spin) Dirac fermion exchange](./include/amplitudes/dirac_exchange.hpp) (u-channel)
 * [(fixed-spin) Rarita-Schwinger fermion exchange](./include/amplitudes/rarita_exchange.hpp) (u-channel)
 
