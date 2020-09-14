@@ -21,35 +21,39 @@ std::complex<double> jpacPhoto::vector_exchange::helicity_amplitude(std::vector<
   theta = kinematics->theta_s(xs, xt);
   zt = real(kinematics->z_t(s,t));
 
+  // Output
+  std::complex<double> result;
+
   if (REGGE == false && FOUR_VEC == true)
   {
-    return covariant_amplitude(helicities);
+    result = covariant_amplitude(helicities);
   }
-
-  // NOTE THIS ONLY WORKS FOR UNPOLARIZED CROSS-SECTIONS
-  // NEED TO WIGNER-ROTATE HELICITES TO S CHANNEL FOR SDMES
-
-  // TODO: ADD CROSSING-MATRICES
-  int lam  = lam_gam - lam_vec;
-  int lamp = (lam_targ - lam_rec) / 2.;
-
-  if (abs(lam) == 2) return 0.; // double flip forbidden!
-
-  // Product of residues  
-  std::complex<double> result;
-  result  = top_residue(lam_gam, lam_vec);
-  result *= bottom_residue(lam_targ, lam_rec);
-
-  if (REGGE == false) // Use the covariant expression
+  else
   {
-    result *= wigner_d_int_cos(1, lam, lamp, zt);
-    result /= t - mEx2;
-  }
-  else // Use the helicity amplitude form in the t-channel
-  {
-    result *= regge_propagator(1, lam, lamp);
-  }
+    // NOTE THIS ONLY WORKS FOR UNPOLARIZED CROSS-SECTIONS
+    // NEED TO WIGNER-ROTATE HELICITES TO S CHANNEL FOR SDMES
 
+    // TODO: ADD CROSSING-MATRICES
+    int lam  = lam_gam - lam_vec;
+    int lamp = (lam_targ - lam_rec) / 2.;
+
+    if (abs(lam) == 2) return 0.; // double flip forbidden!
+
+    // Product of residues  
+    result  = top_residue(lam_gam, lam_vec);
+    result *= bottom_residue(lam_targ, lam_rec);
+
+    if (REGGE == false) // Use the covariant expression
+    {
+      result *= wigner_d_int_cos(1, lam, lamp, zt);
+      result /= t - mEx2;
+    }
+    else // Use the helicity amplitude form in the t-channel
+    {
+      result *= regge_propagator(1, lam, lamp);
+    }
+  }
+ 
   if (IF_FF == true)
   {
     double tprime = t - kinematics->t_man(s, 0.);

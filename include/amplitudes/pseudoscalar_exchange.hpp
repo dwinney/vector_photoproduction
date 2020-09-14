@@ -83,6 +83,9 @@ namespace jpacPhoto
     bool IF_FF = false; // Whether to include the exponential form factor
     double b = 0.; // "t-slope" parameter in the FF
 
+    // Whether to switch to using the feynman rules
+    bool FOUR_VECS = false; 
+
     // Photon - pseudoscalar - Axial vertex
     std::complex<double> top_vertex(double lam_gam, double lam_vec);
 

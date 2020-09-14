@@ -22,24 +22,29 @@ std::complex<double> jpacPhoto::pseudoscalar_exchange::helicity_amplitude(std::v
   // Store the invariant energies to avoid having to pass them around 
   s = xs; t = xt, theta = kinematics->theta_s(xs, xt);
 
-  // Because its a scalar exchange we dont have any loose indices to contract
   std::complex<double> result;
-  // result  = top_vertex(lam_gam, lam_vec);
-  // result *= scalar_propagator();
-  // result *= bottom_vertex(lam_targ, lam_rec);
-    
 
-  if (lam_vec != lam_gam || lam_targ != lam_rec) 
+  if (FOUR_VECS == true)
   {
-    return 0.; 
+    // Because its a scalar exchange we dont have any loose indices to contract
+    result  = top_vertex(lam_gam, lam_vec);
+    result *= scalar_propagator();
+    result *= bottom_vertex(lam_targ, lam_rec);
   }
   else
   {
-    result  = sqrt(2.) * gNN;
-    result *= gGamma / kinematics->mVec;
-    result *= sqrt(xr * t) / 2.;
-    result *= (kinematics->mVec2 - t);
-    result *= scalar_propagator();
+    if (lam_vec != lam_gam || lam_targ != lam_rec) 
+    {
+      return 0.; 
+    }
+    else
+    {
+      result  = sqrt(2.) * gNN;
+      result *= gGamma / kinematics->mVec;
+      result *= sqrt(xr * t) / 2.;
+      result *= (kinematics->mVec2 - t);
+      result *= scalar_propagator();
+    }
   }
 
   // Multiply by the optional expontial form factor
@@ -48,7 +53,7 @@ std::complex<double> jpacPhoto::pseudoscalar_exchange::helicity_amplitude(std::v
     double tprime = t - kinematics->t_man(s, 0.);
     result *= exp(b * tprime);
   }
-
+  
   return result;
 };
 
