@@ -19,7 +19,7 @@ std::complex<double> jpacPhoto::vector_exchange::helicity_amplitude(std::vector<
   // Update the saved energies and angles
   s = xs; t = xt;
   theta = kinematics->theta_s(xs, xt);
-  zt = real(kinematics->z_t(s,t));
+  zt = real(kinematics->z_t(s, theta));
 
   // Output
   std::complex<double> result;
@@ -43,17 +43,20 @@ std::complex<double> jpacPhoto::vector_exchange::helicity_amplitude(std::vector<
     result  = top_residue(lam_gam, lam_vec);
     result *= bottom_residue(lam_targ, lam_rec);
 
-    if (REGGE == false) // Use the covariant expression
+    // Pole with d function residue if fixed spin
+    if (REGGE == false)
     {
       result *= wigner_d_int_cos(1, lam, lamp, zt);
       result /= t - mEx2;
     }
-    else // Use the helicity amplitude form in the t-channel
+    // or regge propagator if reggeized
+    else
     {
       result *= regge_propagator(1, lam, lamp);
     }
   }
  
+  // exponential form factor
   if (IF_FF == true)
   {
     double tprime = t - kinematics->t_man(s, 0.);
