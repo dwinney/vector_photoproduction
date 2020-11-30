@@ -41,7 +41,9 @@ include_directories("include")
 include_directories("src")
 file(GLOB_RECURSE INC "include/*.hpp")
 file(GLOB_RECURSE SRC "src/*.cpp")
+
 add_library( jpacPhoto SHARED ${INC} ${SRC} )
+target_link_libraries( jpacPhoto ${ROOT_LIBRARIES})
 
 # Find the jpacStyle library
 find_library(JSTYLELIB NAMES jpacStyle libjpacStyle 
