@@ -1,7 +1,10 @@
 // Class to contain all relevant kinematic quantities. The kinematics of the reaction
-// gamma p -> V p' is entirely determined by specifying the mass of the vector particle
+// gamma p -> X p' is entirely determined by specifying the mass of the vector particle.
 //
-// Author:       Daniel Winney (2019)
+// Additional options to include virtual photon and different baryons (e.g. gamma p -> X Lambda_c) 
+// also available
+//
+// Author:       Daniel Winney (2020)
 // Affiliation:  Joint Physics Analysis Center (JPAC)
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
@@ -27,9 +30,7 @@ namespace jpacPhoto
   // ---------------------------------------------------------------------------
   // The reaction kinematics object is intended to have all relevant kinematic quantities
   // forthe reaction. Here you'll find the momenta and energies of all particles,
-  //  spinors for the nucleons and polarization vectors for the gamma and vector meson
-  //
-  // Additionally helicity combinations are stored for easier access
+  //  spinors for the baryons and polarization vectors for the gamma and produced meson
   // ---------------------------------------------------------------------------
 
   class reaction_kinematics
@@ -38,7 +39,7 @@ namespace jpacPhoto
     // Empty constructor,
     // defaults to compton scattering: gamma p -> gamma p
     reaction_kinematics()
-    : mVec(0.), mVec2(0.), 
+    : mX(0.), mX2(0.), 
       mBar(mPro), mBar2(mPro2),
       Q2(0.)
     {
@@ -51,11 +52,11 @@ namespace jpacPhoto
       recoil    = new dirac_spinor(final);
     };
 
-    // Constructor with a set vector mass mV, 
+    // Constructor with a set mX, 
     // defaults to proton as baryon and real photon
     // string ID is deprecated but kept for backward compatibility
-    reaction_kinematics(double mV, std::string id = "")
-    : mVec(mV), mVec2(mV*mV),
+    reaction_kinematics(double _mX, std::string id = "")
+    : mX(_mX), mX2(_mX*_mX),
       mBar(mPro), mBar2(mPro2),
       Q2(0.)
     {
@@ -63,16 +64,16 @@ namespace jpacPhoto
       eps_gamma = new polarization_vector(initial);
       target    = new dirac_spinor(initial);
 
-      final     = new two_body_state(mV*mV, mPro2);
+      final     = new two_body_state(_mX*_mX, mPro2);
       eps_vec   = new polarization_vector(final);
       recoil    = new dirac_spinor(final);
     };
 
 
-    // Constructor with a set mV and baryon mass mB
+    // Constructor with a set mX and baryon mass mB
     // defaults to real photon
-    reaction_kinematics(double mV, double mB)
-    : mVec(mV), mVec2(mV*mV),
+    reaction_kinematics(double _mX, double mB)
+    : mX(_mX), mX2(_mX*_mX),
       mBar(mB), mBar2(mB*mB),
       Q2(0.)
     {
@@ -80,15 +81,15 @@ namespace jpacPhoto
       eps_gamma = new polarization_vector(initial);
       target    = new dirac_spinor(initial);
 
-      final     = new two_body_state(mV*mV, mB*mB);
+      final     = new two_body_state(_mX*_mX, mB*mB);
       eps_vec   = new polarization_vector(final);
       recoil    = new dirac_spinor(final);
     };
 
     // Constructor with a set mV and baryon mass mB
     // and q2 > 0 for a virtual photon
-    reaction_kinematics(double mV, double mB, double q2)
-    : mVec(mV), mVec2(mV*mV),
+    reaction_kinematics(double _mX, double mB, double q2)
+    : mX(_mX), mX2(_mX*_mX),
       mBar(mB), mBar2(mB*mB),
       Q2(q2)
     {
@@ -96,7 +97,7 @@ namespace jpacPhoto
       eps_gamma = new polarization_vector(initial);
       target    = new dirac_spinor(initial);
 
-      final     = new two_body_state(mV*mV, mB*mB);
+      final     = new two_body_state(_mX*_mX, mB*mB);
       eps_vec   = new polarization_vector(final);
       recoil    = new dirac_spinor(final);
     };
@@ -109,27 +110,27 @@ namespace jpacPhoto
       delete target, recoil;
     }
 
-    double mVec = 0., mVec2 = 0.; // mass and mass squared of the vector particle
+    double mX = 0., mX2 = 0.;     // mass and mass squared of the produced particle
     double mBar = 0., mBar2 = 0.; // mass nd mass squared of the baryon 
     double Q2 = 0.; // virtuality of the photon
-    inline double Wth(){ return (mVec + mBar); }; // square root of the threshold
+    inline double Wth(){ return (mX + mBar); }; // square root of the threshold
     inline double sth(){ return Wth() * Wth(); }; // final state threshold
 
 
     // Change the vector mass
-    inline void set_vectormass(double m)
+    inline void set_mX(double m)
     {
-      mVec  = m;
-      mVec2 = m*m;
+      mX  = m;
+      mX2 = m*m;
 
       // also update the vector mass in two_body_state
       final->set_mV2(m*m);
     };
     
-    inline void set_mV2(double m2)
+    inline void set_mX2(double m2)
     {
-      mVec  = sqrt(m2);
-      mVec2 = m2;
+      mX  = sqrt(m2);
+      mX2 = m2;
 
       // also update the vector mass in two_body_state
       final->set_mV2(m2);
@@ -197,7 +198,7 @@ namespace jpacPhoto
       std::complex<double> qdotqp = initial->momentum(s) * final->momentum(s);
       std::complex<double> E1E3   = initial->energy_V(s) * final->energy_V(s);
 
-      double result = t - mVec2 + Q2 + 2.*abs(E1E3);
+      double result = t - mX2 + Q2 + 2.*abs(E1E3);
       result /= 2. * abs(qdotqp);
 
       return result;
@@ -216,12 +217,12 @@ namespace jpacPhoto
       std::complex<double> qdotqp = initial->momentum(s) * final->momentum(s);
       std::complex<double> E1E3 = initial->energy_V(s) * final->energy_V(s);
 
-      return mVec*mVec - Q2 - 2. * abs(E1E3) + 2. * abs(qdotqp) * cos(theta);
+      return mX2 - Q2 - 2. * abs(E1E3) + 2. * abs(qdotqp) * cos(theta);
     };
 
     inline double u_man(double s, double theta)
     { 
-      return mVec2 - Q2 + 2. * mBar2 - s - t_man(s, theta);
+      return mX2 - Q2 + 2. * mBar2 - s - t_man(s, theta);
     };
 
     // Scattering angles in t and u channel frames
@@ -229,10 +230,10 @@ namespace jpacPhoto
     {
       double t = t_man(s, theta);
       std::complex<double> p_t = sqrt(xr * t - 4. * mBar2) / 2.;
-      std::complex<double> q_t = sqrt(xr * Kallen(t, mVec2, -Q2)) / sqrt(xr * 4. * t);
+      std::complex<double> q_t = sqrt(xr * Kallen(t, mX2, -Q2)) / sqrt(xr * 4. * t);
 
       std::complex<double> result;
-      result = 2. * s + t - 2. * mBar2 - mVec2 + Q2; // s - u
+      result = 2. * s + t - 2. * mBar2 - mX2 + Q2; // s - u
       result /= 4. * p_t * q_t;
 
       return result;
