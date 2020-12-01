@@ -24,27 +24,10 @@ namespace jpacPhoto
 {
   class baryon_resonance : public amplitude
   {
-  private:
-    int J, P, naturality; // (2xSpin) and parity of the resonance
-    double mRes, gamRes; // Resonant mass and width
-
-    int l_min; // lowest allowed relative angular momentum
-    double P_t; // Combinatorial factor due to only transverse polarized J/psi contribute
-
-    // Couplings
-    double xBR; // Hadronic banching fraction to j/psi p
-    double R_photo; // Photocoupling ratio
-
-    // Initial and final CoM momenta evaluated at resonance energy.
-    double pi_bar, pf_bar;
-
-    // saved energies and angle
-    double s, t, theta;
-
   public:
     // Constructor
     baryon_resonance(reaction_kinematics * xkinem, int j, int p, double mass, double width, std::string name = "")
-    : amplitude(xkinem, name, 2), mRes(mass), gamRes(width), J(j), P(p),
+    : amplitude(xkinem, name), mRes(mass), gamRes(width), J(j), P(p),
       naturality(p * pow(-1, (j-1)/2))
     {
       pi_bar = real(kinematics->initial->momentum(mass * mass));
@@ -96,6 +79,26 @@ namespace jpacPhoto
 
     // Combined total amplitude including Breit Wigner pole
     std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double t);
+
+      private:
+    // Set amplitude class options
+    int Nparams = 2; // Number of couplings
+
+    int J, P, naturality; // (2xSpin) and parity of the resonance
+    double mRes, gamRes; // Resonant mass and width
+
+    int l_min; // lowest allowed relative angular momentum
+    double P_t; // Combinatorial factor due to only transverse polarized J/psi contribute
+
+    // Couplings
+    double xBR; // Hadronic banching fraction to j/psi p
+    double R_photo; // Photocoupling ratio
+
+    // Initial and final CoM momenta evaluated at resonance energy.
+    double pi_bar, pf_bar;
+
+    // saved energies and angle
+    double s, t, theta;
   };
 };
 #endif

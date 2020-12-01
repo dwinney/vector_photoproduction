@@ -31,13 +31,13 @@ namespace jpacPhoto
   {
   public:
     // Constructor for fixed spin
-    vector_exchange(reaction_kinematics * xkinem, double mass, std::string exchange = "")
-    : amplitude(xkinem, exchange, 3), mEx2(mass*mass), REGGE(false)
+    vector_exchange(reaction_kinematics * xkinem, double mass, std::string id = "")
+    : amplitude(xkinem, id), mEx2(mass*mass), REGGE(false)
     {};
 
     // Constructor for the reggized)
-    vector_exchange(reaction_kinematics * xkinem, linear_trajectory * traj, std::string exchange = "")
-    : amplitude(xkinem, exchange, 3), alpha(traj), REGGE(true)
+    vector_exchange(reaction_kinematics * xkinem, linear_trajectory * traj, std::string id = "")
+    : amplitude(xkinem, id), alpha(traj), REGGE(true)
     {};
 
     // Setting utility
@@ -67,6 +67,8 @@ namespace jpacPhoto
     std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double t);
 
   private:
+    // Set amplitude class options
+    int Nparams = 3; // Number of couplings
 
     double zt;
 

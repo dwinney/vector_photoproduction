@@ -27,20 +27,16 @@
 
 #include <string>
 #include <array>
+#include <algorithm>
 
 namespace jpacPhoto
 {
   class amplitude
   {
   public:
-    // Constructor with only a kinematics object
-    amplitude(reaction_kinematics * xkinem)
-    : kinematics(xkinem)
-    {};
-
-    // Constructor with an amplitude id and number of parameters specified
-    amplitude(reaction_kinematics * xkinem, std::string id, int N)
-    : kinematics(xkinem), identifier(id), Nparams(N)
+    // Constructor with an amplitude id
+    amplitude(reaction_kinematics * xkinem, std::string id = "")
+    : kinematics(xkinem), identifier(id)
     {};
 
     // Kinematics object for thresholds and etc.
@@ -87,7 +83,7 @@ namespace jpacPhoto
     // If helicity amplitudes have already been generated for a value of mV, s, t 
     // store them
     bool CACHED = false;
-    double cached_mVec2 = 0., cached_s = 0., cached_t = 0.;
+    double cached_mX2 = 0., cached_s = 0., cached_t = 0.;
     std::array<std::complex<double>, 24> cached_helicity_amplitude;
 
     void check_cache(double _s, double _t);
@@ -95,55 +91,67 @@ namespace jpacPhoto
     // ---------------------------------------------------------------------------
     // Nparams error message
     int Nparams = 0;
-    void check_Nparams(std::vector<double> params)
+    inline void check_Nparams(std::vector<double> params)
     {
       if (params.size() != Nparams)
       {
         std::cout << "\nWarning! Invalid number of parameters (" << params.size() << ") passed to " << identifier << ".\n";
       }
-    }
+    };
 
+    // ---------------------------------------------------------------------------
+    // Allowed JP error message
+    std::vector<int> allowed_JP;
+    inline void check_JP(int _JP)
+    {
+      if (std::find(allowed_JP.begin(), allowed_JP.end(), _JP) == allowed_JP.end())
+      {
+        std::cout << "\nError! Invalid JP (" << _JP << ") passed to " << identifier << ".\n";
+        exit(0);
+      }      
+    };
+  
     // ---------------------------------------------------------------------------
     // Aliases for the above observables with option to change the produced meson mass
     inline double probability_distribution(double M2, double s, double t)
     {
-      kinematics->set_mV2(M2);
+      kinematics->set_mX2(M2);
       return probability_distribution(s, t);
     };
 
     inline double differential_xsection(double M2, double s, double t)
     {
-      kinematics->set_mV2(M2);
+      kinematics->set_mX2(M2);
       return differential_xsection(s, t);
     };
 
     inline double integrated_xsection(double M2, double s)
     {
-      kinematics->set_mV2(M2);
+      kinematics->set_mX2(M2);
       return integrated_xsection(s);
     };
 
     inline std::complex<double> SDME(int alpha, int lam, int lamp, double M2, double s, double t)
     {
-      kinematics->set_mV2(M2);
+      kinematics->set_mX2(M2);
       return SDME(alpha, lam, lamp, s, t);
     };
 
     inline double beam_asymmetry_y(double M2, double s, double t)
     {
-      kinematics->set_mV2(M2);
+      kinematics->set_mX2(M2);
       return beam_asymmetry_y(s, t);
     };
 
     inline double beam_asymmetry_4pi(double M2, double s, double t)
     {
-      kinematics->set_mV2(M2);
+      kinematics->set_mX2(M2);
       return beam_asymmetry_4pi(s, t);
     };
 
     inline double parity_asymmetry(double M2, double s, double t)
     {
-      kinematics->set_mV2(M2);
+      kinematics->set_mX2(M2);
       return parity_asymmetry(s, t);
     };
   };

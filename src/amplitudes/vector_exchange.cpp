@@ -88,7 +88,7 @@ std::complex<double> jpacPhoto::vector_exchange::top_residue(int lam_gam, int la
     }
     case 1:
     {
-      result = sqrt(xr * t) / kinematics->mVec;
+      result = sqrt(xr * t) / kinematics->mX;
       break;
     }
     default:
@@ -98,7 +98,7 @@ std::complex<double> jpacPhoto::vector_exchange::top_residue(int lam_gam, int la
     }
   }
 
-  std::complex<double> q = (t - kinematics->mVec2) / sqrt(4. * t * xr);
+  std::complex<double> q = (t - kinematics->mX2) / sqrt(4. * t * xr);
   return  xi * double(lam_gam) * result * q * gGam;
 };
 
@@ -193,7 +193,7 @@ std::complex<double> jpacPhoto::vector_exchange::half_angle_factor(int lam, int 
 // Angular momentum barrier factor
 std::complex<double> jpacPhoto::vector_exchange::barrier_factor(int j, int M)
 {
-  std::complex<double> q = (t - kinematics->mVec2) / sqrt(4. * t * xr);
+  std::complex<double> q = (t - kinematics->mX2) / sqrt(4. * t * xr);
   std::complex<double> p = sqrt(xr * t - 4.*mPro2) / 2.;
 
   std::complex<double> result = pow(2. * p * q, double(j - M));
@@ -290,8 +290,8 @@ std::complex<double> jpacPhoto::vector_exchange::top_vertex(int mu, int lam_gam,
 
       result += term1 - term2;
     }
-    // Dimensionless coupling requires dividing by the mVec
-    result /= kinematics->mVec;
+    // Dimensionless coupling requires dividing by the mX
+    result /= kinematics->mX;
   }
 
   // Multiply by coupling

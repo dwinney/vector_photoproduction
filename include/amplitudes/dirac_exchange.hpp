@@ -24,7 +24,7 @@ namespace jpacPhoto
   public:
     // constructor
     dirac_exchange(reaction_kinematics * xkinem, double mass, std::string name = "")
-    : amplitude(xkinem, name, 2),
+    : amplitude(xkinem, name),
       mEx(mass), mEx2(mass*mass)
     {};
 
@@ -51,6 +51,9 @@ namespace jpacPhoto
     }
 
   protected:
+    // Set amplitude class options
+    int Nparams = 2; // Number of couplings
+
     // DEBUGGING PARAMS
     bool ScTOP = false, ScBOT = false;
 

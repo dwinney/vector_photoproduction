@@ -18,7 +18,7 @@ namespace jpacPhoto
         public:
         // Constructor 
         primakoff_effect(reaction_kinematics * xkinem, std::string amp_id = "")
-        : amplitude(xkinem, amp_id, 4)
+        : amplitude(xkinem, amp_id)
         {};
 
         void set_params(std::vector<double> params)
@@ -55,6 +55,8 @@ namespace jpacPhoto
         double integrated_xsection(double s);
 
         private:
+        // Set amplitude class options
+        int Nparams = 4; // Number of couplings
 
         // Parameters
         int    LT    = 0 ;  // longitudinal (0) or transverse (1) photon
@@ -81,7 +83,7 @@ namespace jpacPhoto
         };
 
         // Kinematic quantities   
-        long double mX2 = kinematics->mVec2;
+        long double mX2 = kinematics->mX2;
         long double mA2 = kinematics->mBar2;
         long double Q2  = kinematics->Q2;
 

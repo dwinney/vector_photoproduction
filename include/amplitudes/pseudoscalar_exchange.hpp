@@ -37,12 +37,12 @@ namespace jpacPhoto
   public:
     // constructor for fixed meson exchange
     pseudoscalar_exchange(reaction_kinematics * xkinem, double mass, std::string name = "")
-    : amplitude(xkinem, name, 2), mEx2(mass*mass), REGGE(false)
+    : amplitude(xkinem, name), mEx2(mass*mass), REGGE(false)
     {};
 
     // constructors for regge exchange
     pseudoscalar_exchange(reaction_kinematics * xkinem, linear_trajectory * traj, std::string name = "")
-    : amplitude(xkinem, name, 2), alpha(traj), REGGE(true)
+    : amplitude(xkinem, name), alpha(traj), REGGE(true)
     {};
 
     // Setting utility
@@ -64,6 +64,8 @@ namespace jpacPhoto
     std::complex<double> helicity_amplitude(std::vector<int> helicities, double xs, double xt);
 
   private:
+    // Set amplitude class options
+    int Nparams = 2; // Number of couplings
 
     // Whether to use fixed-spin propagator (false) or regge (true)
     bool REGGE;

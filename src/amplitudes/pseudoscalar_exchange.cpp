@@ -40,9 +40,9 @@ std::complex<double> jpacPhoto::pseudoscalar_exchange::helicity_amplitude(std::v
     else
     {
       result  = sqrt(2.) * gNN;
-      result *= gGamma / kinematics->mVec;
+      result *= gGamma / kinematics->mX;
       result *= sqrt(xr * t) / 2.;
-      result *= (kinematics->mVec2 - t);
+      result *= (kinematics->mX2 - t);
       result *= scalar_propagator();
     }
   }
@@ -120,7 +120,7 @@ std::complex<double> jpacPhoto::pseudoscalar_exchange::top_vertex(double lam_gam
   result = term1 - term2;
 
   // Coupling is normalized to the mass of the Axial vector particle
-  result *= gGamma / kinematics->mVec;
+  result *= gGamma / kinematics->mX;
 
   return result;
 };
