@@ -21,7 +21,7 @@ namespace jpacPhoto
     {};
 
     // Assemble the helicity amplitude by contracting the spinor indices
-    std::complex<double> helicity_amplitude(std::vector<int> helicities, double xs, double xt);
+    std::complex<double> helicity_amplitude(std::array<int, 4> helicities, double xs, double xt);
 
   protected:
 

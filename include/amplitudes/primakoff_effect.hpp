@@ -19,11 +19,13 @@ namespace jpacPhoto
         // Constructor 
         primakoff_effect(reaction_kinematics * xkinem, std::string amp_id = "")
         : amplitude(xkinem, amp_id)
-        {};
+        {
+            set_nParams(4);
+        };
 
         void set_params(std::vector<double> params)
         {
-            check_Nparams(params); 
+            check_nParams(params); 
             Z = params[0];
             R = params[1];
             a = params[2];
@@ -44,7 +46,7 @@ namespace jpacPhoto
         };
 
         // individual helicity amplitudes not supported but need to provide definition for virtual class.
-        inline std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double t)
+        inline std::complex<double> helicity_amplitude(std::array<int, 4> helicities, double s, double t)
         {
             std::cout << "Warning! Individual helicity amplitudes not supported by primakoff_effect!\n";
             return 0.;
@@ -55,8 +57,6 @@ namespace jpacPhoto
         double integrated_xsection(double s);
 
         private:
-        // Set amplitude class options
-        int Nparams = 4; // Number of couplings
 
         // Parameters
         int    LT    = 0 ;  // longitudinal (0) or transverse (1) photon

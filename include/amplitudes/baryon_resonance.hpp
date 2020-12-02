@@ -30,6 +30,9 @@ namespace jpacPhoto
     : amplitude(xkinem, name), mRes(mass), gamRes(width), J(j), P(p),
       naturality(p * pow(-1, (j-1)/2))
     {
+      set_nParams(2);
+
+      // save momentum and other J^P dependent quantities
       pi_bar = real(kinematics->initial->momentum(mass * mass));
       pf_bar = real(kinematics->final->momentum(mass * mass));
 
@@ -63,7 +66,7 @@ namespace jpacPhoto
     // Setting utility
     void set_params(std::vector<double> params)
     {
-      check_Nparams(params);
+      check_nParams(params);
       xBR = params[0];
       R_photo = params[1];
     };
@@ -78,12 +81,9 @@ namespace jpacPhoto
     double threshold_factor(double beta);
 
     // Combined total amplitude including Breit Wigner pole
-    std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double t);
+    std::complex<double> helicity_amplitude(std::array<int, 4> helicities, double s, double t);
 
-      private:
-    // Set amplitude class options
-    int Nparams = 2; // Number of couplings
-
+    private:
     int J, P, naturality; // (2xSpin) and parity of the resonance
     double mRes, gamRes; // Resonant mass and width
 

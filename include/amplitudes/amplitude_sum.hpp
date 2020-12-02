@@ -54,7 +54,7 @@ namespace jpacPhoto
     // params to each sub amplitude
 
     // Evaluate the sum for given set of helicites, energy, and cos
-    std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double t);
+    std::complex<double> helicity_amplitude(std::array<int, 4> helicities, double s, double t);
   };
 };
 
