@@ -54,12 +54,10 @@ int main( int argc, char** argv )
 
     vector_exchange X_psi(kX, mJpsi, "J/#psi exchange, BR = 100%");
     X_psi.set_params({gGam_psi, gV_psi, gT_psi});
-    X_psi.set_scalarX(true);
 
     vector_exchange X_omega(kX, mOmega, "#it{X}(6900) with BR(#it{X #rightarrow #psi#omega}) = 1%");
     X_omega.set_params({gGam_omega, gV_omega, gT_omega});
     X_omega.set_formfactor(true, bOmega);
-    X_omega.set_scalarX(true);
    
     // ---------------------------------------------------------------------------
     // Plotting options
