@@ -30,131 +30,134 @@
 
 namespace jpacPhoto
 {
-  class amplitude
-  {
-  public:
-    // Constructor with an amplitude id
-    amplitude(reaction_kinematics * xkinem, std::string id = "")
-    : kinematics(xkinem), identifier(id)
-    {};
-
-    // Kinematics object for thresholds and etc.
-    reaction_kinematics * kinematics;
-
-    // saved energies and angle 
-    double s, t, theta;
-
-    // Some saveable string by which to identify the amplitude
-    std::string identifier;
-
-    // How the calculate the helicity amplitude
-    // Must be given a specific implementation in a user derived class
-    virtual std::complex<double> helicity_amplitude(std::array<int, 4> helicities, double s, double t) = 0;
-
-    // ---------------------------------------------------------------------------
-    // Observables
-    // Evaluatable in terms of s and t or an event object (see reaction_kinematics.hpp)
-
-    // Modulus of the amplitude summed over all helicity combinations
-    double probability_distribution(double s, double t);
-
-    // Differential and total cross-section
-    double differential_xsection(double s, double t);
-
-    // integrated crossection
-    double integrated_xsection(double s);
-
-    // Spin asymmetries
-    double A_LL(double s, double t); // Beam and target
-    double K_LL(double s, double t); // Beam and recoil
-
-    // Spin density matrix elements
-    std::complex<double> SDME(int alpha, int lam, int lamp, double s, double t);
-
-    // Beam Asymmetries
-    double beam_asymmetry_y(double s, double t);    // Along the y direction
-    double beam_asymmetry_4pi(double s, double t);  // integrated along phi
-
-    // Parity asymmetry
-    double parity_asymmetry(double s, double t);
-
-    // ---------------------------------------------------------------------------
-    // If helicity amplitudes have already been generated for a value of mV, s, t 
-    // store them
-    bool CACHED = false;
-    double cached_mX2 = 0., cached_s = 0., cached_t = 0.;
-    std::vector<std::complex<double>> cached_helicity_amplitude;
-
-    void check_cache(double _s, double _t);
-
-    // ---------------------------------------------------------------------------
-    // nParams error message
-    int nParams = 0;
-    inline void set_nParams(int N){ nParams = N; };
-    inline void check_nParams(std::vector<double> params)
+    class amplitude
     {
-      if (params.size() != nParams)
-      {
-        std::cout << "\nWarning! Invalid number of parameters (" << params.size() << ") passed to " << identifier << ".\n";
-      }
-    };
+        public:
+        // Constructor with an amplitude id
+        amplitude(reaction_kinematics * xkinem, std::string id = "")
+        : kinematics(xkinem), identifier(id)
+        {};
 
-    // ---------------------------------------------------------------------------
-    // Allowed JP error message
-    std::vector<int> allowed_JP;
-    inline void check_JP(int _JP)
-    {
-      if (std::find(allowed_JP.begin(), allowed_JP.end(), _JP) == allowed_JP.end())
-      {
-        std::cout << "\nError! Invalid JP (" << _JP << ") passed to " << identifier << ".\n";
-        exit(0);
-      }      
-    };
-  
-    // ---------------------------------------------------------------------------
-    // Aliases for the above observables with option to change the produced meson mass
-    inline double probability_distribution(double M2, double s, double t)
-    {
-      kinematics->set_mX2(M2);
-      return probability_distribution(s, t);
-    };
+        // Kinematics object for thresholds and etc.
+        reaction_kinematics * kinematics;
 
-    inline double differential_xsection(double M2, double s, double t)
-    {
-      kinematics->set_mX2(M2);
-      return differential_xsection(s, t);
-    };
+        // saved energies and angle 
+        double s, t, theta;
 
-    inline double integrated_xsection(double M2, double s)
-    {
-      kinematics->set_mX2(M2);
-      return integrated_xsection(s);
-    };
+        // Some saveable string by which to identify the amplitude
+        std::string identifier;
 
-    inline std::complex<double> SDME(int alpha, int lam, int lamp, double M2, double s, double t)
-    {
-      kinematics->set_mX2(M2);
-      return SDME(alpha, lam, lamp, s, t);
-    };
+        // How the calculate the helicity amplitude
+        // Must be given a specific implementation in a user derived class
+        virtual std::complex<double> helicity_amplitude(std::array<int, 4> helicities, double s, double t) = 0;
 
-    inline double beam_asymmetry_y(double M2, double s, double t)
-    {
-      kinematics->set_mX2(M2);
-      return beam_asymmetry_y(s, t);
-    };
+        // ---------------------------------------------------------------------------
+        // Observables
+        // Evaluatable in terms of s and t or an event object (see reaction_kinematics.hpp)
 
-    inline double beam_asymmetry_4pi(double M2, double s, double t)
-    {
-      kinematics->set_mX2(M2);
-      return beam_asymmetry_4pi(s, t);
-    };
+        // Modulus of the amplitude summed over all helicity combinations
+        double probability_distribution(double s, double t);
 
-    inline double parity_asymmetry(double M2, double s, double t)
-    {
-      kinematics->set_mX2(M2);
-      return parity_asymmetry(s, t);
+        // Differential and total cross-section
+        double differential_xsection(double s, double t);
+
+        // integrated crossection
+        double integrated_xsection(double s);
+
+        // Spin asymmetries
+        double A_LL(double s, double t); // Beam and target
+        double K_LL(double s, double t); // Beam and recoil
+
+        // Spin density matrix elements
+        std::complex<double> SDME(int alpha, int lam, int lamp, double s, double t);
+
+        // Beam Asymmetries
+        double beam_asymmetry_y(double s, double t);    // Along the y direction
+        double beam_asymmetry_4pi(double s, double t);  // integrated along phi
+
+        // Parity asymmetry
+        double parity_asymmetry(double s, double t);
+
+        // ---------------------------------------------------------------------------
+        // If helicity amplitudes have already been generated for a value of mV, s, t 
+        // store them
+        bool CACHED = false;
+        double cached_mX2 = 0., cached_s = 0., cached_t = 0.;
+        std::vector<std::complex<double>> cached_helicity_amplitude;
+
+        void check_cache(double _s, double _t);
+
+        // ---------------------------------------------------------------------------
+        // nParams error message
+        int nParams = 0;
+        inline void set_nParams(int N){ nParams = N; };
+        inline void check_nParams(std::vector<double> params)
+        {
+            if (params.size() != nParams)
+            {
+                std::cout << "\nWarning! Invalid number of parameters (" << params.size() << ") passed to " << identifier << ".\n";
+            }
+        };
+
+        // ---------------------------------------------------------------------------
+        // Allowed JP error message
+        std::vector<std::array<int,2>> allowedJP;
+        
+        // 
+        inline void add_allowedJP(std::array<int,2> x){ allowedJP.push_back(x); };
+        inline void check_JP(std::array<int,2> _JP)
+        {
+            if (std::find(allowedJP.begin(), allowedJP.end(), _JP) == allowedJP.end())
+            {
+                std::cout << "Error! Amplitude for spin: " << _JP[0] << " and parity " << _JP[1] << " for " << identifier << " unavailable.\n";
+                exit(0);
+            }      
+        };
+
+        // ---------------------------------------------------------------------------
+        // Aliases for the above observables with option to change the produced meson mass
+        inline double probability_distribution(double M2, double s, double t)
+        {
+            kinematics->set_mX2(M2);
+            return probability_distribution(s, t);
+        };
+
+        inline double differential_xsection(double M2, double s, double t)
+        {
+            kinematics->set_mX2(M2);
+            return differential_xsection(s, t);
+        };
+
+        inline double integrated_xsection(double M2, double s)
+        {
+            kinematics->set_mX2(M2);
+            return integrated_xsection(s);
+        };
+
+        inline std::complex<double> SDME(int alpha, int lam, int lamp, double M2, double s, double t)
+        {
+            kinematics->set_mX2(M2);
+            return SDME(alpha, lam, lamp, s, t);
+        };
+
+        inline double beam_asymmetry_y(double M2, double s, double t)
+        {
+            kinematics->set_mX2(M2);
+            return beam_asymmetry_y(s, t);
+        };
+
+        inline double beam_asymmetry_4pi(double M2, double s, double t)
+        {
+            kinematics->set_mX2(M2);
+            return beam_asymmetry_4pi(s, t);
+        };
+
+        inline double parity_asymmetry(double M2, double s, double t)
+        {
+            kinematics->set_mX2(M2);
+            return parity_asymmetry(s, t);
+        };
     };
-  };
 };
 
 #endif
