@@ -237,65 +237,61 @@ std::complex<double> jpacPhoto::vector_exchange::covariant_amplitude(std::array<
 // Photon - Axial Vector - Vector vertex
 std::complex<double> jpacPhoto::vector_exchange::top_vertex(int mu, int lam_gam, int lam_vec)
 {
-  std::complex<double> result = 0.;
+    std::complex<double> result = 0.;
 
-  // A-V-V coupling
-  if (IF_SCALAR_X == false)
-  {
-    // Contract with LeviCivita
-    for (int alpha = 0; alpha < 4; alpha++)
+    // A-V-V coupling
+    if (kinematics->JP[0]== 1 && kinematics->JP[1] == 1)
     {
-      for (int beta = 0; beta < 4; beta++)
-      {
-        for (int gamma = 0; gamma < 4; gamma++)
+        // Contract with LeviCivita
+        for (int alpha = 0; alpha < 4; alpha++)
         {
-          std::complex<double> temp;
-          temp = levi_civita(mu, alpha, beta, gamma);
+            for (int beta = 0; beta < 4; beta++)
+            {
+                for (int gamma = 0; gamma < 4; gamma++)
+                {
+                    std::complex<double> temp;
+                    temp = levi_civita(mu, alpha, beta, gamma);
+                    if (std::abs(temp) < 0.001) continue;
+                
+                    temp *= metric[mu];
+                    temp *= kinematics->initial->q(alpha, s, 0.);
+                    temp *= kinematics->eps_gamma->component(beta, lam_gam, s, 0.);
+                    temp *= kinematics->eps_vec->component(gamma, lam_vec, s, theta);
 
-          if (std::abs(temp) < 0.0001) continue;
-        
-          temp *= metric[mu];
-          temp *= kinematics->initial->q(alpha, s, 0.);
-          temp *= kinematics->eps_gamma->component(beta, lam_gam, s, 0.);
-          temp *= kinematics->eps_vec->component(gamma, lam_vec, s, theta);
-
-          result += temp;
+                    result += temp;
+                }
+            }
         }
-      }
     }
-  }
-  // S-V-V coupling
-  else
-  {
-    if (lam_vec != 0)
+
+    // S-V-V coupling
+    else if (kinematics->JP[0]== 0 && kinematics->JP[1] == 1)
     {
-      return 0.;
+        for (int nu = 0; nu < 4; nu++)
+        {
+            std::complex<double> term1, term2;
+
+            // (k . q) eps_gamma^mu
+            term1  = exchange_momenta(nu);
+            term1 *= metric[nu];
+            term1 *= kinematics->initial->q(nu, s, 0.);
+            term1 *= kinematics->eps_gamma->component(mu, lam_gam, s, 0.);
+
+            // (eps_gam . k) q^mu
+            term2  = kinematics->eps_gamma->component(nu, lam_gam, s, 0.);
+            term2 *= metric[nu];
+            term2 *= exchange_momenta(nu);
+            term2 *= kinematics->initial->q(mu, s, 0.);
+
+            result += term1 - term2;
+        }
+
+        // Dimensionless coupling requires dividing by the mX
+        result /= kinematics->mX;
     }
 
-    for (int nu = 0; nu < 4; nu++)
-    {
-      std::complex<double> term1, term2;
-
-      // (k . q) eps_gamma^mu
-      term1  = exchange_momenta(nu);
-      term1 *= metric[nu];
-      term1 *= kinematics->initial->q(nu, s, 0.);
-      term1 *= kinematics->eps_gamma->component(mu, lam_gam, s, 0.);
-
-      // (eps_gam . k) q^mu
-      term2  = kinematics->eps_gamma->component(nu, lam_gam, s, 0.);
-      term2 *= metric[nu];
-      term2 *= exchange_momenta(nu);
-      term2 *= kinematics->initial->q(mu, s, 0.);
-
-      result += term1 - term2;
-    }
-    // Dimensionless coupling requires dividing by the mX
-    result /= kinematics->mX;
-  }
-
-  // Multiply by coupling
-  return result * gGam;
+    // Multiply by coupling
+    return result * gGam;
 };
 
 // ---------------------------------------------------------------------------
