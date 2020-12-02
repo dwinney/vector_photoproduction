@@ -12,31 +12,32 @@
 
 namespace jpacPhoto
 {
-  class rarita_exchange : public dirac_exchange
-  {
-  public:
-    // Constructor
-    rarita_exchange(reaction_kinematics * xkinem, double mass, std::string name = "")
-    : dirac_exchange(xkinem, mass, name)
-    {};
+    class rarita_exchange : public dirac_exchange
+    {
+        public:
+        
+        // Constructor
+        rarita_exchange(reaction_kinematics * xkinem, double mass, std::string name = "")
+        : dirac_exchange(xkinem, mass, name)
+        {};
 
-    // Assemble the helicity amplitude by contracting the spinor indices
-    std::complex<double> helicity_amplitude(std::array<int, 4> helicities, double xs, double xt);
+        // Assemble the helicity amplitude by contracting the spinor indices
+        std::complex<double> helicity_amplitude(std::array<int, 4> helicities, double xs, double xt);
 
-  protected:
+        protected:
 
-    // rank-2 traceless tensor
-    std::complex<double> g_bar(int mu, int nu);
+        // rank-2 traceless tensor
+        std::complex<double> g_bar(int mu, int nu);
 
-    // g_bar contracted with gamma^nu
-    std::complex<double> slashed_g_bar(int mu, int i, int j);
+        // g_bar contracted with gamma^nu
+        std::complex<double> slashed_g_bar(int mu, int i, int j);
 
-    // Relative momentum entering or exiting the propagator
-    std::complex<double> relative_momentum(int mu, std::string in_out);
+        // Relative momentum entering or exiting the propagator
+        std::complex<double> relative_momentum(int mu, std::string in_out);
 
-    // Spin-3/2 propagator
-    std::complex<double> rarita_propagator(int i, int j);
-  };
+        // Spin-3/2 propagator
+        std::complex<double> rarita_propagator(int i, int j);
+    };
 };
 
 #endif
