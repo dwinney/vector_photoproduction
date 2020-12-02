@@ -57,24 +57,34 @@ namespace jpacPhoto
     const std::complex<double> xi(0., 1.);
     const std::complex<double> ieps(0., EPS);
 
-    // Masses in GeV
+    // Meson masses in GeV
     const double mPi        = 0.13957000;
     const double mK         = 0.49367700;
     const double mEta       = 0.54753;
     const double mRho       = 0.77526;
     const double mOmega     = 0.78265;
     const double mPhi       = 1.01956;
-    const double mPro       = 0.938272;
     const double mJpsi      = 3.0969160;
     const double mPsi2S     = 3.686;
+    const double mD         = 1.86965;
+    const double mDstar     = 2.01026;
     const double mUpsilon1S = 9.4603;
     const double mUpsilon2S = 10.02336;
     const double mUpsilon3S = 10.3552;
 
-    // Masses squared
+    // Meson masses squared
     const double mPi2       = mPi * mPi;
-    const double mPro2      = mPro * mPro;
     const double mJpsi2     = mJpsi * mJpsi;
+    const double mD2        = mD * mD;
+    const double mDstar2    = mDstar * mDstar; 
+
+    // Baryon masses
+    const double mPro       = 0.938272;
+    const double mLambdaC   = 2.28646;
+
+    // Baryon masses squared
+    const double mPro2      = mPro * mPro;
+    const double mLambdaC2   = mLambdaC * mLambdaC;
 
     // Decay constants in GeV
     const double fJpsi      = 0.278;
