@@ -66,10 +66,10 @@ namespace jpacPhoto
         };
 
         // Whether or not to include an exponential form factor (default false)
-        inline void set_formfactor(bool FF, double bb = 0.)
+        inline void set_formfactor(int FF, double bb = 0.)
         {
             IF_FF = FF;
-            b = bb;
+            cutoff = bb;
         }
 
         // Assemble the helicity amplitude by contracting the lorentz indices
@@ -78,7 +78,7 @@ namespace jpacPhoto
         // axial vector and scalar kinematics allowed
         inline std::vector<std::array<int,2>> allowedJP()
         {
-            return {{1, 1}, {0, 1}};
+            return {{1, 1}, {0, 1}, {0, -1}};
         };
 
         private:
@@ -93,8 +93,9 @@ namespace jpacPhoto
         bool FOUR_VEC = false;
 
         // Form factor parameters
-        bool IF_FF = false;
-        double b = 0.;
+        int IF_FF = 0;
+        double cutoff = 0.;
+        double form_factor();
 
         // Couplings to the axial-vector/photon and vector/tensor couplings to nucleon
         double gGam = 0., gpGam = 0., gV = 0., gT = 0.;
@@ -103,7 +104,7 @@ namespace jpacPhoto
         // Covariant evaluation
 
         // Mass of the exchange
-        double mEx2;
+        double mEx2 = 0.;
 
         // Full covariant amplitude
         std::complex<double> covariant_amplitude(std::array<int, 4> helicities);
@@ -116,6 +117,9 @@ namespace jpacPhoto
 
         // Nucleon - Nucleon - Vector vertex
         std::complex<double> bottom_vertex(int nu, int lam_targ, int lam_rec);
+
+        // Photon field strength tensor
+        std::complex<double> field_tensor(int mu, int nu, int lambda);
 
         // Vector propogator
         std::complex<double> vector_propagator(int mu, int nu);
