@@ -56,14 +56,33 @@ std::complex<double> jpacPhoto::vector_exchange::helicity_amplitude(std::array<i
         }
     }
 
-    // exponential form factor
-    if (IF_FF == true)
-    {
-        double tprime = t - kinematics->t_man(s, 0.);
-        result *= exp(b * tprime);
-    }
+    // add form factor if wanted
+    result *= form_factor();    
 
     return result;
+};
+
+double jpacPhoto::vector_exchange::form_factor()
+{
+    switch (IF_FF)
+    {
+        // exponential form factor
+        case 1: 
+        {
+            return exp((t - kinematics->t_man(s, 0.)) / cutoff*cutoff);
+        };
+
+        // monopole form factor
+        case 2:
+        {
+            return (cutoff*cutoff - mEx2) / (cutoff*cutoff - t); 
+        };
+
+        default:
+        {
+            return 1.;
+        };
+    }
 };
 
 // ---------------------------------------------------------------------------
@@ -290,6 +309,30 @@ std::complex<double> jpacPhoto::vector_exchange::top_vertex(int mu, int lam_gam,
         result /= kinematics->mX;
     }
 
+    // P-V-V coupling
+    if (kinematics->JP[0]== 0 && kinematics->JP[1] == -1)
+    {
+        // Contract with LeviCivita
+        for (int alpha = 0; alpha < 4; alpha++)
+        {
+            for (int beta = 0; beta < 4; beta++)
+            {
+                for (int gamma = 0; gamma < 4; gamma++)
+                {
+                    std::complex<double> temp;
+                    temp = levi_civita(mu, alpha, beta, gamma);
+                    if (std::abs(temp) < 0.001) continue;
+                
+                    temp *= metric[mu];
+                    temp *= field_tensor(alpha, beta, lam_gam);
+                    temp *= (exchange_momenta(gamma) - kinematics->final->q(gamma, s, M_PI));
+
+                    result += temp;
+                }
+            }
+        }
+    }
+
     // Multiply by coupling
     return result * gGam;
 };
@@ -335,6 +378,15 @@ std::complex<double> jpacPhoto::vector_exchange::bottom_vertex(int mu, int lam_t
     }
 
     return gV * vector - gT * tensor;
+};
+
+std::complex<double> jpacPhoto::vector_exchange::field_tensor(int mu, int nu, int lambda)
+{
+    std::complex<double> result;
+    result  = kinematics->initial->q(mu, s, 0.) * kinematics->eps_gamma->component(nu, lambda, s, 0.);
+    result -= kinematics->initial->q(nu, s, 0.) * kinematics->eps_gamma->component(mu, lambda, s, 0.); 
+
+    return result;
 };
 
 // ---------------------------------------------------------------------------

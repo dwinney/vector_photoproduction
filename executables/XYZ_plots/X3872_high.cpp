@@ -47,10 +47,10 @@ int main( int argc, char** argv )
 
     // Nucleon couplings 
     double gV_omega = 16., gT_omega = 0.;
-    double bOmega = 0.68; // Cuttoff of LamOmega = 1.2 GeV
+    double LamOmega = 1.2;
 
     double gV_rho = 2.4, gT_rho = 14.6;
-    double bRho = 0.51; // Cuttoff of LamRho = 1.4 GeV
+    double LamRho = 1.4;
 
     double gV_phi = -6.2, gT_phi = 2.1;
 
@@ -68,12 +68,12 @@ int main( int argc, char** argv )
     double gChi_omega = 5.2E-4;
     vector_exchange Chi_omega(kChi, alpha, "#omega");
     Chi_omega.set_params({gChi_omega, gV_omega, gT_omega});
-    Chi_omega.set_formfactor(true, bOmega);
+    Chi_omega.set_formfactor(true, LamOmega);
 
     double gChi_rho = 9.2E-4;
     vector_exchange Chi_rho(kChi, alpha, "#rho");
     Chi_rho.set_params({gChi_rho, gV_rho, gT_rho});
-    Chi_rho.set_formfactor(true, bRho);
+    Chi_rho.set_formfactor(true, LamRho);
 
     std::vector<amplitude*> chi_exchanges = {&Chi_omega, &Chi_rho};
     amplitude_sum chi(kChi, chi_exchanges, "#it{#chi_{c1}(1P)}");
@@ -84,12 +84,12 @@ int main( int argc, char** argv )
     double gX_omega = 8.2E-3;
     vector_exchange X_omega(kX, alpha, "#omega");
     X_omega.set_params({gX_omega, gV_omega, gT_omega});
-    X_omega.set_formfactor(true, bOmega);
+    X_omega.set_formfactor(true, LamOmega);
 
     double gX_rho = 3.6E-3;
     vector_exchange X_rho(kX, alpha, "#rho");
     X_rho.set_params({gX_rho, gV_rho, gT_rho});
-    X_rho.set_formfactor(true, bRho);
+    X_rho.set_formfactor(true, LamRho);
 
     std::vector<amplitude*> X_exchanges = {&X_omega, &X_rho};
     amplitude_sum X(kX, X_exchanges, "#it{X}(3872)");
