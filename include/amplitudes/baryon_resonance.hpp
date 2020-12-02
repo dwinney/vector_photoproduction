@@ -32,8 +32,7 @@ namespace jpacPhoto
           J(j), P(p), naturality(p * pow(-1, (j-1)/2))
         {
             set_nParams(2);
-            add_allowedJP({1, -1}); // only allow vector (jpsi) for now
-            // TODO: remove explicit dependence on mJpsi
+            check_JP(xkinem->JP);
 
             // save momentum and other J^P dependent quantities
             pi_bar = real(kinematics->initial->momentum(mass * mass));
@@ -73,6 +72,14 @@ namespace jpacPhoto
         // Combined total amplitude including Breit Wigner pole
         std::complex<double> helicity_amplitude(std::array<int, 4> helicities, double s, double t);
 
+        // only vector kinematics allowed
+        inline std::vector<std::array<int,2>> allowedJP()
+        {
+            return {{1, -1}};
+        };
+
+        private:
+
         // Photoexcitation helicity amplitude for the process gamma p -> R
         std::complex<double> photo_coupling(int lam_i);
 
@@ -82,8 +89,6 @@ namespace jpacPhoto
         // Ad-hoc threshold factor to kill the resonance at threshold
         double threshold_factor(double beta);
 
-
-        private:
         int J, P, naturality; // (2xSpin) and parity of the resonance
         double mRes, gamRes; // Resonant mass and width
 

@@ -24,12 +24,12 @@ namespace jpacPhoto
         public:
         
         // constructor
-        dirac_exchange(reaction_kinematics * xkinem, double mass, std::string name = "")
+        dirac_exchange(reaction_kinematics * xkinem, double mass, std::string name = "dirac_exchange")
         : amplitude(xkinem, name),
             mEx(mass), mEx2(mass*mass)
         {
             set_nParams(2);
-            add_allowedJP({1, -1});
+            check_JP(xkinem->JP);
         };
 
         // Setting utility
@@ -53,6 +53,12 @@ namespace jpacPhoto
             case 1: ScBOT = true; break;
             }
         }
+
+        // only vector kinematics allowed
+        inline std::vector<std::array<int,2>> allowedJP()
+        {
+            return {{1, -1}};
+        };
 
         protected:
 
