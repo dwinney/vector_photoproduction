@@ -15,43 +15,34 @@
 // vectors are always particle 1
 std::complex<double> jpacPhoto::polarization_vector::component(int i, int lambda, double s, double theta)
 {
-  if (abs(lambda) == 1)
-  {
-    switch (i)
+    // Check for massless photon
+    if (lambda == 0 && abs(state->get_mV()) < 0.01){return 0.;}
+
+    int id = 10 * abs(lambda) + i;
+    switch (id)
     {
-      case 0: return 0.;
-      case 1: return - double(lambda) * cos(theta) / sqrt(2.);
-      case 2: return - xi / sqrt(2.);
-      case 3: return double(lambda) * sin(theta) / sqrt(2.);
-    }
-  }
-  else if (lambda == 0)
-  {
-    if (abs(state->get_mV()) < 0.01) // if massless this is zero
-    {
-      return 0.;
-    }
-    else
-    {
-      switch (i)
-      {
+        // Longitudinal
         case 0: return state->momentum(s) / state->get_mV();
         case 1: return state->energy_V(s) * sin(theta) / state->get_mV();
         case 2: return 0.;
         case 3: return state->energy_V(s) * cos(theta) / state->get_mV();
-      }
-    }
-  }
-  else
-  {
-    std::cout << "polarization_vector: Invalid helicity! Quitting... \n";
-    return 0.;
-  }
 
-  return 0.;
+        // Transverse
+        case 10: return 0.;
+        case 11: return - double(lambda) * cos(theta) / sqrt(2.);
+        case 12: return - xi / sqrt(2.);
+        case 13: return double(lambda) * sin(theta) / sqrt(2.);
+
+        default: 
+        {
+            std::cout << "polarization_vector: Invalid helicity! Quitting... \n";
+            return 0.; 
+        }
+    };
+
 };
 
 std::complex<double> jpacPhoto::polarization_vector::conjugate_component(int i, int lambda, double s, double theta)
 {
-  return conj(component(i, lambda, s, theta));
+    return conj(component(i, lambda, s, theta));
 };
