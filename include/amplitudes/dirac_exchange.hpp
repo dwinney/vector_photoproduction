@@ -26,18 +26,20 @@ namespace jpacPhoto
     dirac_exchange(reaction_kinematics * xkinem, double mass, std::string name = "")
     : amplitude(xkinem, name),
       mEx(mass), mEx2(mass*mass)
-    {};
+    {
+      set_nParams(2);
+    };
 
     // Setting utility
     void set_params(std::vector<double> params)
     {
-      check_Nparams(params);
+      check_nParams(params);
       gGam = params[0];
       gVec = params[1];
     };
 
     // Assemble the helicity amplitude by contracting the spinor indices
-    std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double t);
+    std::complex<double> helicity_amplitude(std::array<int, 4> helicities, double s, double t);
 
     // debugging options to make either the photon or vector into scalars
     void set_debug(int i)
@@ -51,9 +53,6 @@ namespace jpacPhoto
     }
 
   protected:
-    // Set amplitude class options
-    int Nparams = 2; // Number of couplings
-
     // DEBUGGING PARAMS
     bool ScTOP = false, ScBOT = false;
 

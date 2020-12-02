@@ -33,22 +33,22 @@ namespace jpacPhoto
     // Optional OLDMODEL if true will default to helicity conserving amplitude
     pomeron_exchange(reaction_kinematics * xkinem, regge_trajectory * alpha, bool OLDMODEL = false, std::string name = "")
     : amplitude(xkinem, name), pomeron_traj(alpha), DELTA(OLDMODEL)
-    {};
+    {
+      set_nParams(2);
+    };
 
     // Setting utility
     void set_params(std::vector<double> params)
     {
-      check_Nparams(params);
+      check_nParams(params);
       norm = params[0];
       b0 = params[1];
     };
 
     // Assemble the helicity amplitude by contracting the lorentz indices
-    std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double t);
+    std::complex<double> helicity_amplitude(std::array<int, 4> helicities, double s, double t);
 
   private:
-    // Set amplitude class options
-    int Nparams = 2; // Number of couplings
 
     bool DELTA = false; // Whether or not to use the helicity conserving model 
     double norm = 0., b0 = 0.; // Regge factor parameters: normalization and t-slope

@@ -22,10 +22,12 @@ void jpacPhoto::amplitude::check_cache(double _s, double _t)
   }
   else // save a new set
   {
-    for (int i = 0; i < 24; i++)
+    cached_helicity_amplitude.clear();
+
+    for (int i = 0; i < kinematics->nAmps; i++)
     {
-      cached_helicity_amplitude[i] = helicity_amplitude(kinematics->helicities[i], _s, _t);
-    }
+        cached_helicity_amplitude.push_back(helicity_amplitude(kinematics->helicities[i], _s, _t));
+    };
 
     // update cache info
     cached_mX2 = kinematics->mX2; cached_s = _s; cached_t = _t;
@@ -42,7 +44,7 @@ double jpacPhoto::amplitude::probability_distribution(double s, double t)
   check_cache(s, t);
 
   double sum = 0.;
-  for (int i = 0; i < 24; i++)
+  for (int i = 0; i < kinematics->nAmps; i++)
   {
     std::complex<double> amp_i = cached_helicity_amplitude[i];
     sum += std::real(amp_i * conj(amp_i));

@@ -26,7 +26,6 @@
 #include "Math/Functor.h"
 
 #include <string>
-#include <array>
 #include <algorithm>
 
 namespace jpacPhoto
@@ -50,7 +49,7 @@ namespace jpacPhoto
 
     // How the calculate the helicity amplitude
     // Must be given a specific implementation in a user derived class
-    virtual std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double t) = 0;
+    virtual std::complex<double> helicity_amplitude(std::array<int, 4> helicities, double s, double t) = 0;
 
     // ---------------------------------------------------------------------------
     // Observables
@@ -84,16 +83,17 @@ namespace jpacPhoto
     // store them
     bool CACHED = false;
     double cached_mX2 = 0., cached_s = 0., cached_t = 0.;
-    std::array<std::complex<double>, 24> cached_helicity_amplitude;
+    std::vector<std::complex<double>> cached_helicity_amplitude;
 
     void check_cache(double _s, double _t);
 
     // ---------------------------------------------------------------------------
-    // Nparams error message
-    int Nparams = 0;
-    inline void check_Nparams(std::vector<double> params)
+    // nParams error message
+    int nParams = 0;
+    inline void set_nParams(int N){ nParams = N; };
+    inline void check_nParams(std::vector<double> params)
     {
-      if (params.size() != Nparams)
+      if (params.size() != nParams)
       {
         std::cout << "\nWarning! Invalid number of parameters (" << params.size() << ") passed to " << identifier << ".\n";
       }

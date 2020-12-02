@@ -33,17 +33,21 @@ namespace jpacPhoto
     // Constructor for fixed spin
     vector_exchange(reaction_kinematics * xkinem, double mass, std::string id = "")
     : amplitude(xkinem, id), mEx2(mass*mass), REGGE(false)
-    {};
+    {
+        set_nParams(3);
+    };
 
     // Constructor for the reggized)
     vector_exchange(reaction_kinematics * xkinem, linear_trajectory * traj, std::string id = "")
     : amplitude(xkinem, id), alpha(traj), REGGE(true)
-    {};
+    {
+        set_nParams(3);
+    };
 
     // Setting utility
     inline void set_params(std::vector<double> params)
     {
-      check_Nparams(params); // make sure the right amout of params passed
+      check_nParams(params); // make sure the right amout of params passed
       gGam = params[0];
       gV = params[1];
       gT = params[2];
@@ -64,18 +68,14 @@ namespace jpacPhoto
     };
 
     // Assemble the helicity amplitude by contracting the lorentz indices
-    std::complex<double> helicity_amplitude(std::vector<int> helicities, double s, double t);
+    std::complex<double> helicity_amplitude(std::array<int, 4> helicities, double s, double t);
 
   private:
-    // Set amplitude class options
-    int Nparams = 3; // Number of couplings
-
-    double zt;
-
     // if using reggeized propagator
     bool REGGE;
     // or the regge trajectory of the exchange
     linear_trajectory * alpha;
+    double zt;
 
     // Whether using analytic or covariant expression
     bool FOUR_VEC = false;
@@ -97,7 +97,7 @@ namespace jpacPhoto
     double mEx2;
 
     // Full covariant amplitude
-    std::complex<double> covariant_amplitude(std::vector<int> helicities);
+    std::complex<double> covariant_amplitude(std::array<int, 4> helicities);
     
     // Four-momentum of the exhange
     std::complex<double> exchange_momenta(int mu);

@@ -9,7 +9,7 @@
 
 // ---------------------------------------------------------------------------
 // Assemble the helicity amplitude by contracting the lorentz indices
-std::complex<double> jpacPhoto::vector_exchange::helicity_amplitude(std::vector<int> helicities, double xs, double xt)
+std::complex<double> jpacPhoto::vector_exchange::helicity_amplitude(std::array<int, 4> helicities, double xs, double xt)
 {
   int lam_gam = helicities[0];
   int lam_targ = helicities[1];
@@ -205,7 +205,7 @@ std::complex<double> jpacPhoto::vector_exchange::barrier_factor(int j, int M)
 // FEYNMAN EVALUATION
 // ---------------------------------------------------------------------------
 
-std::complex<double> jpacPhoto::vector_exchange::covariant_amplitude(std::vector<int> helicities)
+std::complex<double> jpacPhoto::vector_exchange::covariant_amplitude(std::array<int, 4> helicities)
 {
   int lam_gam = helicities[0];
   int lam_targ = helicities[1];

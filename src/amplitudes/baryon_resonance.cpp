@@ -8,7 +8,7 @@
 #include "amplitudes/baryon_resonance.hpp"
 
 // Combined amplitude as a Breit-Wigner with the residue as the prodect of hadronic and photo-couplings
-std::complex<double> jpacPhoto::baryon_resonance::helicity_amplitude(std::vector<int> helicities, double xs, double xt)
+std::complex<double> jpacPhoto::baryon_resonance::helicity_amplitude(std::array<int, 4> helicities, double xs, double xt)
 {
   int lam_i = 2 * helicities[0] - helicities[1];
   int lam_f = 2 * helicities[2] - helicities[3];

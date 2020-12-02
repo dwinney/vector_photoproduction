@@ -9,7 +9,7 @@
 
 //------------------------------------------------------------------------------
 // Combine everything and contract indices
-std::complex<double> jpacPhoto::dirac_exchange::helicity_amplitude(std::vector<int> helicities, double xs, double xt)
+std::complex<double> jpacPhoto::dirac_exchange::helicity_amplitude(std::array<int, 4> helicities, double xs, double xt)
 {
   int lam_gam = helicities[0];
   int lam_targ = helicities[1];

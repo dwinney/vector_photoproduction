@@ -18,9 +18,11 @@
 #include "two_body_state.hpp"
 #include "dirac_spinor.hpp"
 #include "polarization_vector.hpp"
+#include "helicities.hpp"
 
 #include "TMath.h"
 
+#include <array>
 #include <vector>
 #include <string>
 #include <cmath>
@@ -116,14 +118,13 @@ namespace jpacPhoto
     inline double Wth(){ return (mX + mBar); }; // square root of the threshold
     inline double sth(){ return Wth() * Wth(); }; // final state threshold
 
-
-    // Change the vector mass
+    // Change the meson mass
     inline void set_mX(double m)
     {
       mX  = m;
       mX2 = m*m;
 
-      // also update the vector mass in two_body_state
+      // also update the meson mass in two_body_state
       final->set_mV2(m*m);
     };
     
@@ -132,7 +133,7 @@ namespace jpacPhoto
       mX  = sqrt(m2);
       mX2 = m2;
 
-      // also update the vector mass in two_body_state
+      // also update the meson mass in two_body_state
       final->set_mV2(m2);
     };
 
@@ -142,7 +143,7 @@ namespace jpacPhoto
       mBar  = sqrt(m2);
       mBar2 = m2;
 
-      // also update the baryon mass in two_body_state
+      // also update the meson mass in two_body_state
       initial->set_mB2(m2);
       final->set_mB2(m2);
     };
@@ -156,36 +157,21 @@ namespace jpacPhoto
       initial->set_mV2(-q2);
     };
     
-    // Helicity configurations
-    // Photon [0], Incoming Proton [1], Vector meson [2], Outgoing Proton [3], hel_id [4]
-    std::vector< std::vector<int> > helicities =
+    // ---------------------------------------------------------------------------
+    // Quantum numbers of produced meson. 
+    // abs(JP) = J  and sign(JP) = P
+    int JP = 1;
+    inline void set_JP(int _JP)
     {
-    //  {  γ,  p,  V,  p'}
-        {  1, -1,  1, -1 ,  0},
-        {  1, -1,  1,  1 ,  1},
-        {  1, -1,  0, -1 ,  2},
-        {  1, -1,  0,  1 ,  3},
-        {  1, -1, -1, -1 ,  4},
-        {  1, -1, -1,  1 ,  5},
-        {  1,  1,  1, -1 ,  6},
-        {  1,  1,  1,  1 ,  7},
-        {  1,  1,  0, -1 ,  8},
-        {  1,  1,  0,  1 ,  9},
-        {  1,  1, -1, -1 , 10},
-        {  1,  1, -1,  1 , 11},
-        { -1, -1,  1, -1 , 12},
-        { -1, -1,  1,  1 , 13},
-        { -1, -1,  0, -1 , 14},
-        { -1, -1,  0,  1 , 15},
-        { -1, -1, -1, -1 , 16},
-        { -1, -1, -1,  1 , 17},
-        { -1,  1,  1, -1 , 18},
-        { -1,  1,  1,  1 , 19},
-        { -1,  1,  0, -1 , 20},
-        { -1,  1,  0,  1 , 21}, 
-        { -1,  1, -1, -1 , 22},
-        { -1,  1, -1,  1 , 23},
+       JP = _JP; 
+       helicities = get_helicities( abs(_JP));
+       nAmps = helicities.size();
     };
+
+    // Helicity configurations
+    // Photon [0], Incoming Proton [1], Produced meson [2], Outgoing Proton [3]
+    int nAmps = 24; 
+    std::vector< std::array<int, 4> > helicities = spin_one_helicities;
 
     //--------------------------------------------------------------------------
     two_body_state * initial,  * final;
