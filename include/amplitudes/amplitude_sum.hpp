@@ -26,12 +26,12 @@ namespace jpacPhoto
 
   public:
     // Empty constructor
-    amplitude_sum(reaction_kinematics * xkinem, std::string identifer = "")
+    amplitude_sum(reaction_kinematics * xkinem, std::string identifer = "amplitude_sum")
     : amplitude(xkinem, identifer)
     {};
 
     // Constructor with a vector already set up
-    amplitude_sum(reaction_kinematics * xkinem, std::vector<amplitude*> vec, std::string identifer = "")
+    amplitude_sum(reaction_kinematics * xkinem, std::vector<amplitude*> vec, std::string identifer = "amplitude_sum")
     : amplitude(xkinem, identifer), amps(vec)
     {};
 
@@ -48,6 +48,12 @@ namespace jpacPhoto
       {
         amps.push_back(new_sum.amps[i]);
       }
+    };
+
+    // empty allowedJP, leave the checks to the individual amps instead
+    inline std::vector<std::array<int,2>> allowedJP()
+    {
+        return {};
     };
 
     // TODO: Add a set_params which timesi in one vector and allocates approriaten number of

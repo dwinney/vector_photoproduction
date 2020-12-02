@@ -17,10 +17,11 @@ namespace jpacPhoto
     {
         public:
         // Constructor 
-        primakoff_effect(reaction_kinematics * xkinem, std::string amp_id = "")
+        primakoff_effect(reaction_kinematics * xkinem, std::string amp_id = "primakoff_effect")
         : amplitude(xkinem, amp_id)
         {
             set_nParams(4);
+            check_JP(xkinem->JP);
         };
 
         void set_params(std::vector<double> params)
@@ -55,6 +56,12 @@ namespace jpacPhoto
         // instead we override the definition of differential_xsection in amplitude.hpp
         double differential_xsection(double s, double t);
         double integrated_xsection(double s);
+
+        // only axial-vector kinematics allowed
+        inline std::vector<std::array<int,2>> allowedJP()
+        {
+            return {{1, 1}};
+        };
 
         private:
 
