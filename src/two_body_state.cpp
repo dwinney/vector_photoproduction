@@ -13,34 +13,34 @@
 // The four momentum of the vector particle
 std::complex<double> jpacPhoto::two_body_state::q(int mu, double s, double theta)
 {
-  switch (mu)
-  {
-    case 0: return energy_V(s);
-    case 1: return momentum(s) * sin(theta);
-    case 2: return 0.;
-    case 3: return momentum(s) * cos(theta);
-    default: 
+    switch (mu)
     {
-      std::cout << "two_body_state: Invalid four vector component! \n";
-      return 0.;
+        case 0: return energy_V(s);
+        case 1: return momentum(s) * sin(theta);
+        case 2: return 0.;
+        case 3: return momentum(s) * cos(theta);
+        default: 
+        {
+            std::cout << "two_body_state: Invalid four vector component! \n";
+            return 0.;
+        }
     }
-  }
 };
 
 // ---------------------------------------------------------------------------
 // The four momenta of the baryon
 std::complex<double> jpacPhoto::two_body_state::p(int mu, double s, double theta)
 {
-  switch (mu)
-  {
-    case 0: return energy_B(s);
-    case 1: return - momentum(s) * sin(theta);
-    case 2: return 0.;
-    case 3: return - momentum(s) * cos(theta);
-    default: 
+    switch (mu)
     {
-      std::cout << "two_body_state: Invalid four vector component! \n";
-      return 0.;
+        case 0: return energy_B(s);
+        case 1: return - momentum(s) * sin(theta);
+        case 2: return 0.;
+        case 3: return - momentum(s) * cos(theta);
+        default: 
+        {
+            std::cout << "two_body_state: Invalid four vector component! \n";
+            return 0.;
+        }
     }
-  }
 };
