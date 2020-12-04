@@ -23,7 +23,6 @@ void jpacPhoto::amplitude::check_cache(double _s, double _t)
     else // save a new set
     {
         cached_helicity_amplitude.clear();
-
         for (int i = 0; i < kinematics->nAmps; i++)
         {
             cached_helicity_amplitude.push_back(helicity_amplitude(kinematics->helicities[i], _s, _t));
@@ -226,8 +225,8 @@ std::complex<double> jpacPhoto::amplitude::SDME(int alpha, int lam, int lamp, do
 };
 
 // ---------------------------------------------------------------------------
-// Beam asymmetry along y axis sigma_y 
-double jpacPhoto::amplitude::beam_asymmetry_y(double s, double t)
+// Integrated beam asymmetry sigma_4pi
+double jpacPhoto::amplitude::beam_asymmetry_4pi(double s, double t)
 {
     double rho100 = real(SDME(1, 0, 0, s, t));
     double rho111 = real(SDME(1, 1, 1, s, t));
@@ -237,8 +236,8 @@ double jpacPhoto::amplitude::beam_asymmetry_y(double s, double t)
     return -(rho100 + 2. * rho111) / (rho000 + 2. * rho011);
 };
 // ---------------------------------------------------------------------------
-// Integrated beam asymmetry sigma_4pi
-double jpacPhoto::amplitude::beam_asymmetry_4pi(double s, double t)
+// Beam asymmetry along y axis sigma_y 
+double jpacPhoto::amplitude::beam_asymmetry_y(double s, double t)
 {
     double rho111  = real(SDME(1, 1,  1, s, t));
     double rho11m1 = real(SDME(1, 1, -1, s, t));
