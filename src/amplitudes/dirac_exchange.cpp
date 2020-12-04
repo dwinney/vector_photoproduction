@@ -18,6 +18,7 @@ std::complex<double> jpacPhoto::dirac_exchange::helicity_amplitude(std::array<in
 
     // Store the invariant energies to avoid having to pass them around 
     s = xs; t = xt, theta = kinematics->theta_s(xs, xt);
+    u = kinematics->u_man(s, theta);
 
     std::complex<double> result = 0.;
     for (int i = 0; i < 4; i++)
@@ -32,8 +33,33 @@ std::complex<double> jpacPhoto::dirac_exchange::helicity_amplitude(std::array<in
             result += temp;
         }
     }
+    
+    result *= form_factor();
 
     return result;
+};
+
+double jpacPhoto::dirac_exchange::form_factor()
+{
+    switch (IF_FF)
+    {
+        // exponential form factor
+        case 1: 
+        {
+            return exp((u - kinematics->u_man(s, 0.)) / cutoff*cutoff);
+        };
+
+        // monopole form factor
+        case 2:
+        {
+            return (cutoff*cutoff - mEx2) / (cutoff*cutoff - u); 
+        };
+
+        default:
+        {
+            return 1.;
+        };
+    }
 };
 
 
@@ -53,7 +79,7 @@ std::complex<double> jpacPhoto::dirac_exchange::top_vertex(int i, int lam_gam, i
     {
         std::complex<double> temp;
         temp  = kinematics->recoil->adjoint_component(k, lam_rec, s, theta + M_PI); // theta_recoil = theta + pi
-        temp *= slashed_eps(k, i, lam_gam, kinematics->eps_gamma, false, s, 1.); // theta_gamma = 0
+        temp *= slashed_eps(k, i, lam_gam, kinematics->eps_gamma, false, s, 0.); // theta_gamma = 0
 
         result += temp;
     }
@@ -73,14 +99,33 @@ std::complex<double> jpacPhoto::dirac_exchange::bottom_vertex(int j, int lam_vec
     }
 
     std::complex<double> result = 0.;
-    for (int k = 0; k < 4; k++)
+    
+    // F - F - V coupling
+    if (kinematics->JP[0] == 1 && kinematics->JP[1] == -1)
     {
-        std::complex<double> temp;
-        temp  = slashed_eps(j, k, lam_vec, kinematics->eps_vec, true, s, theta); //theta_vec = theta
-        temp *= kinematics->target->component(k, lam_targ, s , M_PI); // theta_target = pi
+        for (int k = 0; k < 4; k++)
+        {
+            std::complex<double> temp;
+            temp  = slashed_eps(j, k, lam_vec, kinematics->eps_vec, true, s, theta + M_PI); //theta_vec = theta
+            temp *= kinematics->target->component(k, lam_targ, s, M_PI); // theta_target = pi
 
-        result += temp;
+            result += temp;
+        }
     }
+
+    // F - F - P coupling
+    else if (kinematics->JP[0] == 0 && kinematics->JP[1] == -1)
+    {
+        for (int k = 0; k < 4; k++)
+        {
+            std::complex<double> temp;
+            temp  = xi * gamma_5[j][k];
+            temp *= kinematics->target->component(k, lam_targ, s, M_PI); // theta_target = pi
+
+            result += temp;
+        }
+    }
+
 
     return gVec * result;
 };

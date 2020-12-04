@@ -40,11 +40,18 @@ namespace jpacPhoto
             gVec = params[1];
         };
 
+        // Whether or not to include an exponential form factor (default false)
+        inline void set_formfactor(int FF, double bb = 0.)
+        {
+            IF_FF = FF;
+            cutoff = bb;
+        }
+
         // Assemble the helicity amplitude by contracting the spinor indices
         std::complex<double> helicity_amplitude(std::array<int, 4> helicities, double s, double t);
 
         // debugging options to make either the photon or vector into scalars
-        void set_debug(int i)
+        inline void set_debug(int i)
         {
             switch (i)
             {
@@ -54,10 +61,10 @@ namespace jpacPhoto
             }
         }
 
-        // only vector kinematics allowed
+        // only vector and psuedo-scalar kinematics
         inline std::vector<std::array<int,2>> allowedJP()
         {
-            return {{1, -1}};
+            return {{1, -1}, {0, -1}};
         };
 
         protected:
@@ -66,7 +73,13 @@ namespace jpacPhoto
         bool ScTOP = false, ScBOT = false;
 
         // Exchange nucleon mass
+        double u;
         double mEx, mEx2;
+
+        // Form factor parameters
+        int IF_FF = 0;
+        double cutoff = 0.;
+        double form_factor();
 
         // couplings
         double gGam = 0., gVec = 0.;
