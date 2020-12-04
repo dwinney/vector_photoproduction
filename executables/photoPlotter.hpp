@@ -33,11 +33,21 @@ namespace jpacPhoto
         bool PRINT_TO_COMMANDLINE = true;
         bool LAB_ENERGY = false;
         double xmin, xmax, ymin, ymax;
+
+        bool SHOW_LEGEND = false;
+        double xlegend, ylegend;
+
         std::string xlabel, ylabel, filename;
 
-        void plot_integrated_xsection()
+        void Plot(std::string observable, double theta = 0.)
         {
-            
+            int obs = translate(observable);
+            if ((obs < 0) || (obs > 7))
+            {
+                std::cout << "Error! Invalid string \"" << observable << "\" passed to photoPlotter::Plot()!";
+                return;
+            }
+        
             for (int n = 0; n < amps.size(); n++)
             {
                 std::cout << std::endl << "Printing amplitude: " << amps[n]->identifier << "\n";
@@ -49,7 +59,48 @@ namespace jpacPhoto
                 {
                     double W;
                     (LAB_ENERGY) ? (W = W_cm(x)) : (W = x);
-                    return amps[n]->integrated_xsection(W*W);
+
+                    double s = W*W;               
+                    double t = amps[n]->kinematics->t_man(s, theta * deg2rad);
+
+                    switch (obs) 
+                    {
+                        case 0:
+                        {
+                            return amps[n]->probability_distribution(s, t);
+                        }
+                        case 1:
+                        {
+                            
+                            return amps[n]->integrated_xsection(s);
+                        }
+                        case 2:
+                        {
+                            return amps[n]->differential_xsection(s, t);
+                        }
+                        case 3:
+                        {
+                            return amps[n]->A_LL(s, t);
+                        }
+                        case 4:
+                        {
+                            return amps[n]->K_LL(s, t);
+                        }
+                        case 5: 
+                        {
+                            return amps[n]->beam_asymmetry_4pi(s, t);
+                        }
+                        case 6: 
+                        {
+                            return amps[n]->beam_asymmetry_y(s, t);
+                        }
+                        case 7:
+                        {
+                            return amps[n]->parity_asymmetry(s, t);
+                        }
+                    };
+
+                    return 0.;
                 };
 
                 std::array<std::vector<double>, 2> x_fx;
@@ -67,53 +118,35 @@ namespace jpacPhoto
 
             SetXaxis(xlabel, xmin, xmax);
             SetYaxis(ylabel, ymin, ymax);
-            SetLegend(false);
 
-            // Output to file
-            Plot(filename);
-        };
-
-        void plot_differential_xsection(double theta)
-        {
-            
-            for (int n = 0; n < amps.size(); n++)
+            if (SHOW_LEGEND == false)
             {
-                std::cout << std::endl << "Printing amplitude: " << amps[n]->identifier << "\n";
-    
-                double th;
-                (LAB_ENERGY) ? (th = E_beam(amps[n]->kinematics->Wth())) : (th = amps[n]->kinematics->Wth());
-
-                auto F = [&](double x)
-                {
-                    double W;
-                    (LAB_ENERGY) ? (W = W_cm(x)) : (W = x);
-                    double t = amps[n]->kinematics->t_man(W*W, theta * deg2rad);
-                    return amps[n]->differential_xsection(W*W, t);
-                };
-
-                std::array<std::vector<double>, 2> x_fx;
-                if (xmin < th)
-                {
-                    x_fx = vec_fill(N, F, th + EPS, xmax, PRINT_TO_COMMANDLINE);
-                }
-                else
-                {
-                    x_fx = vec_fill(N, F, xmin, xmax, PRINT_TO_COMMANDLINE);
-                }
-
-                AddEntry(x_fx[0], x_fx[1], amps[n]->identifier);
+                SetLegend(false);
+            }
+            else
+            {
+                SetLegend(xlegend, ylegend);
             }
 
-            SetXaxis(xlabel, xmin, xmax);
-            SetYaxis(ylabel, ymin, ymax);
-            SetLegend(false);
-
             // Output to file
-            Plot(filename);
+            jpacGraph1D::Plot(filename);
         };
 
         private:
         std::vector<amplitude*> amps;
+
+        int translate(std::string observable)
+        {
+            if      (observable == "probability_distribution")  return 0;
+            else if (observable == "integrated_xsection")       return 1;
+            else if (observable == "differential_xsection")     return 2;
+            else if (observable == "A_LL")                      return 3;
+            else if (observable == "K_LL")                      return 4;
+            else if (observable == "beam_asymmetry_4pi")        return 5;
+            else if (observable == "beam_asymmetry_y")          return 6;
+            else if (observable == "parity_asymmetry")          return 7;
+            else return -1;
+        };
     }; 
 };
 
