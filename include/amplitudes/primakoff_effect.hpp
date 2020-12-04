@@ -90,9 +90,9 @@ namespace jpacPhoto
         };
 
         // Kinematic quantities   
-        long double mX2 = kinematics->mX2;
-        long double mA2 = kinematics->mBar2;
-        long double Q2  = kinematics->Q2;
+        long double mX2 =  kinematics->mX2;
+        long double mA2 =  kinematics->mT2;
+        long double Q2  = -kinematics->mB2;
 
         long double cX, sX2;
         long double pGam, pX;
