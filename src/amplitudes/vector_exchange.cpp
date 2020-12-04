@@ -24,7 +24,8 @@ std::complex<double> jpacPhoto::vector_exchange::helicity_amplitude(std::array<i
     // Output
     std::complex<double> result;
 
-    if (REGGE == false && FOUR_VEC == true)
+    // if psuedo scalar or scalar production do covariant
+    if (!(kinematics->JP[0] == 1 && kinematics->JP[1] == 1) || FOUR_VEC == true)
     {
         result = covariant_amplitude(helicities);
     }
@@ -325,8 +326,7 @@ std::complex<double> jpacPhoto::vector_exchange::top_vertex(int mu, int lam_gam,
                 
                     temp *= metric[mu];
                     temp *= field_tensor(alpha, beta, lam_gam);
-                    temp *= (exchange_momenta(gamma) - kinematics->final->q(gamma, s, M_PI));
-
+                    temp *= kinematics->final->q(gamma, s, M_PI) - exchange_momenta(gamma);
                     result += temp;
                 }
             }
@@ -358,22 +358,25 @@ std::complex<double> jpacPhoto::vector_exchange::bottom_vertex(int mu, int lam_t
 
     // Tensor coupling piece
     std::complex<double> tensor = 0.;
-    for (int i = 0; i < 4; i++)
+    if (abs(gT) > 0.001)
     {
-        for (int j = 0; j < 4; j++)
+        for (int i = 0; i < 4; i++)
         {
-            std::complex<double> sigma_q_ij = 0.;
-            for (int nu = 0; nu < 4; nu++)
+            for (int j = 0; j < 4; j++)
             {
-            sigma_q_ij += sigma(mu, nu, i, j) * metric[nu] * exchange_momenta(nu) / (2. * mPro);
+                std::complex<double> sigma_q_ij = 0.;
+                for (int nu = 0; nu < 4; nu++)
+                {
+                sigma_q_ij += sigma(mu, nu, i, j) * metric[nu] * exchange_momenta(nu) / (2. * mPro);
+                }
+
+                std::complex<double> temp;
+                temp = kinematics->recoil->adjoint_component(i, lam_rec, s, theta + M_PI); // theta_rec = theta + pi
+                temp *= sigma_q_ij;
+                temp *= kinematics->target->component(j, lam_targ, s, M_PI); // theta_targ = pi
+
+                tensor += temp;
             }
-
-            std::complex<double> temp;
-            temp = kinematics->recoil->adjoint_component(i, lam_rec, s, theta + M_PI); // theta_rec = theta + pi
-            temp *= sigma_q_ij;
-            temp *= kinematics->target->component(j, lam_targ, s, M_PI); // theta_targ = pi
-
-            tensor += temp;
         }
     }
 
