@@ -33,13 +33,8 @@ namespace jpacPhoto
     class amplitude
     {
         public:
-
-        amplitude(reaction_kinematics * xkinem, std::string id = "")
-        : kinematics(xkinem), identifier(id)
-        {};
-
         // Constructor with nParams for backward compatibility (now depricated)
-        amplitude(reaction_kinematics * xkinem, int n = 0, std::string id = "")
+        amplitude(reaction_kinematics * xkinem, std::string id = "", int n = 0)
         : kinematics(xkinem), identifier(id)
         {};
 
