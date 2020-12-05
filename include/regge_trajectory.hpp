@@ -34,6 +34,8 @@ class regge_trajectory
     // Only need a function to evaluate the trajectory at some s
     virtual std::complex<double> eval(double s) = 0;
 
+    virtual std::complex<double> slope(double s = 0.){return 0.;};
+
     // These parameters define the trajectory
     // name, spin, and mass of the lowest lying resonance on the parent trajectory
     std::string parent;
@@ -77,7 +79,7 @@ class linear_trajectory : public regge_trajectory
         return a0 + aprime * s;
     };
 
-    double slope()
+    std::complex<double> slope(double s = 0.)
     {
         return aprime;
     };
