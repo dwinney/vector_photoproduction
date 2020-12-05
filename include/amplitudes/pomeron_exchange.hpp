@@ -4,6 +4,11 @@
 // Affiliation:  Joint Physics Analysis Center (JPAC)
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
+// REFERENCES:
+// [1] 1907.09393
+// [2] 1606.08912
+// [3] 1904.11706
+// ---------------------------------------------------------------------------
 
 #ifndef _POMERON_
 #define _POMERON_
@@ -31,8 +36,8 @@ namespace jpacPhoto
         // Constructor
         // need a pointer to kinematic object, pointer to trajectory.
         // Optional OLDMODEL if true will default to helicity conserving amplitude
-        pomeron_exchange(reaction_kinematics * xkinem, regge_trajectory * alpha, bool OLDMODEL = false, std::string name = "pomeron_exchange")
-        : amplitude(xkinem, name), pomeron_traj(alpha), DELTA(OLDMODEL)
+        pomeron_exchange(reaction_kinematics * xkinem, regge_trajectory * alpha, int model_ = 0, std::string name = "pomeron_exchange")
+        : amplitude(xkinem, name), pomeron_traj(alpha), model(model_)
         {
             set_nParams(2);
             check_JP(xkinem->JP);
@@ -56,8 +61,13 @@ namespace jpacPhoto
         };
 
         private:
+        
+        // Which model to use. 
+        int model = 0; 
+        // 0 - model in [1] Lesniak-Szcepaniak
+        // 1 - model in [2] Helicity conserving
+        // 2 - model in [3]
 
-        bool DELTA = false; // Whether or not to use the helicity conserving model 
         double norm = 0., b0 = 0.; // Regge factor parameters: normalization and t-slope
         regge_trajectory * pomeron_traj;
 
