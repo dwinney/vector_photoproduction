@@ -66,7 +66,7 @@ namespace jpacPhoto
         int model = 0; 
         // 0 - model in [1] Lesniak-Szcepaniak
         // 1 - model in [2] Helicity conserving
-        // 2 - model in [3]
+        // 2 - model in [3] Wang et al.
 
         double norm = 0., b0 = 0.; // Regge factor parameters: normalization and t-slope
         regge_trajectory * pomeron_traj;

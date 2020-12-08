@@ -66,9 +66,6 @@ std::complex<double> jpacPhoto::pomeron_exchange::bottom_vertex(int mu, int lam_
         }
     }
 
-    // Divide by s to remove the energy dependence left over by the spinors
-    result /= s;
-
     return result;
 };
 
@@ -120,7 +117,7 @@ std::complex<double> jpacPhoto::pomeron_exchange::top_vertex(int mu, int lam_gam
             sum2  += (kinematics->initial->q(mu, s, 0.) + kinematics->final->q(mu, s, theta)) * temp2;
         }
 
-        result = (sum1 + sum2) / 2.;
+        result = (sum1 + sum2);
     };
 
     return result;
@@ -138,35 +135,49 @@ std::complex<double> jpacPhoto::pomeron_exchange::regge_factor()
 
     std::complex<double> result = 0.;
     
-    if ( model == 0 || model == 1)
+    switch (model)
     {
-        double t_min = kinematics->t_man(s, 0.); // t_min = t(theta = 0)
-        result  = exp(b0 * (t - t_min));
-        result *= pow(s - kinematics->sth(), pomeron_traj->eval(t));
-        result *= xi * norm * e;
+        case 0:
+        {
+            double t_min = kinematics->t_man(s, 0.); // t_min = t(theta = 0)
+            result  = exp(b0 * (t - t_min));
+            result *= pow(s - kinematics->sth(), pomeron_traj->eval(t));
+            result *= xi * norm * e;
+            result /= s;
+            break;
+        }
+        case 1:
+        {
+            double t_min = kinematics->t_man(s, 0.); // t_min = t(theta = 0)
+            result  = exp(b0 * (t - t_min));
+            result *= pow(s - kinematics->sth(), pomeron_traj->eval(t));
+            result *= xi * norm * e;
+            break;
+        }
+        case 2:
+        {
+            double mX2 = kinematics->mX2;
+            double th  = pow((kinematics->mT + kinematics->mR), 2.);
+
+            double beta_0 = 2.;         // Pomeron - light quark coupling
+            double beta_c = norm;       // Pomeron - charm quark coupling
+            double mu2 = b0 * b0;       // cutoff parameter 
+            double etaprime = std::real(pomeron_traj->slope());
+
+            std::complex<double> F_t;
+            F_t  = 3. * beta_0;
+            F_t *= (th - 2.8*t);
+            F_t /= (th - t) *  pow((1. - (t / 0.7)) , 2.);
+
+            std::complex<double> G_p = -xi;
+            G_p  *= pow(xr * etaprime * s, pomeron_traj->eval(t) - 1.);
+
+            result  = - xi * 8. * beta_c * mu2 * G_p * F_t;
+            result /= (mX2 - t) * (2.*mu2 + mX2 - t);
+            break;
+        }
+        default: return 0.;
     }
-    else if (model == 2)
-    {
-        double mX2 = kinematics->mX2;
-        double th  = pow((kinematics->mT + kinematics->mR), 2.);
-
-        double beta_0 = 4.;         // Pomeron - light quark coupling
-        double beta_c = norm;       // Pomeron - charm quark coupling
-        double mu2 = b0 * b0;       // cutoff parameter 
-        double etaprime = std::real(pomeron_traj->slope());
-
-        std::complex<double> F_t;
-        F_t  = 3. * beta_0;
-        F_t *= (th - 2.8*t);
-        F_t /= (th - t) *  pow((1. - (t / 0.7)) , 2.);
-
-        std::complex<double> G_p = -xi;
-        G_p  *= pow(xr * etaprime * s, pomeron_traj->eval(t) - 1.);
-
-        result  = 8. * beta_c * mu2 * G_p * F_t;
-        result /= (mX2 - t) * (2.*mu2 + mX2 - t);
-        result *= 2.;
-    };
 
     return result;
 };
