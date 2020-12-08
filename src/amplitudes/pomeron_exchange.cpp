@@ -116,7 +116,7 @@ std::complex<double> jpacPhoto::pomeron_exchange::top_vertex(int mu, int lam_gam
             temp2 *= kinematics->eps_gamma->component(nu, lam_gam, s, 0.);
             sum2  += (kinematics->initial->q(mu, s, 0.) + kinematics->final->q(mu, s, theta)) * temp2;
         }
-
+      
         result = (sum1 + sum2);
     };
 

@@ -38,10 +38,9 @@ int main( int argc, char** argv )
     // Normalization and t-slope
     background0->set_params({0.379, 0.12});
 
-
     // ---------------------------------------------------------------------------
     // Wang et al. amplitude
-
+  
     auto alpha2 = new linear_trajectory(+1, 1. + 0.08, 0.25);
     auto background2 = new pomeron_exchange(ptr, alpha2, 2, "Wang et al as written");
 
