@@ -83,7 +83,7 @@ namespace jpacPhoto
         };
 
         // Constructor with a set mV and baryon mass mR
-        // and massive beam and target
+        // and massive incoming scatterer and target
         reaction_kinematics(double _mX, double _mR, double _mT, double _mB = 0.)
         : mX(_mX), mX2(_mX*_mX),
           mR(_mR), mR2(_mR*_mR),
@@ -149,7 +149,7 @@ namespace jpacPhoto
 
         // ---------------------------------------------------------------------------
         // Quantum numbers of produced meson. 
-        std::array<int,2> JP = {1, 1};
+        std::array<int,2> JP{{1,1}};
         inline void set_JP(int _J, int _P)
         { 
             JP = {_J, _P};
