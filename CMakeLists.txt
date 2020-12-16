@@ -7,10 +7,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_CXX_FLAGS "-fPIC -O3") 
 set(CMAKE_BUILD_TYPE "Release")
 
-# Make sure gcc version is atleast 6!
+# Make sure gcc version is atleast 5!
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0)
-    message(FATAL_ERROR "GCC version must be atleast 7.0!")
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.0)
+    message(FATAL_ERROR "GCC version must be atleast 5.0!")
   endif()
 endif()
 
