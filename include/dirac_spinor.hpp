@@ -12,7 +12,7 @@
 #include <complex>
 
 #include "constants.hpp"
-#include "gamma_technology.hpp"
+#include "gamma_matrices.hpp"
 #include "two_body_state.hpp"
 
 // ---------------------------------------------------------------------------

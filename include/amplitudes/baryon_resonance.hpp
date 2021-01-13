@@ -35,8 +35,8 @@ namespace jpacPhoto
             check_JP(xkinem->JP);
 
             // save momentum and other J^P dependent quantities
-            pi_bar = real(kinematics->initial->momentum(mass * mass));
-            pf_bar = real(kinematics->final->momentum(mass * mass));
+            pi_bar = real(kinematics->initial_state->momentum(mass * mass));
+            pf_bar = real(kinematics->final_state->momentum(mass * mass));
 
             if (abs(P) != 1)
             {

@@ -83,7 +83,7 @@ std::complex<double> jpacPhoto::pomeron_exchange::top_vertex(int mu, int lam_gam
             std::complex<double> temp1, temp2;
 
             // (q . eps_vec^*) eps_gam^mu
-            temp1  = kinematics->initial->q(nu, s, 0.);
+            temp1  = kinematics->initial_state->q(nu, s, 0.);
             temp1 *= metric[nu];
             temp1 *= kinematics->eps_vec->conjugate_component(nu, lam_vec, s, theta);
             sum1  += kinematics->eps_gamma->component(mu, lam_gam, s, 0.) * temp1;
@@ -92,7 +92,7 @@ std::complex<double> jpacPhoto::pomeron_exchange::top_vertex(int mu, int lam_gam
             temp2  = kinematics->eps_gamma->component(nu, lam_gam, s, 0.);
             temp2 *= metric[nu];
             temp2 *= kinematics->eps_vec->conjugate_component(nu, lam_vec, s, theta);
-            sum2  += kinematics->initial->q(mu, s, 0.) * temp2;
+            sum2  += kinematics->initial_state->q(mu, s, 0.) * temp2;
         }
 
         result = -sum1 + sum2;
@@ -105,7 +105,7 @@ std::complex<double> jpacPhoto::pomeron_exchange::top_vertex(int mu, int lam_gam
             std::complex<double> temp1, temp2;
 
             // -2 * (q . eps_vec^*) eps_gam^mu
-            temp1  = kinematics->initial->q(nu, s, 0.);
+            temp1  = kinematics->initial_state->q(nu, s, 0.);
             temp1 *= metric[nu];
             temp1 *= kinematics->eps_vec->conjugate_component(nu, lam_vec, s, theta);
             sum1  += -2. * kinematics->eps_gamma->component(mu, lam_gam, s, 0.) * temp1;
@@ -114,7 +114,7 @@ std::complex<double> jpacPhoto::pomeron_exchange::top_vertex(int mu, int lam_gam
             temp2  = kinematics->eps_vec->conjugate_component(nu, lam_vec, s, theta);
             temp2 *= metric[nu];
             temp2 *= kinematics->eps_gamma->component(nu, lam_gam, s, 0.);
-            sum2  += (kinematics->initial->q(mu, s, 0.) + kinematics->final->q(mu, s, theta)) * temp2;
+            sum2  += (kinematics->initial_state->q(mu, s, 0.) + kinematics->final_state->q(mu, s, theta)) * temp2;
         }
       
         result = (sum1 + sum2);

@@ -42,13 +42,13 @@ namespace jpacPhoto
         // defaults to compton scattering: gamma p -> gamma p
         reaction_kinematics()
         {
-            initial   = new two_body_state(0., mPro2);
-            eps_gamma = new polarization_vector(initial);
-            target    = new dirac_spinor(initial);
+            initial_state   = new two_body_state(0., mPro2);
+            eps_gamma       = new polarization_vector(initial_state);
+            target          = new dirac_spinor(initial_state);
 
-            final     = new two_body_state(0., mPro2);
-            eps_vec   = new polarization_vector(final);
-            recoil    = new dirac_spinor(final);
+            final_state     = new two_body_state(0., mPro2);
+            eps_vec         = new polarization_vector(final_state);
+            recoil          = new dirac_spinor(final_state);
         };
 
         // Constructor with a set mX and JP
@@ -57,13 +57,13 @@ namespace jpacPhoto
         reaction_kinematics(double _mX, std::string id = "")
         : mX(_mX), mX2(_mX*_mX)
         {
-            initial   = new two_body_state(0., mPro2);
-            eps_gamma = new polarization_vector(initial);
-            target    = new dirac_spinor(initial);
+            initial_state   = new two_body_state(0., mPro2);
+            eps_gamma       = new polarization_vector(initial_state);
+            target          = new dirac_spinor(initial_state);
 
-            final     = new two_body_state(_mX*_mX, mPro2);
-            eps_vec   = new polarization_vector(final);
-            recoil    = new dirac_spinor(final);
+            final_state     = new two_body_state(_mX*_mX, mPro2);
+            eps_vec         = new polarization_vector(final_state);
+            recoil          = new dirac_spinor(final_state);
         };
 
 
@@ -73,13 +73,13 @@ namespace jpacPhoto
         : mX(_mX), mX2(_mX*_mX),
           mR(_mR), mR2(_mR*_mR)
         {
-            initial   = new two_body_state(0., mPro2);
-            eps_gamma = new polarization_vector(initial);
-            target    = new dirac_spinor(initial);
+            initial_state   = new two_body_state(0., mPro2);
+            eps_gamma       = new polarization_vector(initial_state);
+            target          = new dirac_spinor(initial_state);
 
-            final     = new two_body_state(_mX*_mX, _mR*_mR);
-            eps_vec   = new polarization_vector(final);
-            recoil    = new dirac_spinor(final);
+            final_state     = new two_body_state(_mX*_mX, _mR*_mR);
+            eps_vec         = new polarization_vector(final_state);
+            recoil          = new dirac_spinor(final_state);
         };
 
         // Constructor with a set mV and baryon mass mR
@@ -90,21 +90,24 @@ namespace jpacPhoto
           mB(_mB), mB2(_mB*_mB),
           mT(_mT), mT2(_mT*_mT)
         {
-            initial   = new two_body_state(_mB*_mB, _mT*_mT);
-            eps_gamma = new polarization_vector(initial);
-            target    = new dirac_spinor(initial);
+            initial_state   = new two_body_state(_mB*_mB, _mT*_mT);
+            eps_gamma       = new polarization_vector(initial_state);
+            target          = new dirac_spinor(initial_state);
 
-            final     = new two_body_state(_mX*_mX, _mR*_mR);
-            eps_vec   = new polarization_vector(final);
-            recoil    = new dirac_spinor(final);
+            final_state     = new two_body_state(_mX*_mX, _mR*_mR);
+            eps_vec         = new polarization_vector(final_state);
+            recoil          = new dirac_spinor(final_state);
         };
 
         // destructor
         ~reaction_kinematics()
         {
-            delete initial, final;
-            delete eps_gamma, eps_vec;
-            delete target, recoil;
+            delete initial_state;
+            delete final_state;
+            delete eps_gamma;
+            delete eps_vec;
+            delete target;
+            delete recoil;
         }
 
         // ---------------------------------------------------------------------------
@@ -126,7 +129,7 @@ namespace jpacPhoto
             mX2 = m*m;
 
             // also update the meson mass in two_body_state
-            final->set_mV2(m*m);
+            final_state->set_mV2(m*m);
         };
 
         inline void set_mX2(double m2)
@@ -135,7 +138,7 @@ namespace jpacPhoto
             mX2 = m2;
 
             // also update the meson mass in two_body_state
-            final->set_mV2(m2);
+            final_state->set_mV2(m2);
         };
 
         // Change virtuality of the photon
@@ -144,7 +147,7 @@ namespace jpacPhoto
         {
             if (q2 > 0) { std::cout << "Caution! set_Q2(x) requires x > 0! \n"; }
             mB2 = -q2;
-            initial->set_mV2(-q2);
+            initial_state->set_mV2(-q2);
         };
 
         // ---------------------------------------------------------------------------
@@ -163,15 +166,15 @@ namespace jpacPhoto
         std::vector< std::array<int, 4> > helicities = spin_one_helicities;
 
         //--------------------------------------------------------------------------
-        two_body_state * initial,  * final;
+        two_body_state * initial_state,  * final_state;
         polarization_vector * eps_vec, * eps_gamma;
         dirac_spinor * target, * recoil;
 
         // Get s-channel scattering angle from invariants
         inline double z_s(double s, double t)
         {
-            std::complex<double> qdotqp = initial->momentum(s) * final->momentum(s);
-            std::complex<double> E1E3   = initial->energy_V(s) * final->energy_V(s);
+            std::complex<double> qdotqp = initial_state->momentum(s) * final_state->momentum(s);
+            std::complex<double> E1E3   = initial_state->energy_V(s) * final_state->energy_V(s);
 
             double result = t - mX2 - mB2 + 2.*abs(E1E3);
             result /= 2. * abs(qdotqp);
@@ -189,8 +192,8 @@ namespace jpacPhoto
         // Invariant variables
         inline double t_man(double s, double theta)
         {
-            std::complex<double> qdotqp = initial->momentum(s) * final->momentum(s);
-            std::complex<double> E1E3   = initial->energy_V(s) * final->energy_V(s);
+            std::complex<double> qdotqp = initial_state->momentum(s) * final_state->momentum(s);
+            std::complex<double> E1E3   = initial_state->energy_V(s) * final_state->energy_V(s);
 
             return mX2 + mB2 - 2. * abs(E1E3) + 2. * abs(qdotqp) * cos(theta);
         };

@@ -150,8 +150,8 @@ double jpacPhoto::dirac_exchange::exchange_mass()
 std::complex<double> jpacPhoto::dirac_exchange::exchange_momentum(int mu)
 {
     std::complex<double> qGamma_mu, qRec_mu;
-    qGamma_mu   = kinematics->initial->q(mu, s, M_PI);
-    qRec_mu     = kinematics->final->p(mu, s, theta + M_PI);
+    qGamma_mu   = kinematics->initial_state->q(mu, s, M_PI);
+    qRec_mu     = kinematics->final_state->p(mu, s, theta + M_PI);
 
     return qRec_mu - qGamma_mu;
 };

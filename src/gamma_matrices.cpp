@@ -5,7 +5,7 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#include "gamma_technology.hpp"
+#include "gamma_matrices.hpp"
 
 // ---------------------------------------------------------------------------
 // Rank two gamma tensor

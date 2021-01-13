@@ -10,7 +10,6 @@
 
 #include "amplitude.hpp"
 #include "regge_trajectory.hpp"
-#include "gamma_technology.hpp"
 
 // ---------------------------------------------------------------------------
 // vector_exchange class describes the amplitude for a fixed-spin-1 exchange

@@ -13,7 +13,6 @@
 
 #include "amplitude.hpp"
 #include "regge_trajectory.hpp"
-#include "gamma_technology.hpp"
 
 // ---------------------------------------------------------------------------
 // pseudoscalar_exchange class describes the amplitude for a spin-0 exchange

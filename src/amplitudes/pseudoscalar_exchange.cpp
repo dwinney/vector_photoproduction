@@ -97,9 +97,9 @@ std::complex<double> jpacPhoto::pseudoscalar_exchange::top_vertex(double lam_gam
             temp1  = kinematics->eps_vec->conjugate_component(mu, lam_vec, s, theta);
             temp1 *= metric[mu];
             temp1 *= kinematics->eps_gamma->component(mu, lam_gam, s, 0.);
-            temp1 *= kinematics->initial->q(nu, s, 0.);
+            temp1 *= kinematics->initial_state->q(nu, s, 0.);
             temp1 *= metric[nu];
-            temp1 *= kinematics->final->q(nu, s, theta);
+            temp1 *= kinematics->final_state->q(nu, s, theta);
 
             term1 += temp1;
 
@@ -107,10 +107,10 @@ std::complex<double> jpacPhoto::pseudoscalar_exchange::top_vertex(double lam_gam
             std::complex<double> temp2;
             temp2  = kinematics->eps_vec->conjugate_component(mu, lam_vec, s, theta);
             temp2 *= metric[mu];
-            temp2 *= kinematics->initial->q(mu, s, 0.);
+            temp2 *= kinematics->initial_state->q(mu, s, 0.);
             temp2 *= kinematics->eps_gamma->component(nu, lam_gam, s, 0.);
             temp2 *= metric[nu];
-            temp2 *= kinematics->final->q(nu, s, theta);
+            temp2 *= kinematics->final_state->q(nu, s, theta);
 
             term2 += temp2;
         }

@@ -274,7 +274,7 @@ std::complex<double> jpacPhoto::vector_exchange::top_vertex(int mu, int lam_gam,
                     if (std::abs(temp) < 0.001) continue;
                 
                     temp *= metric[mu];
-                    temp *= kinematics->initial->q(alpha, s, 0.);
+                    temp *= kinematics->initial_state->q(alpha, s, 0.);
                     temp *= kinematics->eps_gamma->component(beta, lam_gam, s, 0.);
                     temp *= kinematics->eps_vec->component(gamma, lam_vec, s, theta);
 
@@ -294,14 +294,14 @@ std::complex<double> jpacPhoto::vector_exchange::top_vertex(int mu, int lam_gam,
             // (k . q) eps_gamma^mu
             term1  = exchange_momenta(nu);
             term1 *= metric[nu];
-            term1 *= kinematics->initial->q(nu, s, 0.);
+            term1 *= kinematics->initial_state->q(nu, s, 0.);
             term1 *= kinematics->eps_gamma->component(mu, lam_gam, s, 0.);
 
             // (eps_gam . k) q^mu
             term2  = kinematics->eps_gamma->component(nu, lam_gam, s, 0.);
             term2 *= metric[nu];
             term2 *= exchange_momenta(nu);
-            term2 *= kinematics->initial->q(mu, s, 0.);
+            term2 *= kinematics->initial_state->q(mu, s, 0.);
 
             result += term1 - term2;
         }
@@ -326,7 +326,7 @@ std::complex<double> jpacPhoto::vector_exchange::top_vertex(int mu, int lam_gam,
                 
                     temp *= metric[mu];
                     temp *= field_tensor(alpha, beta, lam_gam);
-                    temp *= kinematics->final->q(gamma, s, M_PI) - exchange_momenta(gamma);
+                    temp *= kinematics->final_state->q(gamma, s, M_PI) - exchange_momenta(gamma);
                     result += temp;
                 }
             }
@@ -386,8 +386,8 @@ std::complex<double> jpacPhoto::vector_exchange::bottom_vertex(int mu, int lam_t
 std::complex<double> jpacPhoto::vector_exchange::field_tensor(int mu, int nu, int lambda)
 {
     std::complex<double> result;
-    result  = kinematics->initial->q(mu, s, 0.) * kinematics->eps_gamma->component(nu, lambda, s, 0.);
-    result -= kinematics->initial->q(nu, s, 0.) * kinematics->eps_gamma->component(mu, lambda, s, 0.); 
+    result  = kinematics->initial_state->q(mu, s, 0.) * kinematics->eps_gamma->component(nu, lambda, s, 0.);
+    result -= kinematics->initial_state->q(nu, s, 0.) * kinematics->eps_gamma->component(mu, lambda, s, 0.); 
 
     return result;
 };
@@ -398,8 +398,8 @@ std::complex<double> jpacPhoto::vector_exchange::field_tensor(int mu, int nu, in
 std::complex<double> jpacPhoto::vector_exchange::exchange_momenta(int mu)
 {
     std::complex<double> qGamma_mu, qA_mu;
-    qGamma_mu = kinematics->initial->q(mu, s, 0.);
-    qA_mu = kinematics->final->q(mu, s, theta);
+    qGamma_mu = kinematics->initial_state->q(mu, s, 0.);
+    qA_mu = kinematics->final_state->q(mu, s, theta);
 
     return (qGamma_mu - qA_mu);
 };

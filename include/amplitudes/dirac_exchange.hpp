@@ -15,7 +15,6 @@
 #include <iomanip>
 
 #include "amplitude.hpp"
-#include "gamma_technology.hpp"
 
 namespace jpacPhoto
 {

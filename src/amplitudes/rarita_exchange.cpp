@@ -77,13 +77,13 @@ std::complex<double> jpacPhoto::rarita_exchange::relative_momentum(int mu, std::
 
     if ((in_out == "in") || (in_out == "top") || (in_out == "initial") )
     {
-        q1_mu = kinematics->initial->q(mu, s, 0.);
-        q2_mu = kinematics->initial->p(mu, s, M_PI);
+        q1_mu = kinematics->initial_state->q(mu, s, 0.);
+        q2_mu = kinematics->initial_state->p(mu, s, M_PI);
     }
     else if ((in_out == "out") || (in_out == "bot") || (in_out == "final"))
     {
-        q1_mu = kinematics->final->q(mu, s, theta);
-        q2_mu = kinematics->final->p(mu, s, theta + M_PI);
+        q1_mu = kinematics->final_state->q(mu, s, theta);
+        q2_mu = kinematics->final_state->p(mu, s, theta + M_PI);
     }
     else
     {
