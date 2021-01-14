@@ -39,23 +39,22 @@ int main( int argc, char** argv )
     // ---------------------------------------------------------------------------
 
     // X(6900)
-    double mX = 6.900;
-    reaction_kinematics * kX = new reaction_kinematics(mX);
+    reaction_kinematics * kX = new reaction_kinematics(6.900);
     kX->set_JP(0, 1);
 
     double gV_psi = 1.6E-3, gT_psi = 0.;
     double gX_psi = 5.03;
-    double gGam_psi = gX_psi * e * fJpsi / mJpsi;
+    double gGam_psi = gX_psi * E * F_JPSI / M_JPSI;
 
     double gV_omega = 16., gT_omega = 0.;
     double gX_omega = 0.225;
-    double gGam_omega = gX_omega * e * fJpsi / mJpsi;
+    double gGam_omega = gX_omega * E * F_JPSI / M_JPSI;
     double bOmega = 0.68; // Cuttoff of LamOmega = 1.2 GeV
 
-    vector_exchange X_psi(kX, mJpsi, "J/#psi exchange, BR = 100%");
+    vector_exchange X_psi(kX, M_JPSI, "J/#psi exchange, BR = 100%");
     X_psi.set_params({gGam_psi, gV_psi, gT_psi});
 
-    vector_exchange X_omega(kX, mOmega, "#it{X}(6900) with BR(#it{X #rightarrow #psi#omega}) = 1%");
+    vector_exchange X_omega(kX, M_OMEGA, "#it{X}(6900) with BR(#it{X #rightarrow #psi#omega}) = 1%");
     X_omega.set_params({gGam_omega, gV_omega, gT_omega});
     X_omega.set_formfactor(true, bOmega);
    
@@ -89,7 +88,7 @@ int main( int argc, char** argv )
     // Print the desired observable for each amplitude
     for (int n = 0; n < amps.size(); n++)
     {
-        std::cout << std::endl << "Printing amplitude: " << amps[n]->identifier << "\n";
+        std::cout << std::endl << "Printing amplitude: " << amps[n]->_identifier << "\n";
 
         auto F = [&](double x)
         {
@@ -97,9 +96,9 @@ int main( int argc, char** argv )
         };
 
         std::array<std::vector<double>, 2> x_fx; 
-        if (xmin < amps[n]->kinematics->Wth())
+        if (xmin < amps[n]->_kinematics->Wth())
         {
-            x_fx = vec_fill(N, F, amps[n]->kinematics->Wth() + EPS, 9., true);
+            x_fx = vec_fill(N, F, amps[n]->_kinematics->Wth() + EPS, 9., true);
 
             for (int j = 1; j <= 10; j++)
             {
@@ -113,7 +112,7 @@ int main( int argc, char** argv )
             x_fx = vec_fill(N, F, xmin, xmax, true);
         }
 
-        plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->identifier);
+        plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->_identifier);
     }
 
     plotter->SetXaxis(ROOT_italics("W_{#gammap}") + "  [GeV]", xmin, xmax);

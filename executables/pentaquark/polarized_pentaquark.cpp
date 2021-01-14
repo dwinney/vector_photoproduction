@@ -70,7 +70,7 @@ int main( int argc, char** argv )
     // ---------------------------------------------------------------------------
 
     // Set up Kinematics
-    reaction_kinematics * ptr = new reaction_kinematics(mJpsi);
+    reaction_kinematics * ptr = new reaction_kinematics(M_JPSI);
     ptr->set_JP(1, -1);
 
     // ---------------------------------------------------------------------------
@@ -120,7 +120,7 @@ int main( int argc, char** argv )
         // find the desired observable
         auto F = [&](double W)
         {
-            double t = ptr->t_man(W*W, theta * deg2rad);
+            double t = ptr->t_man(W*W, theta * DEG2RAD);
             if (observable == "dxs")
             {
                 ylabel = "d#sigma/dt    (nb GeV^{-2})";
@@ -143,7 +143,7 @@ int main( int argc, char** argv )
         };
 
         std::array<std::vector<double>, 2> x_fx = vec_fill(N, F, sqrt(ptr->sth()) + 0.01, max);
-        plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->identifier);
+        plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->_identifier);
     }
 
     // Add a header to legend to specify the fixed energy

@@ -27,19 +27,19 @@ using namespace jpacPhoto;
 int main( int argc, char** argv )
 {
     // Set up Kinematics for Dbar LambdaC in final state
-    auto ptr = new reaction_kinematics(mD, mLambdaC, mPro);
+    auto ptr = new reaction_kinematics(M_D, M_LAMBDAC, M_PROTON);
     ptr->set_JP(0, -1);
 
     // Amplitude
     double eta = 1.;
 
-    auto dstarEx = new vector_exchange(ptr, mDstar, "D^{*} exchange");
+    auto dstarEx = new vector_exchange(ptr, M_DSTAR, "D^{*} exchange");
     dstarEx->set_params({0.134, -13.2, 0.});
-    dstarEx->set_formfactor(2, mDstar + eta * 0.250);
+    dstarEx->set_formfactor(2, M_DSTAR + eta * 0.250);
 
-    auto lamcEx = new dirac_exchange(ptr, mLambdaC, "#Lambda_{c} exchange");
-    lamcEx->set_params({sqrt(4.*M_PI*M_ALPHA), -4.3});
-    lamcEx->set_formfactor(2, mLambdaC + eta * 0.250);
+    auto lamcEx = new dirac_exchange(ptr, M_LAMBDAC, "#Lambda_{c} exchange");
+    lamcEx->set_params({sqrt(4.* PI * ALPHA), -4.3});
+    lamcEx->set_formfactor(2, M_LAMBDAC + eta * 0.250);
 
     auto sum = new amplitude_sum(ptr, {dstarEx, lamcEx}, "Sum");
 

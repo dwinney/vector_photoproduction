@@ -24,7 +24,7 @@ int main( int argc, char** argv )
     // ---------------------------------------------------------------------------
 
     // Set up Kinematics for jpsi in final state
-    auto ptr = new reaction_kinematics(mJpsi);
+    auto ptr = new reaction_kinematics(M_JPSI);
     ptr->set_JP(1, -1);
 
     // ---------------------------------------------------------------------------
@@ -108,7 +108,7 @@ int main( int argc, char** argv )
     // scan over theta
     for (int n = 0; n < amps.size(); n++)
     {
-        std::cout << "\nPrinting amplitude " << amps[n]->identifier << ".\n";
+        std::cout << "\nPrinting amplitude " << amps[n]->_identifier << ".\n";
 
         auto F = [&](double theta)
         {
@@ -116,7 +116,7 @@ int main( int argc, char** argv )
             auto f = [&](double E)
             {
                 double W = W_cm(E);
-                double t = ptr->t_man(W*W, theta * deg2rad);
+                double t = ptr->t_man(W*W, theta * DEG2RAD);
                 return amps[n]->beam_asymmetry_4pi(W*W, t);
             };
 
@@ -128,7 +128,7 @@ int main( int argc, char** argv )
         };
 
         std::array<std::vector<double>, 2> x_fx = vec_fill(N, F, 0., 90., PRINT_TO_COMMANDLINE);
-        plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->identifier);
+        plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->_identifier);
     }
 
     // Add a header to legend to specify the fixed energy
@@ -149,7 +149,7 @@ int main( int argc, char** argv )
     // scan over energy
     for (int n = 0; n < amps.size(); n++)
     {
-        std::cout << "\nPrinting amplitude " << amps[n]->identifier << ".\n";
+        std::cout << "\nPrinting amplitude " << amps[n]->_identifier << ".\n";
 
         auto F = [&](double egam)
         {
@@ -163,13 +163,13 @@ int main( int argc, char** argv )
             ROOT::Math::Functor1D wF(f);
             ig.SetFunction(wF);
             
-            double t_min = amps[n]->kinematics->t_man(W*W, 0.);
-            double t_max = amps[n]->kinematics->t_man(W*W, M_PI);
+            double t_min = amps[n]->_kinematics->t_man(W*W, 0.);
+            double t_max = amps[n]->_kinematics->t_man(W*W, PI);
             return ig.Integral(t_max, t_min) / (t_min - t_max);
         };
 
         std::array<std::vector<double>, 2> x_fx = vec_fill(N, F, Emin, Emax, PRINT_TO_COMMANDLINE);
-        plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->identifier);
+        plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->_identifier);
     }
 
     // Add a header to legend to specify the fixed energy

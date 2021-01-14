@@ -224,10 +224,10 @@ double jpacPhoto::wigner_d_int(int j, int lam1, int lam2, double theta)
 std::complex<double> jpacPhoto::wigner_d_int_cos(int j, int lam1, int lam2, double cosine)
 {
     // Careful because this loses the +- phase of the sintheta. 
-    std::complex<double> sine = sqrt(xr - cosine * cosine);
+    std::complex<double> sine = sqrt(XR - cosine * cosine);
 
-    std::complex<double> sinhalf =  sqrt((xr - cosine) / 2.);
-    std::complex<double> coshalf =  sqrt((xr + cosine) / 2.);
+    std::complex<double> sinhalf =  sqrt((XR - cosine) / 2.);
+    std::complex<double> coshalf =  sqrt((XR + cosine) / 2.);
 
     double phase = 1.;
     // If first lam argument is smaller, switch them

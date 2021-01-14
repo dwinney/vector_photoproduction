@@ -9,7 +9,7 @@
 
 //------------------------------------------------------------------------------
 // Combine everything and contract indices
-std::complex<double> jpacPhoto::rarita_exchange::helicity_amplitude(std::array<int, 4> helicities, double xs, double xt)
+std::complex<double> jpacPhoto::rarita_exchange::helicity_amplitude(std::array<int, 4> helicities, double s, double t)
 {
     int lam_gam = helicities[0];
     int lam_targ = helicities[1];
@@ -17,7 +17,7 @@ std::complex<double> jpacPhoto::rarita_exchange::helicity_amplitude(std::array<i
     int lam_rec = helicities[3];
 
     // Store the invariant energies to avoid having to pass them around 
-    s = xs; t = xt, theta = kinematics->theta_s(xs, xt);
+    _s = s; _t = t, _theta = _kinematics->theta_s(s, t);
 
     std::complex<double> result = 0.;
     for (int i = 0; i < 4; i++)
@@ -41,11 +41,11 @@ std::complex<double> jpacPhoto::rarita_exchange::helicity_amplitude(std::array<i
 std::complex<double> jpacPhoto::rarita_exchange::g_bar(int mu, int nu)
 {
     std::complex<double> result;
-    result = exchange_momentum(mu) * exchange_momentum(nu) / mEx2;
+    result = exchange_momentum(mu) * exchange_momentum(nu) / _mEx2;
 
     if (mu == nu)
     {
-        result -= metric[mu];
+        result -= METRIC[mu];
     }
 
     return result;
@@ -60,8 +60,8 @@ std::complex<double> jpacPhoto::rarita_exchange::slashed_g_bar(int mu, int i, in
     {
         std::complex<double> temp;
         temp  = g_bar(mu, nu);
-        temp *= metric[nu];
-        temp *= gamma_matrices[nu][i][j];
+        temp *= METRIC[nu];
+        temp *= GAMMA[nu][i][j];
 
         result += temp;
     }
@@ -77,13 +77,13 @@ std::complex<double> jpacPhoto::rarita_exchange::relative_momentum(int mu, std::
 
     if ((in_out == "in") || (in_out == "top") || (in_out == "initial") )
     {
-        q1_mu = kinematics->initial_state->q(mu, s, 0.);
-        q2_mu = kinematics->initial_state->p(mu, s, M_PI);
+        q1_mu = _kinematics->_initial_state->q(mu, _s, 0.);
+        q2_mu = _kinematics->_initial_state->p(mu, _s, PI);
     }
     else if ((in_out == "out") || (in_out == "bot") || (in_out == "final"))
     {
-        q1_mu = kinematics->final_state->q(mu, s, theta);
-        q2_mu = kinematics->final_state->p(mu, s, theta + M_PI);
+        q1_mu = _kinematics->_final_state->q(mu, _s, _theta);
+        q2_mu = _kinematics->_final_state->p(mu, _s, _theta + PI);
     }
     else
     {
@@ -107,17 +107,17 @@ std::complex<double> jpacPhoto::rarita_exchange::rarita_propagator(int i, int j)
         {
             std::complex<double> term_1;
             term_1  = relative_momentum(mu, "in");
-            term_1 *= metric[mu];
+            term_1 *= METRIC[mu];
             term_1 *= g_bar(mu, nu);
-            term_1 *= metric[nu];
+            term_1 *= METRIC[nu];
             term_1 *= relative_momentum(nu, "out");
 
             std::complex<double> term_2;
             term_2  = relative_momentum(mu, "in");
-            term_2 *= metric[mu];
+            term_2 *= METRIC[mu];
             term_2 *= slashed_g_bar(mu, i, j);
             term_2 *= slashed_g_bar(nu, i, j);
-            term_2 *= metric[nu];
+            term_2 *= METRIC[nu];
             term_2 *= relative_momentum(nu, "out");
 
             result += -term_1 + term_2 / 3.;

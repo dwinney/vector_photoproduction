@@ -25,25 +25,26 @@ namespace jpacPhoto
         // constructor
         dirac_exchange(reaction_kinematics * xkinem, double mass, std::string name = "dirac_exchange")
         : amplitude(xkinem, name),
-            mEx(mass), mEx2(mass*mass)
+            _mEx(mass), _mEx2(mass*mass)
         {
             set_nParams(2);
-            check_JP(xkinem->JP);
+            check_JP(xkinem->_jp);
         };
 
         // Setting utility
         void set_params(std::vector<double> params)
         {
             check_nParams(params);
-            gGam = params[0];
-            gVec = params[1];
+            _gGam = params[0];
+            _gVec = params[1];
         };
 
-        // Whether or not to include an exponential form factor (default false)
+        // Whether or not to include an form factor (default false)
+        // FF = 0 (none), 1 (exponential), 2 (monopole)
         inline void set_formfactor(int FF, double bb = 0.)
         {
-            IF_FF = FF;
-            cutoff = bb;
+            _useFF = FF;
+            _cutoff = bb;
         }
 
         // Assemble the helicity amplitude by contracting the spinor indices
@@ -54,9 +55,9 @@ namespace jpacPhoto
         {
             switch (i)
             {
-            case 3: ScTOP = true; ScBOT = true; break;
-            case 2: ScTOP = true; break;
-            case 1: ScBOT = true; break;
+            case 3: _scTOP = true; _scBOT = true; break;
+            case 2: _scTOP = true; break;
+            case 1: _scBOT = true; break;
             }
         }
 
@@ -68,20 +69,21 @@ namespace jpacPhoto
 
         protected:
 
-        // DEBUGGING PARAMS
-        bool ScTOP = false, ScBOT = false;
-
+        // possibility to set the top and bottom vertices to be scalar type 
+        // For debugging purposes only
+        bool _scTOP = false, _scBOT = false;
+    
         // Exchange nucleon mass
-        double u;
-        double mEx, mEx2;
+        double _u;
+        double _mEx, _mEx2;
 
         // Form factor parameters
-        int IF_FF = 0;
-        double cutoff = 0.;
+        int _useFF = 0;
+        double _cutoff = 0.;
         double form_factor();
 
         // couplings
-        double gGam = 0., gVec = 0.;
+        double _gGam = 0., _gVec = 0.;
 
         // Should be exactly u_man(s, zs);
         double exchange_mass();

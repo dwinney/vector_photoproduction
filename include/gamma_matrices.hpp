@@ -18,10 +18,10 @@
 namespace jpacPhoto
 {
     // Mostly minus metric
-    const double metric[4] = {1., -1., -1., -1.};
+    const double METRIC[4] = {1., -1., -1., -1.};
 
 	// Gamma matrix vector in Dirac basis
-	const std::complex<double> gamma_matrices[4][4][4] =
+	const std::complex<double> GAMMA[4][4][4] =
 	{
 	  //gamma0
 		{ { 1., 0., 0., 0. },
@@ -34,10 +34,10 @@ namespace jpacPhoto
 	    { 0., -1., 0., 0. },
 	    { -1., 0., 0., 0. } },
 	  //gamma2
-		{ { 0., 0., 0., -xi },
-	    { 0., 0., xi, 0. },
-	    { 0.,  xi, 0., 0. },
-	    { -xi, 0., 0., 0. } },
+		{ { 0., 0., 0., -XI },
+	    { 0., 0., XI, 0. },
+	    { 0.,  XI, 0., 0. },
+	    { -XI, 0., 0., 0. } },
 	  //gamma3
 		{ { 0., 0., 1., 0. },
 	    { 0., 0., 0., -1. },
@@ -46,7 +46,7 @@ namespace jpacPhoto
 	};
 
 	// Gamma_5
-	const std::complex<double> gamma_5[4][4] =
+	const std::complex<double> GAMMA_5[4][4] =
 	{
         { 0., 0., 1., 0. },
         { 0., 0., 0., 1. },

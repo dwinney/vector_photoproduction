@@ -12,9 +12,9 @@
 std::complex<double> jpacPhoto::amplitude_sum::helicity_amplitude(std::array<int, 4> helicities, double s, double t)
 {
     std::complex<double> result = 0.;
-    for (int i = 0; i < amps.size(); i++)
+    for (int i = 0; i < _amps.size(); i++)
     {
-        result += amps[i]->helicity_amplitude(helicities, s, t);
+        result += _amps[i]->helicity_amplitude(helicities, s, t);
     }
 
     return result;

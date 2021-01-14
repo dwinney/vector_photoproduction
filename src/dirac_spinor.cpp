@@ -11,13 +11,13 @@
 // Energy part
 std::complex<double> jpacPhoto::dirac_spinor::omega(int sign, double s)
 {
-    if (ANTI_PARTICLE)
+    if (_antiParticle)
     {
         sign *= -1;
     }
 
-    std::complex<double> E = state->energy_B(s);
-    return sqrt(xr * E + double(sign) * state->get_mB());
+    std::complex<double> E = _state->energy_B(s);
+    return sqrt(XR * E + double(sign) * _state->get_mB());
 }
 
 // ---------------------------------------------------------------------------
@@ -48,8 +48,11 @@ std::complex<double> jpacPhoto::dirac_spinor::component(int i, int lambda, doubl
         case 1: return double(lambda) * omega(+1, s) * half_angle(-lambda, theta);
         case 2: return double(lambda) * omega(-1, s) * half_angle( lambda, theta);
         case 3: return                  omega(-1, s) * half_angle(-lambda, theta);
-        default : std::cout << "dirac_spinor: Invalid component index " << i << " passed as argument!\n";
-                  return 0.;
+        default : 
+        {
+            std::cout << "dirac_spinor: Invalid component index " << i << " passed as argument!\n";
+            return 0.;
+        }
     }
 };
 

@@ -34,20 +34,19 @@ namespace jpacPhoto
 
         // Constructor
         // need a pointer to kinematic object, pointer to trajectory.
-        // Optional OLDMODEL if true will default to helicity conserving amplitude
-        pomeron_exchange(reaction_kinematics * xkinem, regge_trajectory * alpha, int model_ = 0, std::string name = "pomeron_exchange")
-        : amplitude(xkinem, name), pomeron_traj(alpha), model(model_)
+        pomeron_exchange(reaction_kinematics * xkinem, regge_trajectory * alpha, int model = 0, std::string name = "pomeron_exchange")
+        : amplitude(xkinem, name), _traj(alpha), _model(model)
         {
             set_nParams(2);
-            check_JP(xkinem->JP);
+            check_JP(xkinem->_jp);
         };
 
         // Setting utility
         void set_params(std::vector<double> params)
         {
             check_nParams(params);
-            norm = params[0];
-            b0 = params[1];
+            _norm = params[0];
+            _b0 = params[1];
         };
 
         // Assemble the helicity amplitude by contracting the lorentz indices
@@ -62,13 +61,13 @@ namespace jpacPhoto
         private:
         
         // Which model to use. 
-        int model = 0; 
+        int _model = 0; 
         // 0 - model in [1] Lesniak-Szcepaniak
         // 1 - model in [2] Helicity conserving
         // 2 - model in [3] Wang et al.
 
-        double norm = 0., b0 = 0.; // Regge factor parameters: normalization and t-slope
-        regge_trajectory * pomeron_traj;
+        double _norm = 0., _b0 = 0.; // Regge factor parameters: normalization and t-slope
+        regge_trajectory * _traj;
 
         // Photon - Vector - Pomeron vertex
         std::complex<double> top_vertex(int mu, int lam_gam, int lam_vec);

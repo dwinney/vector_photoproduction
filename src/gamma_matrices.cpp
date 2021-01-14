@@ -14,11 +14,11 @@ std::complex<double> jpacPhoto::sigma(int mu, int nu, int i, int j)
     std::complex<double> result = 0.;
     for (int k = 0; k < 4; k++)
     {
-        result += gamma_matrices[mu][i][k] * gamma_matrices[nu][k][j];
-        result -= gamma_matrices[nu][i][k] * gamma_matrices[mu][k][j];
+        result += GAMMA[mu][i][k] * GAMMA[nu][k][j];
+        result -= GAMMA[nu][i][k] * GAMMA[mu][k][j];
     }
 
-    result *= xr / 2.;
+    result *= XR / 2.;
 
     return result;
 };

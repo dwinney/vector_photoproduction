@@ -36,33 +36,33 @@ namespace jpacPhoto
         public:
         // constructor for fixed meson exchange
         pseudoscalar_exchange(reaction_kinematics * xkinem, double mass, std::string name = "pseudoscalar_exchange")
-        : amplitude(xkinem, name), mEx2(mass*mass), REGGE(false)
+        : amplitude(xkinem, name), _mEx2(mass*mass), _reggeized(false)
         {
             set_nParams(2);
-            check_JP(xkinem->JP);
+            check_JP(xkinem->_jp);
         };
 
         // constructors for regge exchange
         pseudoscalar_exchange(reaction_kinematics * xkinem, linear_trajectory * traj, std::string name = "pseudoscalar_exchange")
-        : amplitude(xkinem, name), alpha(traj), REGGE(true)
+        : amplitude(xkinem, name), _alpha(traj), _reggeized(true)
         {
             set_nParams(2);
-            check_JP(xkinem->JP);
+            check_JP(xkinem->_jp);
         };
 
         // Setting utility
         void set_params(std::vector<double> params)
         {
             check_nParams(params);
-            gGamma = params[0];
-            gNN = params[1];
+            _gGamma = params[0];
+            _gNN = params[1];
         };
 
         // Whether or not to include an exponential form factor (default false)
         void set_formfactor(bool FF, double bb = 0.)
         {
-            IF_FF = FF;
-            b = bb;
+            _useFF = FF;
+            _b = bb;
         }
 
         // Assemble the helicity amplitude by contracting the spinor indices
@@ -77,25 +77,25 @@ namespace jpacPhoto
         private:
 
         // Whether to use fixed-spin propagator (false) or regge (true)
-        bool REGGE;
+        bool _reggeized;
 
         // Mass of the exchanged pseudo-scalar (if REGGE = false)
         // ignored otherwise
-        double mEx2;
+        double _mEx2;
 
         // Regge trajectory for the pion (if REGGE = true)
         // ignored otherwise
-        linear_trajectory * alpha;
+        linear_trajectory * _alpha;
 
         // Coupling constants
-        double gGamma = 0.; // Gamma - Axial - Pseudoscalar coupling 
-        double gNN = 0.;    // Pseudoscalar - Nucleon coupling
+        double _gGamma = 0.; // Gamma - Axial - Pseudoscalar coupling 
+        double _gNN = 0.;    // Pseudoscalar - Nucleon coupling
 
-        bool IF_FF = false; // Whether to include the exponential form factor
-        double b = 0.; // "t-slope" parameter in the FF
+        bool _useFF = false; // Whether to include the exponential form factor
+        double _b = 0.; // "t-slope" parameter in the FF
 
         // Whether to switch to using the feynman rules
-        bool FOUR_VECS = false; 
+        bool _useFourVecs = false; 
 
         // Photon - pseudoscalar - Axial vertex
         std::complex<double> top_vertex(double lam_gam, double lam_vec);

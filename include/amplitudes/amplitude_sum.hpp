@@ -22,7 +22,7 @@ namespace jpacPhoto
   {
   private:
     // Store a vector of all the amplitudes you want to sum incoherently
-    std::vector<amplitude*> amps;
+    std::vector<amplitude*> _amps;
 
   public:
     // Empty constructor
@@ -32,21 +32,21 @@ namespace jpacPhoto
 
     // Constructor with a vector already set up
     amplitude_sum(reaction_kinematics * xkinem, std::vector<amplitude*> vec, std::string identifer = "amplitude_sum")
-    : amplitude(xkinem, identifer), amps(vec)
+    : amplitude(xkinem, identifer), _amps(vec)
     {};
 
     // Add a new amplitude to the vector
     void add_amplitude(amplitude * new_amp)
     {
-      amps.push_back(new_amp);
+      _amps.push_back(new_amp);
     };
 
     // Add all the members of an existing sum to a new sum
-    void add_amplitude(amplitude_sum new_sum)
+    void add_amplitude(amplitude_sum * new_sum)
     {
-      for (int i = 0; i < new_sum.amps.size(); i++)
+      for (int i = 0; i < new_sum->_amps.size(); i++)
       {
-        amps.push_back(new_sum.amps[i]);
+        _amps.push_back(new_sum->_amps[i]);
       }
     };
 

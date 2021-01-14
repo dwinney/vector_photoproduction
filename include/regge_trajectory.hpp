@@ -19,16 +19,16 @@ class regge_trajectory
 
     // constructor
     regge_trajectory(std::string name = "")
-    : parent(name)
+    : _parent(name)
     {};
 
     regge_trajectory(int sig, std::string name = "")
-    : signature(sig), parent(name)
+    : _signature(sig), _parent(name)
     {};
 
     // copy constructor
     regge_trajectory(const regge_trajectory & old)
-    : parent(old.parent), signature(old.signature)
+    : _parent(old._parent), _signature(old._signature)
     {};
 
     // Only need a function to evaluate the trajectory at some s
@@ -38,8 +38,8 @@ class regge_trajectory
 
     // These parameters define the trajectory
     // name, spin, and mass of the lowest lying resonance on the parent trajectory
-    std::string parent;
-    int signature;
+    std::string _parent;
+    int _signature;
 };
 
 
@@ -49,7 +49,7 @@ class linear_trajectory : public regge_trajectory
     private:
 
     // Intercept and slope
-    double a0, aprime;
+    double _a0, _aprime;
 
     public:
 
@@ -59,29 +59,29 @@ class linear_trajectory : public regge_trajectory
     // Parameterized constructor
     linear_trajectory(int sig, double inter, double slope, std::string name = "")
     : regge_trajectory(sig, name),
-      a0(inter), aprime(slope)
+      _a0(inter), _aprime(slope)
     {};
 
     // copy Constructor
     linear_trajectory(const linear_trajectory & old)
     : regge_trajectory(old),
-      a0(old.a0), aprime(old.aprime)
+      _a0(old._a0), _aprime(old._aprime)
     {};
 
     // Setting utility
     void set_params(double inter, double slope)
     {
-        a0 = inter; aprime = slope;
+        _a0 = inter; _aprime = slope;
     };
 
     std::complex<double> eval(double s)
     {
-        return a0 + aprime * s;
+        return _a0 + _aprime * s;
     };
 
     std::complex<double> slope(double s = 0.)
     {
-        return aprime;
+        return _aprime;
     };
 };
 

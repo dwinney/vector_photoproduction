@@ -37,46 +37,43 @@ int main( int argc, char** argv )
   // Preliminaries
   // ---------------------------------------------------------------------------
 
-  double g_NN = sqrt(4. * M_PI * 13.81); // Nucleon coupling same for all
+  double g_NN = sqrt(4. * PI * 13.81); // Nucleon coupling same for all
   double LamPi = .9;  // 900 MeV cutoff for formfactor
   double bPi = 1. / (LamPi * LamPi);
 
   // Zc(3900)
-  double mZc = 3.8884; // GeV
-  reaction_kinematics * kZc = new reaction_kinematics(mZc);
+  reaction_kinematics * kZc = new reaction_kinematics(M_ZC3900);
   kZc->set_JP(1, 1);
 
   double gc_Psi = 1.91; // psi coupling before VMD scaling
-  double gc_Gamma = e * fJpsi * gc_Psi / mJpsi;
+  double gc_Gamma = E * F_JPSI * gc_Psi / M_JPSI;
   std::vector<double> Zc_couplings = {gc_Gamma, g_NN};
 
   // Zb(10610)
-  double mZb = 10.6072;
-  reaction_kinematics * kZb = new reaction_kinematics(mZb);
+  reaction_kinematics * kZb = new reaction_kinematics(M_ZB10610);
   kZb->set_JP(1, 1);
 
   double gb_Ups1 = 0.49, gb_Ups2 = 3.30, gb_Ups3 = 9.22;
-  double gb_Gamma = e * (fUpsilon1S * gb_Ups1 / mUpsilon1S 
-                       + fUpsilon2S * gb_Ups2 / mUpsilon2S
-                       + fUpsilon3S * gb_Ups3 / mUpsilon3S);  
+  double gb_Gamma = E * (F_UPSILON1S * gb_Ups1 / M_UPSILON1S 
+                       + F_UPSILON2S * gb_Ups2 / M_UPSILON2S
+                       + F_UPSILON3S * gb_Ups3 / M_UPSILON3S); 
   std::vector<double> Zb_couplings = {gb_Gamma, g_NN};
 
   
   // Zb(10650)
-  double mZbp = 10.6522;
-  reaction_kinematics * kZbp = new reaction_kinematics(mZbp);
+  reaction_kinematics * kZbp = new reaction_kinematics(M_ZB10650);
   kZbp->set_JP(1, 1);
 
   double gbp_Ups1 = 0.21, gbp_Ups2 = 1.47, gbp_Ups3 = 4.8;
-  double gbp_Gamma = e * (fUpsilon1S * gbp_Ups1 / mUpsilon1S 
-                        + fUpsilon2S * gbp_Ups2 / mUpsilon2S
-                        + fUpsilon3S * gbp_Ups3 / mUpsilon3S);  
+  double gbp_Gamma = E * (F_UPSILON1S * gbp_Ups1 / M_UPSILON1S 
+                       +  F_UPSILON2S * gbp_Ups2 / M_UPSILON2S
+                       +  F_UPSILON3S * gbp_Ups3 / M_UPSILON3S);  
   std::vector<double> Zbp_couplings = {gbp_Gamma, g_NN};
   
   // Pion trajectory 
   int signature = +1;
   double alpha_prime = 0.7; // GeV^-2
-  double alpha_0 =  - alpha_prime * mPi2;
+  double alpha_0 =  - alpha_prime * M2_PION;
   linear_trajectory * alpha = new linear_trajectory(signature, alpha_0, alpha_prime);
 
   // ---------------------------------------------------------------------------
@@ -131,7 +128,7 @@ int main( int argc, char** argv )
   // Print the desired observable for each amplitude
   for (int n = 0; n < amps.size(); n++)
   {
-    std::cout << std::endl << "Printing amplitude: " << amps[n]->identifier << "\n";
+    std::cout << std::endl << "Printing amplitude: " << amps[n]->_identifier << "\n";
 
     auto F = [&](double x)
     {
@@ -139,10 +136,10 @@ int main( int argc, char** argv )
     };
 
     std::array<std::vector<double>, 2> x_fx, x_fx1;
-    if (xmin < amps[n]->kinematics->Wth())
+    if (xmin < amps[n]->_kinematics->Wth())
     {
-        x_fx = vec_fill(N, F, amps[n]->kinematics->Wth() + EPS, xmax, PRINT_TO_COMMANDLINE);
-        x_fx[0].insert(x_fx[0].begin(), amps[n]->kinematics->Wth());
+        x_fx = vec_fill(N, F, amps[n]->_kinematics->Wth() + EPS, xmax, PRINT_TO_COMMANDLINE);
+        x_fx[0].insert(x_fx[0].begin(), amps[n]->_kinematics->Wth());
         x_fx[1].insert(x_fx[1].begin(), 0.);
     }
     else
@@ -150,7 +147,7 @@ int main( int argc, char** argv )
       x_fx = vec_fill(N, F, xmin, xmax, PRINT_TO_COMMANDLINE);
     }
 
-    plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->identifier);
+    plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->_identifier);
   }
 
   plotter->SetXaxis(xlabel, xmin, xmax);

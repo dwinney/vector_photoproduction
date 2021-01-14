@@ -99,7 +99,7 @@ int main( int argc, char** argv )
     // Print the desired observable for each amplitude
     for (int n = 0; n < amps.size(); n++)
     {     
-        double xmin = (amps[n]->kinematics->Wth() + EPS) / xNs[n];
+        double xmin = (amps[n]->_kinematics->Wth() + EPS) / xNs[n];
 
         auto F = [&](double x)
         {
@@ -109,12 +109,12 @@ int main( int argc, char** argv )
 
         std::array<std::vector<double>, 2> x_fx, x_fx2; 
 
-        std::cout << std::endl << "Printing longitudinal xsection: " << amps[n]->identifier << "\n";
+        std::cout << std::endl << "Printing longitudinal xsection: " << amps[n]->_identifier << "\n";
         x_fx = vec_fill(N, F, xmin, xmax, print_to_cmd);
-        plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->identifier);
+        plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->_identifier);
 
         amps[n]->set_LT(1);
-        std::cout << std::endl << "Printing transverse xsection: " << amps[n]->identifier << "\n";
+        std::cout << std::endl << "Printing transverse xsection: " << amps[n]->_identifier << "\n";
         x_fx2 = vec_fill  (N, F, xmin, xmax, print_to_cmd);
         plotter->AddDashedEntry(x_fx2[0], x_fx2[1]);
     }

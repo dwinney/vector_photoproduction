@@ -26,7 +26,7 @@ namespace jpacPhoto
 
         // Constructor
         polarization_vector(two_body_state * xstate)
-            : state(xstate)
+            : _state(xstate)
         {};
 
         // Destructor
@@ -38,7 +38,7 @@ namespace jpacPhoto
 
         private:
         
-        two_body_state * state;
+        two_body_state * _state;
     };
 };
 

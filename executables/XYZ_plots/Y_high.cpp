@@ -42,20 +42,19 @@ int main( int argc, char** argv )
     double A_HE = 0.16;
 
     // J/Psi
-    reaction_kinematics * kJpsi = new reaction_kinematics(mJpsi);
+    reaction_kinematics * kJpsi = new reaction_kinematics(M_JPSI);
     kJpsi->set_JP(1, -1);
     double R_Jpsi = 1.;
 
     // Psi(2S)
-    reaction_kinematics * kPsi2s = new reaction_kinematics(mPsi2S);
+    reaction_kinematics * kPsi2s = new reaction_kinematics(M_PSI2S);
     kPsi2s->set_JP(1, -1);
     double R_Psi2s = 0.55;
 
     // Y(4260)
-    double mY = 4.220;
-    reaction_kinematics * kY = new reaction_kinematics(mY);
+    reaction_kinematics * kY = new reaction_kinematics(M_Y4260);
     kY->set_JP(1, -1);
-    double R_Y = 1.55;
+    double R_Y = 0.84;
 
     // ---------------------------------------------------------------------------
     // High-enegy Amplitudes
@@ -103,7 +102,7 @@ int main( int argc, char** argv )
     // Print the desired observable for each amplitude
     for (int n = 0; n < amps.size(); n++)
     {
-        std::cout << std::endl << "Printing amplitude: " << amps[n]->identifier << "\n";
+        std::cout << std::endl << "Printing amplitude: " << amps[n]->_identifier << "\n";
 
         auto F = [&](double x)
         {
@@ -111,16 +110,16 @@ int main( int argc, char** argv )
         };
 
         std::array<std::vector<double>, 2> x_fx;
-        if (xmin < amps[n]->kinematics->Wth())
+        if (xmin < amps[n]->_kinematics->Wth())
         {
-            x_fx = vec_fill(N, F, amps[n]->kinematics->Wth() + EPS, xmax, true);
+            x_fx = vec_fill(N, F, amps[n]->_kinematics->Wth() + EPS, xmax, true);
         }
         else
         {
             x_fx = vec_fill(N, F, xmin, xmax, true);
         }
 
-        plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->identifier);
+        plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->_identifier);
     }
 
     plotter->SetXaxis(ROOT_italics("W_{#gammap}") + "  [GeV]", std::floor(xmin), xmax);

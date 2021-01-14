@@ -16,21 +16,24 @@
 std::complex<double> jpacPhoto::polarization_vector::component(int i, int lambda, double s, double theta)
 {
     // Check for massless photon
-    if (lambda == 0 && abs(state->get_mV()) < 0.01){return 0.;}
+    if (lambda == 0 && abs(_state->get_mV()) < 0.01)
+    {   
+        return 0.;
+    }
 
     int id = 10 * abs(lambda) + i;
     switch (id)
     {
         // Longitudinal
-        case 0: return state->momentum(s) / state->get_mV();
-        case 1: return state->energy_V(s) * sin(theta) / state->get_mV();
+        case 0: return _state->momentum(s) / _state->get_mV();
+        case 1: return _state->energy_V(s) * sin(theta) / _state->get_mV();
         case 2: return 0.;
-        case 3: return state->energy_V(s) * cos(theta) / state->get_mV();
+        case 3: return _state->energy_V(s) * cos(theta) / _state->get_mV();
 
         // Transverse
         case 10: return 0.;
         case 11: return - double(lambda) * cos(theta) / sqrt(2.);
-        case 12: return - xi / sqrt(2.);
+        case 12: return - XI / sqrt(2.);
         case 13: return double(lambda) * sin(theta) / sqrt(2.);
 
         default: 

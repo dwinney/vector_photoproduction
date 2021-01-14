@@ -36,25 +36,28 @@ int main( int argc, char** argv )
     // ---------------------------------------------------------------------------
 
     // Chi_c1(1P)
-    double mChi = 3.510;
-    reaction_kinematics * kChi = new reaction_kinematics(mChi);
+    reaction_kinematics * kChi = new reaction_kinematics(M_CHIC1);
     kChi->set_JP(1, 1);
 
     // X(3872)
-    double mX = 3.87169;
-    reaction_kinematics * kX = new reaction_kinematics(mX);
+    reaction_kinematics * kX = new reaction_kinematics(M_X3872);
     kX->set_JP(1, 1);
 
     // Nucleon couplings 
     double gV_omega = 16., gT_omega = 0.;
     double LamOmega = 1.2; // cutoff
-
     double gV_rho = 2.4, gT_rho = 14.6;
     double LamRho = 1.4; // cutoff
-
     double gV_phi = -6.2, gT_phi = 2.1;
-
     double gV_psi = 1.6E-3, gT_psi = 0.;
+
+    // Photon couplings
+    double gChi_omega   = 5.2E-4;
+    double gChi_rho     = 9.2E-4;
+    double gChi_phi     = 4.2E-4;
+    double gChi_psi     = 1.;
+    double gX_omega     = 8.2E-3;
+    double gX_rho       = 3.6E-3;
 
     // ---------------------------------------------------------------------------
     // Low-Energy Amplitudes
@@ -62,22 +65,18 @@ int main( int argc, char** argv )
 
     ////////////////////
     // Chi_c1(1P)
-    double gChi_omega = 5.2E-4;
-    vector_exchange Chi_omega(kChi, mOmega, "#omega");
+    vector_exchange Chi_omega(kChi, M_OMEGA, "#omega");
     Chi_omega.set_params({gChi_omega, gV_omega, gT_omega});
     Chi_omega.set_formfactor(1, LamOmega);
 
-    double gChi_rho = 9.2E-4;
-    vector_exchange Chi_rho(kChi, mRho, "#rho");
+    vector_exchange Chi_rho(kChi, M_RHO, "#rho");
     Chi_rho.set_params({gChi_rho, gV_rho, gT_rho});
     Chi_rho.set_formfactor(1, LamRho);
 
-    double gChi_phi = 4.2E-4;
-    vector_exchange Chi_phi(kChi, mPhi, "#phi");
+    vector_exchange Chi_phi(kChi, M_PHI, "#phi");
     Chi_phi.set_params({gChi_phi, gV_phi, gT_phi});
 
-    double gChi_psi = 1.;
-    vector_exchange Chi_psi(kChi, mJpsi, "#psi");
+    vector_exchange Chi_psi(kChi, M_JPSI, "#psi");
     Chi_psi.set_params({gChi_psi, gV_psi, gT_psi});
 
     std::vector<amplitude*> chi_exchanges = {&Chi_omega, &Chi_rho, &Chi_phi, &Chi_psi};
@@ -86,13 +85,11 @@ int main( int argc, char** argv )
 
     //////////////////
     // X(3872)
-    double gX_omega = 8.2E-3;
-    vector_exchange X_omega(kX, mOmega, "#omega");
+    vector_exchange X_omega(kX, M_OMEGA, "#omega");
     X_omega.set_params({gX_omega, gV_omega, gT_omega});
     X_omega.set_formfactor(1, LamOmega);
 
-    double gX_rho = 3.6E-3;
-    vector_exchange X_rho(kX, mRho, "#rho");
+    vector_exchange X_rho(kX, M_RHO, "#rho");
     X_rho.set_params({gX_rho, gV_rho, gT_rho});
     X_rho.set_formfactor(1, LamRho);
 
@@ -133,7 +130,7 @@ int main( int argc, char** argv )
     // Print the desired observable for each amplitude
     for (int n = 0; n < amps.size(); n++)
     {
-        std::cout << std::endl << "Printing amplitude: " << amps[n]->identifier << "\n";
+        std::cout << std::endl << "Printing amplitude: " << amps[n]->_identifier << "\n";
 
         auto F = [&](double x)
         {
@@ -141,10 +138,10 @@ int main( int argc, char** argv )
         };
 
         std::array<std::vector<double>, 2> x_fx, x_fx1;
-        if (xmin < amps[n]->kinematics->Wth())
+        if (xmin < amps[n]->_kinematics->Wth())
         {
-            x_fx = vec_fill(N, F, amps[n]->kinematics->Wth() + EPS, xmax, PRINT_TO_COMMANDLINE);
-            x_fx[0].insert(x_fx[0].begin(), amps[n]->kinematics->Wth());
+            x_fx = vec_fill(N, F, amps[n]->_kinematics->Wth() + EPS, xmax, PRINT_TO_COMMANDLINE);
+            x_fx[0].insert(x_fx[0].begin(), amps[n]->_kinematics->Wth());
             x_fx[1].insert(x_fx[1].begin(), 0.);
         }
         else
@@ -152,7 +149,7 @@ int main( int argc, char** argv )
             x_fx = vec_fill(N, F, xmin, xmax, PRINT_TO_COMMANDLINE);
         }
 
-        plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->identifier);
+        plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->_identifier);
     }
 
     plotter->SetXaxis(xlabel, xmin, xmax);

@@ -15,7 +15,7 @@
 
 namespace jpacPhoto
 {
-    const std::vector< std::array<int, 4> > spin_zero_helicities =
+    const std::vector< std::array<int, 4> > SPIN_ZERO_HELICITIES =
     {
     //  {  γ,  p,  S,  p'}
         {  1, -1,  0, -1},
@@ -28,7 +28,7 @@ namespace jpacPhoto
         { -1,  1,  0,  1} 
     };
 
-    const std::vector< std::array<int, 4> > spin_one_helicities =
+    const std::vector< std::array<int, 4> > SPIN_ONE_HELICITIES =
     {
     //  {  γ,  p,  V,  p'}
         {  1, -1,  1, -1},
@@ -57,7 +57,7 @@ namespace jpacPhoto
         { -1,  1, -1,  1}
     };
 
-    const std::vector< std::array<int, 4> > spin_two_helicities =
+    const std::vector< std::array<int, 4> > SPIN_TWO_HELICITIES =
     {
     //  {  γ,  p,  V,  p'}
         {  1, -1,  2, -1},
@@ -107,9 +107,9 @@ namespace jpacPhoto
     {
         switch (J)
         {   
-            case 0: return spin_zero_helicities;
-            case 1: return spin_one_helicities;
-            case 2: return spin_two_helicities;
+            case 0: return SPIN_ZERO_HELICITIES;
+            case 1: return SPIN_ONE_HELICITIES;
+            case 2: return SPIN_TWO_HELICITIES;
             default:
             {
                 std::cout << "Error! Amplitudes for spin J = " << J << " not yet implemented. Quitting...\n";

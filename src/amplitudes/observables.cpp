@@ -10,26 +10,26 @@
 
 // ---------------------------------------------------------------------------
 
-void jpacPhoto::amplitude::check_cache(double _s, double _t)
+void jpacPhoto::amplitude::check_cache(double s, double t)
 {
     // check if saved version its the one we want
-    if (  (abs(cached_s - _s) < 0.00001) && 
-          (abs(cached_t - _t) < 0.00001) &&
-          (abs(cached_mX2 - kinematics->mX2) < 0.00001) // important to make sure the value of mX2 hasnt chanced since last time
+    if (  (abs(_cached_s - s) < 0.00001) && 
+          (abs(_cached_t - t) < 0.00001) &&
+          (abs(_cached_mX2 - _kinematics->_mX2) < 0.00001) // important to make sure the value of mX2 hasnt chanced since last time
        )
     {
         return; // do nothing
     }
     else // save a new set
     {
-        cached_helicity_amplitude.clear();
-        for (int i = 0; i < kinematics->nAmps; i++)
+        _cached_helicity_amplitude.clear();
+        for (int i = 0; i < _kinematics->_nAmps; i++)
         {
-            cached_helicity_amplitude.push_back(helicity_amplitude(kinematics->helicities[i], _s, _t));
+            _cached_helicity_amplitude.push_back(helicity_amplitude(_kinematics->_helicities[i], s, t));
         };
 
         // update cache info
-        cached_mX2 = kinematics->mX2; cached_s = _s; cached_t = _t;
+        _cached_mX2 = _kinematics->_mX2; _cached_s = s; _cached_t = t;
     }
 
     return;
@@ -43,9 +43,9 @@ double jpacPhoto::amplitude::probability_distribution(double s, double t)
     check_cache(s, t);
 
     double sum = 0.;
-    for (int i = 0; i < kinematics->nAmps; i++)
+    for (int i = 0; i < _kinematics->_nAmps; i++)
     {
-        std::complex<double> amp_i = cached_helicity_amplitude[i];
+        std::complex<double> amp_i = _cached_helicity_amplitude[i];
         sum += std::real(amp_i * conj(amp_i));
     }
 
@@ -60,8 +60,8 @@ double jpacPhoto::amplitude::differential_xsection(double s, double t)
     double sum = probability_distribution(s, t);
 
     double norm = 1.;
-    norm /= 64. * M_PI * s;
-    norm /= real(pow(kinematics->initial_state->momentum(s), 2.));
+    norm /= 64. * PI * s;
+    norm /= real(pow(_kinematics->_initial_state->momentum(s), 2.));
     norm /= (2.56819E-6); // Convert from GeV^-2 -> nb
     norm /= 4.; // Average over initial state helicites
 
@@ -82,8 +82,8 @@ double jpacPhoto::amplitude::integrated_xsection(double s)
     ROOT::Math::Functor1D wF(F);
     ig.SetFunction(wF);
 
-    double t_min = kinematics->t_man(s, 0.);
-    double t_max = kinematics->t_man(s, M_PI);
+    double t_min = _kinematics->t_man(s, 0.);
+    double t_max = _kinematics->t_man(s, PI);
 
     return ig.Integral(t_max, t_min);
 };
@@ -101,14 +101,14 @@ double jpacPhoto::amplitude::K_LL(double s, double t)
         std::complex<double> squarepp, squarepm;
 
         // Amplitudes with lam_gam = + and lam_recoil = +
-        squarepp = cached_helicity_amplitude[2*i+1];
+        squarepp  = _cached_helicity_amplitude[2*i+1];
         squarepp *= conj(squarepp);
-        sigmapp += real(squarepp);
+        sigmapp  += real(squarepp);
 
         // Amplitudes with lam_gam = + and lam_recoil = -
-        squarepm = cached_helicity_amplitude[2*i];
+        squarepm  = _cached_helicity_amplitude[2*i];
         squarepm *= conj(squarepm);
-        sigmapm += real(squarepm);
+        sigmapm  += real(squarepm);
     }
 
     return (sigmapp - sigmapm) / (sigmapp + sigmapm);
@@ -127,14 +127,14 @@ double jpacPhoto::amplitude::A_LL(double s, double t)
         std::complex<double> squarepp, squarepm;
 
         // Amplitudes with lam_gam = + and lam_targ = +
-        squarepp = cached_helicity_amplitude[i+6];
+        squarepp  = _cached_helicity_amplitude[i+6];
         squarepp *= conj(squarepp);
-        sigmapp += real(squarepp);
+        sigmapp  += real(squarepp);
 
         // Amplitudes with lam_gam = + and lam_targ = -
-        squarepm = cached_helicity_amplitude[i];
+        squarepm  = _cached_helicity_amplitude[i];
         squarepm *= conj(squarepm);
-        sigmapm += real(squarepm);
+        sigmapm  += real(squarepm);
     }
 
     return (sigmapp - sigmapm) / (sigmapp + sigmapm);
@@ -205,10 +205,10 @@ std::complex<double> jpacPhoto::amplitude::SDME(int alpha, int lam, int lamp, do
         (alpha == 0) ? (index = pos_iters[i]) : (index = neg_iters[i]);
 
         std::complex<double> amp_i, amp_j;
-        amp_i = cached_helicity_amplitude[index + k];
-        amp_j = cached_helicity_amplitude[pos_iters[i] + j];
+        amp_i = _cached_helicity_amplitude[index + k];
+        amp_j = _cached_helicity_amplitude[pos_iters[i] + j];
 
-        (alpha == 2) ? (amp_j *= xi * double(kinematics->helicities[pos_iters[i] + j][0])) : (amp_j *= xr);
+        (alpha == 2) ? (amp_j *= XI * double(_kinematics->_helicities[pos_iters[i] + j][0])) : (amp_j *= XR);
 
         result += real(amp_i * conj(amp_j));
     }

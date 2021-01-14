@@ -20,21 +20,21 @@ namespace jpacPhoto
         : amplitude(xkinem, amp_id)
         {
             set_nParams(4);
-            check_JP(xkinem->JP);
+            check_JP(xkinem->_jp);
         };
 
         void set_params(std::vector<double> params)
         {
             check_nParams(params); 
-            Z = params[0];
-            R = params[1];
-            a = params[2];
-            g = params[3];
+            _atomicZ        = params[0];
+            _atomicRadius   = params[1];
+            _skinThickness  = params[2];
+            _photonCoupling = params[3];
 
             calculate_norm();
         };
 
-        inline void set_LT(int _LT)
+        inline void set_LT(int LT)
         {
             if (LT > 1 || LT < 0)
             {
@@ -42,7 +42,7 @@ namespace jpacPhoto
                 std::cout << "LT = 0 for longitudinal and 1 for transverse photon.\n";
             };
 
-            LT = _LT;
+            _helProj = LT;
         };
 
         // individual helicity amplitudes not supported but need to provide definition for virtual class.
@@ -65,58 +65,58 @@ namespace jpacPhoto
         private:
 
         // Parameters
-        int    LT    = 0 ;  // longitudinal (0) or transverse (1) photon
-        int    Z     = 0 ;  // atomic number
-        double R     = 0.;  // radius parameter
-        double a     = 0.;  // skin thickness parameter
-        double g     = 0.;  // X -> gamma gamma* coupling
+        int    _helProj              = 0 ;  // longitudinal (0) or transverse (1) photon
+        int    _atomicZ              = 0 ;  // atomic number
+        double _atomicRadius         = 0.;  // radius parameter
+        double _skinThickness        = 0.;  // skin thickness parameter
+        double _photonCoupling       = 0.;  // X -> gamma gamma* coupling
 
         // Fermi model nuclear charge distribution
         inline double charge_distribution(double r)
         {
-            return 1. / ( 1. + exp((r - R) / a) );
+            return 1. / ( 1. + exp((r - _atomicRadius) / _skinThickness) );
         };
 
         // Normalized fourier transform of the above charge_distributions 
         double form_factor(double x);
-        double F_0; // Form factor at energy t
+        double _formFactor; // Form factor at energy t
         
         void calculate_norm();     
-        double rho_0 = 0.;  // normalizaton
+        double _rho0 = 0.;  // normalizaton
         inline double W_00()
         {
-            return 64. * Z*Z * mA2 * mA2 * mA2 * F_0 * F_0 / ((t - 4.*mA2) * (t - 4.*mA2));
+            return 64. * _atomicZ*_atomicZ * _mA2 * _mA2 * _mA2 * _formFactor * _formFactor / ((_t - 4.*_mA2) * (_t - 4.*_mA2));
         };
 
         // Kinematic quantities   
-        long double mX2 =  kinematics->mX2;
-        long double mA2 =  kinematics->mT2;
-        long double Q2  = -kinematics->mB2;
+        long double _mX2 =  _kinematics->_mX2;
+        long double _mA2 =  _kinematics->_mT2;
+        long double _mQ2  = -_kinematics->_mB2;
 
-        long double cX, sX2;
-        long double pGam, pX;
-        long double nu, EX;
+        long double _cosX, _sinX2;
+        long double _pGam, _pX;
+        long double _nu, _enX;
         inline void update_kinematics()
         {
             // lab frame momentum transfer
-            nu = (s - mA2 + Q2) / (2. * sqrt(mA2));
+            _nu = (_s - _mA2 + _mQ2) / (2. * sqrt(_mA2));
 
             // Momentum of photon
-            pGam = sqrt(nu*nu + Q2);
+            _pGam = sqrt(_nu*_nu + _mQ2);
 
             // // Momentum of the X
-            pX  = sqrt(t*t + 4.*sqrt(mA2)*t*nu + 4.*mA2*(nu*nu - mX2));
-            pX /= 2. * sqrt(mA2);
+            _pX  = sqrt(_t*_t + 4.*sqrt(_mA2)*_t*_nu + 4.*_mA2*(_nu*_nu - _mX2));
+            _pX /= 2. * sqrt(_mA2);
 
             // Energy of the X
-            EX = sqrt(pX*pX + mX2);
+            _enX = sqrt(_pX*_pX + _mX2);
 
             // Cosine of scattering angle of the X in the lab frame
-            cX  = t + Q2 - mX2 + 2.*nu*EX;
-            cX /= 2. * pX * pGam;
+            _cosX  = _t + _mQ2 - _mX2 + 2.*_nu*_enX;
+            _cosX /= 2. * _pX * _pGam;
 
             // // Sine of the above 
-            sX2 = 1. - cX * cX;
+            _sinX2 = 1. - _cosX * _cosX;
         };
 
         // Spin summed amplitude squared

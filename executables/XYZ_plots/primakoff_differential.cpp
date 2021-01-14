@@ -102,7 +102,7 @@ int main( int argc, char** argv )
     for (int n = 0; n < amps.size(); n++)
     {
         double s = W * W * xNs[n] * xNs[n];
-        double xmin = -amps[n]->kinematics->t_man(s, 0.);
+        double xmin = -amps[n]->_kinematics->t_man(s, 0.);
 
         auto F = [&](double t)
         {
@@ -111,11 +111,11 @@ int main( int argc, char** argv )
 
         std::array<std::vector<double>, 2> x_fx, x_fx2; 
 
-        std::cout << std::endl << "Printing longitudinal xsection: " << amps[n]->identifier << "\n";
+        std::cout << std::endl << "Printing longitudinal xsection: " << amps[n]->_identifier << "\n";
         x_fx = vec_fill(N, F, xmin, xmax, print_to_cmd);
-        plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->identifier);
+        plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->_identifier);
 
-        std::cout << std::endl << "Printing tranverse xsection: " << amps[n]->identifier << "\n";
+        std::cout << std::endl << "Printing tranverse xsection: " << amps[n]->_identifier << "\n";
         amps[n]->set_LT(1);
         x_fx2 = vec_fill  (N, F, xmin, xmax, print_to_cmd);
         plotter->AddDashedEntry(x_fx2[0], x_fx2[1]);

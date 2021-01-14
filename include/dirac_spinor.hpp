@@ -31,7 +31,7 @@ namespace jpacPhoto
 
         // Constructor
         dirac_spinor(two_body_state * xstate, bool if_anti = false)
-        : state(xstate), ANTI_PARTICLE(if_anti)
+        : _state(xstate), _antiParticle(if_anti)
         {};
 
         // Default destructor
@@ -44,10 +44,10 @@ namespace jpacPhoto
         private:
 
         // masses, energies, and momenta
-        two_body_state * state;
+        two_body_state * _state;
 
         //Whether its an anti-particle or not
-        const bool ANTI_PARTICLE = false;
+        const bool _antiParticle = false;
 
         // Energy component
         std::complex<double> omega(int sign, double s);

@@ -28,33 +28,33 @@ namespace jpacPhoto
         // Constructor
         baryon_resonance(reaction_kinematics * xkinem, int j, int p, double mass, double width, std::string name = "baryon_resonance")
         : amplitude(xkinem, name),
-          mRes(mass), gamRes(width), 
-          J(j), P(p), naturality(p * pow(-1, (j-1)/2))
+          _mRes(mass), _gamRes(width), 
+          _resJ(j), _resP(p), _naturality(p * pow(-1, (j-1)/2))
         {
             set_nParams(2);
-            check_JP(xkinem->JP);
+            check_JP(xkinem->_jp);
 
             // save momentum and other J^P dependent quantities
-            pi_bar = real(kinematics->initial_state->momentum(mass * mass));
-            pf_bar = real(kinematics->final_state->momentum(mass * mass));
+            _pibar = real(xkinem->_initial_state->momentum(mass * mass));
+            _pfbar = real(xkinem->_final_state->momentum(mass * mass));
 
-            if (abs(P) != 1)
+            if (abs(p) != 1)
             {
-                std::cout << "Invalid parity " << P << " passed to " << name << ". Quitting...\n";
+                std::cout << "Invalid parity " << p << " passed to " << name << ". Quitting...\n";
                 exit(0);
             };
-            switch (P * J)
+            switch (p * j)
             {
-                case  1: {l_min = 0; P_t = 2./3.; break;}
-                case -1: {l_min = 1; P_t = 3./5.; break;}
-                case  3: {l_min = 1; P_t = 3./5.; break;}
-                case -3: {l_min = 0; P_t = 2./3.; break;}
-                case  5: {l_min = 1; P_t = 3./5.; break;}
-                case -5: {l_min = 2; P_t = 1./3.; break;}
+                case  1: {_lmin = 0; _pt = 2./3.; break;}
+                case -1: {_lmin = 1; _pt = 3./5.; break;}
+                case  3: {_lmin = 1; _pt = 3./5.; break;}
+                case -3: {_lmin = 0; _pt = 2./3.; break;}
+                case  5: {_lmin = 1; _pt = 3./5.; break;}
+                case -5: {_lmin = 2; _pt = 1./3.; break;}
             
                 default:
                 {
-                std::cout << "\nbaryon_resonance: spin-parity combination for J = " << J << "/2 and P = " << P << " not available. ";
+                std::cout << "\nbaryon_resonance: spin-parity combination for J = " << j << "/2 and p = " << p << " not available. ";
                 std::cout << "Quiting... \n";
                 exit(0);
                 }
@@ -65,8 +65,8 @@ namespace jpacPhoto
         void set_params(std::vector<double> params)
         {
             check_nParams(params);
-            xBR = params[0];
-            R_photo = params[1];
+            _xBR = params[0];
+            _photoR = params[1];
         };
 
         // Combined total amplitude including Breit Wigner pole
@@ -89,21 +89,21 @@ namespace jpacPhoto
         // Ad-hoc threshold factor to kill the resonance at threshold
         double threshold_factor(double beta);
 
-        int J, P, naturality; // (2xSpin) and parity of the resonance
-        double mRes, gamRes; // Resonant mass and width
+        int _resJ, _resP, _naturality; // (2xSpin) and parity of the resonance
+        double _mRes, _gamRes; // Resonant mass and width
 
-        int l_min; // lowest allowed relative angular momentum
-        double P_t; // Combinatorial factor due to only transverse polarized J/psi contribute
+        int _lmin; // lowest allowed relative angular momentum
+        double _pt; // Combinatorial factor due to only transverse polarized J/psi contribute
 
         // Couplings
-        double xBR; // Hadronic banching fraction to j/psi p
-        double R_photo; // Photocoupling ratio
+        double _xBR; // Hadronic banching fraction to j/psi p
+        double _photoR; // Photocoupling ratio
 
         // Initial and final CoM momenta evaluated at resonance energy.
-        double pi_bar, pf_bar;
+        double _pibar, _pfbar;
 
         // saved energies and angle
-        double s, t, theta;
+        double _s, _t, _theta;
     };
 };
 #endif

@@ -9,20 +9,20 @@
 
 // ---------------------------------------------------------------------------
 // Differential cross-sections with all the flux factors
-double jpacPhoto::primakoff_effect::differential_xsection(double xs, double xt)
+double jpacPhoto::primakoff_effect::differential_xsection(double s, double t)
 {
     // update saved energies
-    s = xs; t = xt;
+    _s = s; _t = t;
     update_kinematics(); // calculate the other kinematics
 
     // Form factor
-    F_0 = form_factor(t);
+    _formFactor = form_factor(t);
     
     // output
     long double result = 1.;
-    result  = M_ALPHA * g*g;
-    result /= 8. * sqrt(mA2) * mX2 * mX2 * pGam * t*t;
-    result /= (2. * sqrt(mA2) * nu - Q2);
+    result  = ALPHA * _photonCoupling*_photonCoupling;
+    result /= 8. * sqrt(_mA2) * _mX2 * _mX2 * _pGam * t*t;
+    result /= (2. * sqrt(_mA2) * _nu - _mQ2);
     result *= W_00();
 
     // Amplitude depends on LT
@@ -48,8 +48,8 @@ double jpacPhoto::primakoff_effect::integrated_xsection(double s)
   ROOT::Math::Functor1D wF(F);
   ig.SetFunction(wF);
 
-  double t_min = kinematics->t_man(s, 0.);
-  double t_max = kinematics->t_man(s, 1. * deg2rad); // Fall off is extremely fast in t so only integrate over that little bit
+  double t_min = _kinematics->t_man(s, 0.);
+  double t_max = _kinematics->t_man(s, 1. * DEG2RAD); // Fall off is extremely fast in t so only integrate over that little bit
 
   return ig.Integral(t_max, t_min);
 };
@@ -70,7 +70,7 @@ void jpacPhoto::primakoff_effect::calculate_norm()
     ig.SetFunction(wF);
 
     // Integrate [0:inf]
-    rho_0 = 1. / ig.IntegralUp(0.);
+    _rho0 = 1. / ig.IntegralUp(0.);
 };
 
 // ---------------------------------------------------------------------------
@@ -78,7 +78,7 @@ void jpacPhoto::primakoff_effect::calculate_norm()
 double jpacPhoto::primakoff_effect::form_factor(double x)
 {
     // momentum in the t channel
-    double q = sqrt(x * (x - 4. * mA2)) / (2. * sqrt(mA2));
+    double q = sqrt(x * (x - 4. * _mA2)) / (2. * sqrt(_mA2));
 
     auto dF = [&] (double r)
     {
@@ -91,7 +91,7 @@ double jpacPhoto::primakoff_effect::form_factor(double x)
     ROOT::Math::Functor1D wF(dF);
     ig.SetFunction(wF);
     
-    return rho_0 * ig.IntegralUp(0.) / q;
+    return _rho0 * ig.IntegralUp(0.) / q;
 
 };
 
@@ -101,28 +101,28 @@ long double jpacPhoto::primakoff_effect::amplitude_squared()
 {
     long double result;
 
-    switch (LT)
+    switch (_helProj)
     {
         // Longitudinal photon
         case 0: 
         {
-            result = pX*pX * Q2 * EX*EX *  sX2;
+            result = _pX*_pX * _mQ2 * _enX*_enX * _sinX2;
             break;
         };
         // Transverse photon
         case 1:
         {
-            double coshalf2 = (1. + cX) / 2.;
-            double sinhalf2 = (1. - cX) / 2.;
+            double coshalf2 = (1. + _cosX) / 2.;
+            double sinhalf2 = (1. - _cosX) / 2.;
 
-            double symC = pX*pGam*(pX + pGam) + EX*nu*(pGam-pX) - 2.*pX*pGam*pGam*cX;
-            double symS = pX*pGam*(pX - pGam) + EX*nu*(pGam+pX) - 2.*pX*pGam*pGam*cX;
+            double symC = _pX*_pGam*(_pX + _pGam) + _enX*_nu*(_pGam-_pX) - 2.*_pX*_pGam*_pGam*_cosX;
+            double symS = _pX*_pGam*(_pX - _pGam) + _enX*_nu*(_pGam+_pX) - 2.*_pX*_pGam*_pGam*_cosX;
 
-            double temp = pow(pGam*(nu*(mX2+2.*pX*pX) - 2.*EX*pX*pGam*cX), 2.) / (2. * mX2);
+            double temp = pow(_pGam*(_nu*(_mX2+2.*_pX*_pX) - 2.*_enX*_pX*_pGam*_cosX), 2.) / (2. * _mX2);
 
             result  = pow(coshalf2 * symC, 2.);
             result += pow(sinhalf2 * symS, 2.);
-            result += temp * sX2;
+            result += temp * _sinX2;
 
             break;
         };

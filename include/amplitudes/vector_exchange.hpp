@@ -32,23 +32,23 @@ namespace jpacPhoto
 
         // Constructor for fixed spin
         vector_exchange(reaction_kinematics * xkinem, double mass, std::string id = "vector_exchange")
-        : amplitude(xkinem, id), mEx2(mass*mass), REGGE(false)
+        : amplitude(xkinem, id), _mEx2(mass*mass), _ifReggeized(false)
         {
             set_nParams(3);
-            check_JP(xkinem->JP);
+            check_JP(xkinem->_jp);
 
             // For scalar interaction only 4-vector eval implemented so far
-            if (xkinem->JP[0] == 0) FOUR_VEC = true;
+            if (xkinem->_jp[0] == 0) _useCovariant = true;
         };
 
         // Constructor for the reggized)
         vector_exchange(reaction_kinematics * xkinem, linear_trajectory * traj, std::string id = "vector_exchange")
-        : amplitude(xkinem, id), alpha(traj), REGGE(true)
+        : amplitude(xkinem, id), _alpha(traj), _ifReggeized(true)
         {
             set_nParams(3);
-            check_JP(xkinem->JP);
+            check_JP(xkinem->_jp);
 
-            if (xkinem->JP[0] == 0)
+            if (xkinem->_jp[0] == 0)
             {
                 std::cout << "Error! Scalar production via Reggeized vector_exchange not yet implemented...\n";
                 exit(0);
@@ -59,16 +59,16 @@ namespace jpacPhoto
         inline void set_params(std::vector<double> params)
         {
             check_nParams(params); // make sure the right amout of params passed
-            gGam = params[0];
-            gV = params[1];
-            gT = params[2];
+            _gGam = params[0];
+            _gV = params[1];
+            _gT = params[2];
         };
 
         // Whether or not to include an exponential form factor (default false)
         inline void set_formfactor(int FF, double bb = 0.)
         {
-            IF_FF = FF;
-            cutoff = bb;
+            _useFormFactor = FF;
+            _cutoff = bb;
         }
 
         // Assemble the helicity amplitude by contracting the lorentz indices
@@ -83,27 +83,27 @@ namespace jpacPhoto
         private:
 
         // if using reggeized propagator
-        bool REGGE;
+        bool _ifReggeized;
         // or the regge trajectory of the exchange
-        linear_trajectory * alpha;
-        double zt;
+        linear_trajectory * _alpha;
+        double _zt;
 
         // Whether using analytic or covariant expression
-        bool FOUR_VEC = false;
+        bool _useCovariant = false;
 
         // Form factor parameters
-        int IF_FF = 0;
-        double cutoff = 0.;
+        int _useFormFactor = 0;
+        double _cutoff = 0.;
         double form_factor();
 
         // Couplings to the axial-vector/photon and vector/tensor couplings to nucleon
-        double gGam = 0., gpGam = 0., gV = 0., gT = 0.;
+        double _gGam = 0., _gpGam = 0., _gV = 0., _gT = 0.;
 
         // ---------------------------------------------------------------------------
         // Covariant evaluation
 
         // Mass of the exchange
-        double mEx2 = 0.;
+        double _mEx2 = 0.;
 
         // Full covariant amplitude
         std::complex<double> covariant_amplitude(std::array<int, 4> helicities);

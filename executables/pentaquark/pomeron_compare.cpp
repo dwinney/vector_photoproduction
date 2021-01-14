@@ -17,7 +17,7 @@ int main( int argc, char** argv )
     // ---------------------------------------------------------------------------
 
     // Set up Kinematics for jpsi in final state
-    auto * ptr = new reaction_kinematics(mJpsi, mPro, mPro);
+    auto * ptr = new reaction_kinematics(M_JPSI);
     ptr->set_JP(1, -1);
 
     // ---------------------------------------------------------------------------
@@ -42,7 +42,7 @@ int main( int argc, char** argv )
     // Wang et al. amplitude
   
     auto alpha2 = new linear_trajectory(+1, 1. + 0.08, 0.25);
-    auto background2 = new pomeron_exchange(ptr, alpha2, 2, "Wang et al as written");
+    auto background2 = new pomeron_exchange(ptr, alpha2, 2, "Wang et al 2019");
 
     // Pomeron-charm coupling and cutoff
     background2->set_params({sqrt(0.8), 1.2});
