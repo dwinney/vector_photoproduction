@@ -290,10 +290,10 @@ std::complex<double> jpacPhoto::vector_exchange::top_vertex(int mu, int lam_gam,
         for (int nu = 0; nu < 4; nu++)
         {
             std::complex<double> temp = XI;
-            temp *= field_tensor(mu, nu, lam_gam);
+            temp *= METRIC[mu];
+            temp *= _kinematics->_eps_gamma->field_tensor(mu, nu, lam_gam, _s, _theta);
             temp *= METRIC[nu];
             temp *= _kinematics->_eps_vec->component(nu, lam_vec, _s, _theta);
-
             result += temp;
         }
     }
@@ -306,7 +306,7 @@ std::complex<double> jpacPhoto::vector_exchange::top_vertex(int mu, int lam_gam,
             std::complex<double> term1, term2;
 
             // (k . q) eps_gamma^mu
-            term1  = exchange_momenta(nu);
+            term1  = _kinematics->t_exchange_momentum(nu, _s, _theta);
             term1 *= METRIC[nu];
             term1 *= _kinematics->_initial_state->q(nu, _s, 0.);
             term1 *= _kinematics->_eps_gamma->component(mu, lam_gam, _s, 0.);
@@ -314,7 +314,7 @@ std::complex<double> jpacPhoto::vector_exchange::top_vertex(int mu, int lam_gam,
             // (eps_gam . k) q^mu
             term2  = _kinematics->_eps_gamma->component(nu, lam_gam, _s, 0.);
             term2 *= METRIC[nu];
-            term2 *= exchange_momenta(nu);
+            term2 *= _kinematics->t_exchange_momentum(nu, _s, _theta);
             term2 *= _kinematics->_initial_state->q(mu, _s, 0.);
 
             result += term1 - term2;
@@ -337,9 +337,8 @@ std::complex<double> jpacPhoto::vector_exchange::top_vertex(int mu, int lam_gam,
                     std::complex<double> temp;
                     temp = levi_civita(mu, alpha, beta, gamma);
                     if (std::abs(temp) < 0.001) continue;
-                
-                    temp *= field_tensor(alpha, beta, lam_gam);
-                    temp *= _kinematics->_final_state->q(gamma, _s, _theta) - exchange_momenta(gamma);
+                    temp *= _kinematics->_eps_gamma->field_tensor(alpha, beta, lam_gam, _s, 0.);
+                    temp *= _kinematics->_final_state->q(gamma, _s, _theta) - _kinematics->t_exchange_momentum(gamma, _s, _theta);
                     result += temp;
                 }
             }
@@ -380,7 +379,7 @@ std::complex<double> jpacPhoto::vector_exchange::bottom_vertex(int mu, int lam_t
                 std::complex<double> sigma_q_ij = 0.;
                 for (int nu = 0; nu < 4; nu++)
                 {
-                sigma_q_ij += sigma(mu, nu, i, j) * METRIC[nu] * exchange_momenta(nu) / (2. * M_PROTON);
+                sigma_q_ij += sigma(mu, nu, i, j) * METRIC[nu] * _kinematics->t_exchange_momentum(nu, _s, _theta) / (2. * M_PROTON);
                 }
 
                 std::complex<double> temp;
@@ -396,34 +395,13 @@ std::complex<double> jpacPhoto::vector_exchange::bottom_vertex(int mu, int lam_t
     return _gV * vector - _gT * tensor;
 };
 
-std::complex<double> jpacPhoto::vector_exchange::field_tensor(int mu, int nu, int lambda)
-{
-    std::complex<double> result;
-    result  = _kinematics->_initial_state->q(mu, _s, 0.) * _kinematics->_eps_gamma->component(nu, lambda, _s, 0.);
-    result -= _kinematics->_initial_state->q(nu, _s, 0.) * _kinematics->_eps_gamma->component(mu, lambda, _s, 0.); 
-
-    return result;
-};
-
-// ---------------------------------------------------------------------------
-// Four-momentum of the exchanged meson.
-// Simply the difference of the photon and axial 4-momenta
-std::complex<double> jpacPhoto::vector_exchange::exchange_momenta(int mu)
-{
-    std::complex<double> qGamma_mu, qA_mu;
-    qGamma_mu = _kinematics->_initial_state->q(mu, _s, 0.);
-    qA_mu = _kinematics->_final_state->q(mu, _s, _theta);
-
-    return (qGamma_mu - qA_mu);
-};
-
 // ---------------------------------------------------------------------------
 // Propagator of a massive spin-one particle
 std::complex<double> jpacPhoto::vector_exchange::vector_propagator(int mu, int nu)
 {
     // q_mu q_nu / mEx2 - g_mu nu
     std::complex<double> result;
-    result = exchange_momenta(mu) * exchange_momenta(nu) / _mEx2;
+    result = _kinematics->t_exchange_momentum(mu, _s, _theta) * _kinematics->t_exchange_momentum(nu, _s, _theta) / _mEx2;
 
     if (mu == nu)
     {

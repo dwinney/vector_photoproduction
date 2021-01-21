@@ -137,24 +137,15 @@ double jpacPhoto::dirac_exchange::exchange_mass()
     for (int mu = 0; mu < 4; mu++)
     {
         std::complex<double> temp;
-        temp  = exchange_momentum(mu);
+        temp  = _kinematics->u_exchange_momentum(mu, _s, _theta);
         temp *= METRIC[mu];
-        temp *= exchange_momentum(mu);
+        temp *= _kinematics->u_exchange_momentum(mu, _s, _theta);
 
         result += real(temp);
     }
 
     return result;
 }
-
-std::complex<double> jpacPhoto::dirac_exchange::exchange_momentum(int mu)
-{
-    std::complex<double> qGamma_mu, qRec_mu;
-    qGamma_mu   = _kinematics->_initial_state->q(mu, _s, PI);
-    qRec_mu     = _kinematics->_final_state->p(mu, _s, _theta + PI);
-
-    return qRec_mu - qGamma_mu;
-};
 
 std::complex<double> jpacPhoto::dirac_exchange::slashed_exchange_momentum(int i, int j)
 {
@@ -164,7 +155,7 @@ std::complex<double> jpacPhoto::dirac_exchange::slashed_exchange_momentum(int i,
         std::complex<double> temp;
         temp  = GAMMA[mu][i][j];
         temp *= METRIC[mu];
-        temp *= exchange_momentum(mu);
+        temp *= _kinematics->u_exchange_momentum(mu, _s, _theta);
 
         result += temp;
     }

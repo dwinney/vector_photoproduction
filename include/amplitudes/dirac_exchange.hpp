@@ -88,9 +88,6 @@ namespace jpacPhoto
         // Should be exactly u_man(s, zs);
         double exchange_mass();
 
-        // Four-momentum of the exhange (u - channel)
-        std::complex<double> exchange_momentum(int mu);
-
         // Slashed momentumn
         std::complex<double> slashed_exchange_momentum(int i, int j);
 

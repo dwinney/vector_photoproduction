@@ -217,6 +217,26 @@ namespace jpacPhoto
 
             return result;
         };
+
+        inline std::complex<double> t_exchange_momentum(int mu, double s, double theta)
+        {
+            std::complex<double> qGamma_mu, qA_mu;
+            qGamma_mu = _initial_state->q(mu, s, 0.);
+            qA_mu = _final_state->q(mu, s, theta);
+
+            return (qGamma_mu - qA_mu);
+        };
+
+        inline std::complex<double> u_exchange_momentum(int mu, double s, double theta)
+        {
+            std::complex<double> qGamma_mu, qRec_mu;
+            qGamma_mu   = _initial_state->q(mu, s, PI);
+            qRec_mu     = _final_state->p(mu, s, theta + PI);
+
+            return qRec_mu - qGamma_mu;
+        };
+
+        
     };
 };
 

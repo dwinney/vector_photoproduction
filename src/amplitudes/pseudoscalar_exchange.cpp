@@ -87,42 +87,69 @@ std::complex<double> jpacPhoto::pseudoscalar_exchange::bottom_vertex(double lam_
 // Photon vertex
 std::complex<double> jpacPhoto::pseudoscalar_exchange::top_vertex(double lam_gam, double lam_vec)
 {
-    std::complex<double> term1 = 0., term2 = 0.;
-    for (int mu = 0; mu < 4; mu++)
+    std::complex<double> result = 0.;
+
+    // A - V - P
+    if (_kinematics->_jp[0] == 1 && _kinematics->_jp[1] == 1)
     {
-        for (int nu = 0; nu < 4; nu++)
+         std::complex<double> term1 = 0., term2 = 0.;
+        for (int mu = 0; mu < 4; mu++)
         {
-            // (eps*_lam . eps_gam)(q_vec . q_gam)
-            std::complex<double> temp1;
-            temp1  = _kinematics->_eps_vec->conjugate_component(mu, lam_vec, _s, _theta);
-            temp1 *= METRIC[mu];
-            temp1 *= _kinematics->_eps_gamma->component(mu, lam_gam, _s, 0.);
-            temp1 *= _kinematics->_initial_state->q(nu, _s, 0.);
-            temp1 *= METRIC[nu];
-            temp1 *= _kinematics->_final_state->q(nu, _s, _theta);
+            for (int nu = 0; nu < 4; nu++)
+            {
+                // (eps*_lam . eps_gam)(q_vec . q_gam)
+                std::complex<double> temp1;
+                temp1  = _kinematics->_eps_vec->conjugate_component(mu, lam_vec, _s, _theta);
+                temp1 *= METRIC[mu];
+                temp1 *= _kinematics->_eps_gamma->component(mu, lam_gam, _s, 0.);
+                temp1 *= _kinematics->_initial_state->q(nu, _s, 0.);
+                temp1 *= METRIC[nu];
+                temp1 *= _kinematics->_final_state->q(nu, _s, _theta);
 
-            term1 += temp1;
+                term1 += temp1;
 
-            // (eps*_lam . q_gam)(eps_gam . q_vec)
-            std::complex<double> temp2;
-            temp2  = _kinematics->_eps_vec->conjugate_component(mu, lam_vec, _s, _theta);
-            temp2 *= METRIC[mu];
-            temp2 *= _kinematics->_initial_state->q(mu, _s, 0.);
-            temp2 *= _kinematics->_eps_gamma->component(nu, lam_gam, _s, 0.);
-            temp2 *= METRIC[nu];
-            temp2 *= _kinematics->_final_state->q(nu, _s, _theta);
+                // (eps*_lam . q_gam)(eps_gam . q_vec)
+                std::complex<double> temp2;
+                temp2  = _kinematics->_eps_vec->conjugate_component(mu, lam_vec, _s, _theta);
+                temp2 *= METRIC[mu];
+                temp2 *= _kinematics->_initial_state->q(mu, _s, 0.);
+                temp2 *= _kinematics->_eps_gamma->component(nu, lam_gam, _s, 0.);
+                temp2 *= METRIC[nu];
+                temp2 *= _kinematics->_final_state->q(nu, _s, _theta);
 
-            term2 += temp2;
+                term2 += temp2;
+
+                result = (temp1 - temp2) / _kinematics->_mX;
+            }
         }
     }
 
-    std::complex<double> result;
-    result = term1 - term2;
+    // V - V - P
+    if (_kinematics->_jp[0] == 1 && _kinematics->_jp[1] == -1)
+    {
+        // Contract with LeviCivita
+        for (int mu = 0; mu < 4; mu ++)
+        {
+            for (int alpha = 0; alpha < 4; alpha++)
+            {
+                for (int beta = 0; beta < 4; beta++)
+                {
+                    for (int gamma = 0; gamma < 4; gamma++)
+                    {
+                        std::complex<double> temp;
+                        temp = levi_civita(mu, alpha, beta, gamma);
+                        if (std::abs(temp) < 0.001) continue;
+                        temp *= _kinematics->_eps_vec->conjugate_component(mu, lam_vec, _s, _theta);
+                        temp *= _kinematics->_eps_gamma->field_tensor(alpha, beta, lam_gam, _s, 0.);
+                        temp *= _kinematics->_final_state->q(gamma, _s, _theta) - _kinematics->t_exchange_momentum(gamma, _s, _theta);
+                        result += temp;
+                    }
+                }
+            }
+        }
+    }
 
-    // Coupling is normalized to the mass of the Axial vector particle
-    result *= _gGamma / _kinematics->_mX;
-
-    return result;
+    return _gGamma * result;
 };
 
 //------------------------------------------------------------------------------

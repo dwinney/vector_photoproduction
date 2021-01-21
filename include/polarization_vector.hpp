@@ -36,6 +36,15 @@ namespace jpacPhoto
         std::complex<double> component(int i, int lambda, double s, double theta);
         std::complex<double> conjugate_component(int i, int lambda, double s, double theta);
 
+        inline std::complex<double> field_tensor(int i, int j, int lambda, double s, double theta)
+        {
+            std::complex<double> result;
+            result  = _state->q(i, s, theta) * component(j, lambda, s, theta);
+            result -= _state->q(j, s, theta) * component(i, lambda, s, theta);
+
+            return result;
+        };
+
         private:
         
         two_body_state * _state;

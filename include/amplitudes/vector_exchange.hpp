@@ -108,17 +108,11 @@ namespace jpacPhoto
         // Full covariant amplitude
         std::complex<double> covariant_amplitude(std::array<int, 4> helicities);
 
-        // Four-momentum of the exhange
-        std::complex<double> exchange_momenta(int mu);
-
         // Photon - Axial Vector - Vector vertex
         std::complex<double> top_vertex(int mu, int lam_gam, int lam_vec);
 
         // Nucleon - Nucleon - Vector vertex
         std::complex<double> bottom_vertex(int nu, int lam_targ, int lam_rec);
-
-        // Photon field strength tensor
-        std::complex<double> field_tensor(int mu, int nu, int lambda);
 
         // Vector propogator
         std::complex<double> vector_propagator(int mu, int nu);

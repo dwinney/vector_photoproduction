@@ -41,7 +41,7 @@ std::complex<double> jpacPhoto::rarita_exchange::helicity_amplitude(std::array<i
 std::complex<double> jpacPhoto::rarita_exchange::g_bar(int mu, int nu)
 {
     std::complex<double> result;
-    result = exchange_momentum(mu) * exchange_momentum(nu) / _mEx2;
+    result = _kinematics->u_exchange_momentum(mu, _s, _theta) * _kinematics->u_exchange_momentum(nu, _s, _theta) / _mEx2;
 
     if (mu == nu)
     {

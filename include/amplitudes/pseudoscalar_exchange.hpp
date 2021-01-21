@@ -40,6 +40,9 @@ namespace jpacPhoto
         {
             set_nParams(2);
             check_JP(xkinem->_jp);
+
+            // Only axial vector is available for analytic residue evaluation
+            if (xkinem->_jp[0] != 1 && xkinem->_jp[1] != 1) _useFourVecs = true;
         };
 
         // constructors for regge exchange
@@ -48,6 +51,13 @@ namespace jpacPhoto
         {
             set_nParams(2);
             check_JP(xkinem->_jp);
+
+            // Only axial vector is available for analytic residue evaluation
+            if (xkinem->_jp[0] != 1 && xkinem->_jp[1] != 1)
+            {
+                std::cout << "Error! Only reggeized axial vector production implemented so far!" << std::endl;
+                exit(0);
+            }
         };
 
         // Setting utility
@@ -68,10 +78,10 @@ namespace jpacPhoto
         // Assemble the helicity amplitude by contracting the spinor indices
         std::complex<double> helicity_amplitude(std::array<int, 4> helicities, double xs, double xt);
 
-        // only axial-vector kinematics allowed
+        // only axial-vector, vector, and pseudo-scalar available
         inline std::vector<std::array<int,2>> allowedJP()
         {
-            return {{1, 1}};
+            return { {1, 1}, {1, -1} };
         };
 
         private:
