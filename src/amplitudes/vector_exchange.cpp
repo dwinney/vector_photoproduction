@@ -284,6 +284,20 @@ std::complex<double> jpacPhoto::vector_exchange::top_vertex(int mu, int lam_gam,
         }
     }
 
+    // V-V-V coupling
+    else if (_kinematics->_jp[0] == 1 && _kinematics->_jp[1] == -1)
+    {
+        for (int nu = 0; nu < 4; nu++)
+        {
+            std::complex<double> temp = XI;
+            temp *= field_tensor(mu, nu, lam_gam);
+            temp *= METRIC[nu];
+            temp *= _kinematics->_eps_vec->component(nu, lam_vec, _s, _theta);
+
+            result += temp;
+        }
+    }
+
     // S-V-V coupling
     else if (_kinematics->_jp[0]== 0 && _kinematics->_jp[1] == 1)
     {
@@ -324,9 +338,8 @@ std::complex<double> jpacPhoto::vector_exchange::top_vertex(int mu, int lam_gam,
                     temp = levi_civita(mu, alpha, beta, gamma);
                     if (std::abs(temp) < 0.001) continue;
                 
-                    temp *= METRIC[mu];
                     temp *= field_tensor(alpha, beta, lam_gam);
-                    temp *= _kinematics->_final_state->q(gamma, _s, PI) - exchange_momenta(gamma);
+                    temp *= _kinematics->_final_state->q(gamma, _s, _theta) - exchange_momenta(gamma);
                     result += temp;
                 }
             }
