@@ -258,6 +258,7 @@ std::complex<double> jpacPhoto::vector_exchange::covariant_amplitude(std::array<
 std::complex<double> jpacPhoto::vector_exchange::top_vertex(int mu, int lam_gam, int lam_vec)
 {
     std::complex<double> result = 0.;
+    std::complex<double> test = 0.;
 
     // A-V-V coupling
     if (_kinematics->_jp[0]== 1 && _kinematics->_jp[1] == 1)
@@ -334,18 +335,31 @@ std::complex<double> jpacPhoto::vector_exchange::top_vertex(int mu, int lam_gam,
             {
                 for (int gamma = 0; gamma < 4; gamma++)
                 {
+                    // // Explicitly in terms of the Field tensor of the photon
+                    // std::complex<double> temp;
+                    // temp = levi_civita(mu, alpha, beta, gamma);
+                    // if (std::abs(temp) < 0.001) continue;
+                    // temp *= _kinematics->_eps_gamma->field_tensor(alpha, beta, lam_gam, _s, 0.);
+                    // temp *= _kinematics->_final_state->q(gamma, _s, _theta) - _kinematics->t_exchange_momentum(gamma, _s, _theta);
+                    // result += temp;
+
+                    // OR reduced to be consistent with jpsi as well
                     std::complex<double> temp;
                     temp = levi_civita(mu, alpha, beta, gamma);
                     if (std::abs(temp) < 0.001) continue;
-                    temp *= _kinematics->_eps_gamma->field_tensor(alpha, beta, lam_gam, _s, 0.);
-                    temp *= _kinematics->_final_state->q(gamma, _s, _theta) - _kinematics->t_exchange_momentum(gamma, _s, _theta);
+                    temp *= _kinematics->_final_state->q(alpha, _s, _theta);
+                    temp *= _kinematics->_eps_gamma->component(beta, lam_gam, _s, 0.);
+                    temp *= _kinematics->t_exchange_momentum(gamma, _s, _theta);
+
+                    // Relative -1/4 from photon and jpsi VVP couplings
+                    if (_kinematics->_mB2 < 1.E-5) temp *= - 4.;
+
                     result += temp;
                 }
             }
         }
     }
 
-    // Multiply by coupling
     return result * _gGam;
 };
 
