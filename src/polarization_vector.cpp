@@ -16,7 +16,7 @@
 std::complex<double> jpacPhoto::polarization_vector::component(int i, int lambda, double s, double theta)
 {
     // Check for massless photon
-    if (lambda == 0 && abs(_state->get_mV()) < 0.01)
+    if (lambda == 0 && std::abs(_state->get_mV()) < 0.01)
     {   
         return 0.;
     }
