@@ -198,7 +198,7 @@ std::complex<double> jpacPhoto::amplitude::SDME(int alpha, int lam, int lamp, do
         default: exit(0);
     };
     
-    (lamp < 0) ? (m = 4 * abs(l)) : (m = 0);
+    (lamp < 0) ? (m = 4 * _kinematics->_jp[0]) : (m = 0);
 
     // Sum over the appropriate amplitude combinations
     std::complex<double> result = 0.;
