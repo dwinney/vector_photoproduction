@@ -151,8 +151,9 @@ std::complex<double> jpacPhoto::amplitude::SDME(int alpha, int lam, int lamp, do
     };
 
     // If spin is too small return 0 automatically
-    if (_kinematics->_jp[0] < 2 && (abs(lam) == 2 || abs(lamp == 2))) return 0.;
-    if (_kinematics->_jp[0] < 1 && (abs(lam) >= 1 || abs(lamp >= 1))) return 0.;
+    int j = _kinematics->_jp[0];
+    if (j < 2 && (abs(lam) == 2 || abs(lamp) == 2)) return 0.;
+    if (j < 1 && (abs(lam) >= 1 || abs(lamp) >= 1)) return 0.;
 
     // Phase and whether to conjugate at the end
     bool CONJ = false;
@@ -162,7 +163,7 @@ std::complex<double> jpacPhoto::amplitude::SDME(int alpha, int lam, int lamp, do
     if (std::abs(lam) < std::abs(lamp))
     {
         int temp = lam;
-        lam = lamp;
+        lam  = lamp;
         lamp = temp;
 
         CONJ = true;
@@ -171,10 +172,12 @@ std::complex<double> jpacPhoto::amplitude::SDME(int alpha, int lam, int lamp, do
     // if first index is negative, flip to positive
     if (lam < 0)
     {
-        lam *= -1;
+        lam  *= -1;
         lamp *= -1;
 
         phase *= pow(-1., double(lam - lamp));
+
+        if (alpha == 2){phase *= -1.;};
     }
 
     // Normalization (sum over all amplitudes squared)
@@ -184,7 +187,7 @@ std::complex<double> jpacPhoto::amplitude::SDME(int alpha, int lam, int lamp, do
     // l filters second index to be 0, 1, 2
     // m filters sign of second index
     int k, l, m;
-    std::array<std::vector<int>, 2> iters = get_iters(_kinematics->_jp[0]);
+    std::array<std::vector<int>, 2> iters = get_iters(j);
     
     int lamlamp = 10 * lam + abs(lamp);
     switch(lamlamp)
@@ -198,7 +201,7 @@ std::complex<double> jpacPhoto::amplitude::SDME(int alpha, int lam, int lamp, do
         default: exit(0);
     };
     
-    (lamp < 0) ? (m = 4 * _kinematics->_jp[0]) : (m = 0);
+    (lamp < 0) ? (m = 4 * j) : (m = 0);
 
     // Sum over the appropriate amplitude combinations
     std::complex<double> result = 0.;
