@@ -26,6 +26,10 @@ class regge_trajectory
     : _signature(sig), _parent(name)
     {};
 
+    regge_trajectory(int sig, int min_j, std::string name = "")
+    : _signature(sig), _minJ(min_j), _parent(name)
+    {};
+
     // copy constructor
     regge_trajectory(const regge_trajectory & old)
     : _parent(old._parent), _signature(old._signature)
@@ -36,10 +40,16 @@ class regge_trajectory
 
     virtual std::complex<double> slope(double s = 0.){return 0.;};
 
+    inline void set_minimum_spin(int j)
+    {
+        _minJ = j;
+    }
+
     // These parameters define the trajectory
     // name, spin, and mass of the lowest lying resonance on the parent trajectory
     std::string _parent;
     int _signature;
+    int _minJ = 0;
 };
 
 

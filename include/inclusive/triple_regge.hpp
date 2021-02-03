@@ -14,6 +14,7 @@
 #include "regge_trajectory.hpp"
 
 #include <vector>
+#include <tuple>
 
 namespace jpacPhoto
 {
@@ -38,15 +39,51 @@ namespace jpacPhoto
             }
         };
 
+        //--------------------------------------------------------------------
+        // Methods to add field and fox like terms
+
+        // If only one term in the coupling
         inline void add_term(std::array<regge_trajectory*, 3> trajectories, std::array<double,2> couplings)
+        {
+            auto new_term = new ffTripleRegge(_kinematics, trajectories, {couplings});
+            _termsFF.push_back(new_term);
+        };
+
+        // If many (passing a vector)
+        inline void add_term(std::array<regge_trajectory*, 3> trajectories,std::vector<std::array<double,2>> couplings)
         {
             auto new_term = new ffTripleRegge(_kinematics, trajectories, couplings);
             _termsFF.push_back(new_term);
         };
+        
+        //--------------------------------------------------------------------
+        // Methods to add terms following Vincent's normalization
 
-        inline void add_term(regge_trajectory* trajectory, std::array<double,3> couplings)
+        // Only one coupling and one sigma term
+        inline void add_term(regge_trajectory* trajectory, std::tuple<int,double> coupling, std::array<double,2> sigmaparams)
         {
-            auto new_term = new jpacTripleRegge(_kinematics, trajectory, couplings);
+            auto new_term = new jpacTripleRegge(_kinematics, trajectory, {coupling}, {sigmaparams});
+            _termsJPAC.push_back(new_term);
+        };
+
+        // One coupling but many sigma
+        inline void add_term(regge_trajectory* trajectory, std::tuple<int,double> coupling, std::vector<std::array<double,2>> sigmaparams)
+        {
+            auto new_term = new jpacTripleRegge(_kinematics, trajectory, {coupling}, sigmaparams);
+            _termsJPAC.push_back(new_term);
+        };
+
+        // Many coupling one sigma
+        inline void add_term(regge_trajectory* trajectory, std::vector<std::tuple<int,double>> coupling, std::array<double,2> sigmaparams)
+        {
+            auto new_term = new jpacTripleRegge(_kinematics, trajectory, coupling, {sigmaparams});
+            _termsJPAC.push_back(new_term);
+        };
+        
+        // Passing multiple coupling and sigma terms
+        inline void add_term(regge_trajectory* trajectory, std::vector<std::tuple<int,double>> coupling, std::vector<std::array<double,2>> sigmaparams)
+        {
+            auto new_term = new jpacTripleRegge(_kinematics, trajectory, coupling, sigmaparams);
             _termsJPAC.push_back(new_term);
         };
 

@@ -7,6 +7,7 @@
 #include "jpacUtils.hpp"
 
 #include <cstring>
+#include <memory>
 
 using namespace jpacPhoto;
 
@@ -17,31 +18,12 @@ int main( int argc, char** argv )
     // Amplitudes
     // ---------------------------------------------------------------------------
 
-    auto kTest = new inclusive_kinematics(M_PION);
+    // For all Z's we only have pion exchange
+    auto alphaPi = new linear_trajectory(+1, -M2_PION * 0.7, 0.7, "#pi trajectory");
 
-    // ---------------------------------------------
-    // Phenomenological fiits from Field and Fox with exponential couplings
-    auto field_and_fox = new triple_regge(kTest, "Field & Fox");
+    auto kZc3900 = new inclusive_kinematics(M_ZC3900);
+    auto Zc3900 = new triple_regge(kZc3900, "Z_{c}(3900)");
 
-    // trajectories
-    auto alphaPom = new linear_trajectory(+1,  1., 0.37, "Pomeron");
-    auto alphaReg = new linear_trajectory(+1, 0.5,   1., "Reggeon");
-
-    // Triple Reggeon
-    field_and_fox->add_term({alphaReg, alphaReg, alphaReg}, {18.1, 12});
-    
-    // Reggeon-Reggeon-Pomeron
-    field_and_fox->add_term({alphaReg, alphaReg, alphaPom}, {{26.81, 7.26}, {4.80, -1.83}});
-
-    // ---------------------------------------------
-    // Compare with Vincent's parameterization normalized to the total cross-section
-    auto vincent = new triple_regge(kTest, "Vincent");
-
-    auto alphaRho = new linear_trajectory(+1, 0.5, 0.9, "Rho");
-    alphaRho->set_minimum_spin(1);
-
-    // Reggeon exchange
-    vincent->add_term(alphaRho, {0, 12.20}, {{13.63, 0.0808}, {(36.02 + 27.56)/2., -0.4525}});
 
     // ---------------------------------------------------------------------------
     // Plotting options
@@ -49,8 +31,8 @@ int main( int argc, char** argv )
 
     // which amps to plot
     std::vector<triple_regge*> amps;
-    amps.push_back(field_and_fox);
-    amps.push_back(vincent);
+    // amps.push_back(field_and_fox);
+    // amps.push_back(vincent);
 
     int N = 100;
 
@@ -72,7 +54,7 @@ int main( int argc, char** argv )
     // ---------------------------------------------------------------------------
 
     // Plotter object
-    jpacGraph1D* plotter = new jpacGraph1D();
+    auto plotter = new jpacGraph1D();
 
     // ---------------------------------------------------------------------------
     // Print the desired observable for each amplitude
@@ -103,14 +85,6 @@ int main( int argc, char** argv )
 
     // Output to file
     plotter->Plot(filename);
-
-    delete plotter;
-    delete alphaPom;
-    delete alphaReg;
-    delete field_and_fox;
-    delete alphaRho;
-    delete vincent;
-    delete kTest;
 
     return 1.;
 };

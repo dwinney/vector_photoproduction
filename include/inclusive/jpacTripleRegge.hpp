@@ -1,6 +1,4 @@
-// Form of the terms following JPAC's ds
-//
-// Nucl. Phys. B80(1974) 367
+// Form of the terms following JPAC's normalization
 //
 // Author:       Daniel Winney (2021)
 // Affiliation:  Joint Physics Analysis Center (JPAC)
@@ -11,6 +9,7 @@
 #define _TRIPLE_JPAC_
 
 #include <complex>
+#include <tuple>
 #include "misc_math.hpp"
 #include "inclusive_kinematics.hpp"
 #include "regge_trajectory.hpp"
@@ -20,35 +19,12 @@ namespace jpacPhoto
     class jpacTripleRegge
     {
         public:
-        jpacTripleRegge(inclusive_kinematics * xkinem, regge_trajectory * trajectory, std::array<double,3> couplings)
-        : _kinematics(xkinem), _trajectory(trajectory), _couplings(couplings)
+
+        // Fully general constructor
+        jpacTripleRegge(inclusive_kinematics * xkinem, regge_trajectory * trajectory, 
+                        std::vector<std::tuple<int,double>> couplings, std::vector<std::array<double, 2>> sigmatot)
+        : _kinematics(xkinem), _trajectory(trajectory), _couplings(couplings), _sigmaParams(sigmatot)
         {};
-        
-        regge_trajectory * _trajectory;
-        std::array<double, 3> _couplings;
-
-        inclusive_kinematics * _kinematics;
-
-        constexpr static double _scale = 1.0;
-
-        inline double sigmaTOT(double s)
-        {
-            return _couplings[1] * pow(s, _couplings[2]);
-        };
-
-        inline std::complex<double> xi(double t)
-        {
-            std::complex<double> signature_factor, gamma_factor;
-            signature_factor = 0.5 * (1. + double(_trajectory->_signature) * exp(XI * PI * _trajectory->eval(t)));
-            gamma_factor = cgamma(1. - _trajectory->eval(t));
-
-            return signature_factor * gamma_factor;
-        };
-
-        inline double xi_squared(double t)
-        {
-            return real(xi(t) * std::conj(xi(t)));
-        };
         
         inline double eval(double s, double t, double M2)
         {
@@ -56,14 +32,59 @@ namespace jpacPhoto
 
             double result;
             result  = sigmaTOT(s);
-            result *= pow((s / M2), real(2. * _trajectory->eval(t))); 
-            result *= xi_squared(t);
-            result *= _couplings[0] * _couplings[0];
-            result *= M2 / s;
+            result *= pow((s / M2), real(2. * _trajectory->eval(t) - 1.)); 
+            result *= norm(xi(t));
+            result *= norm(coupling(t));
 
             double normalization = real(_trajectory->slope()) / (16. * PI*PI*PI);
 
             return normalization * result;
+        };
+
+        protected: 
+        
+        regge_trajectory * _trajectory;
+
+        std::vector<std::tuple<int,double>> _couplings;
+        std::vector<std::array<double, 2>> _sigmaParams;
+
+        inclusive_kinematics * _kinematics;
+
+        constexpr static double _scale = 1.0;
+
+        inline double sigmaTOT(double s)
+        {
+            double result = 0.;
+            for (int i = 0; i < _sigmaParams.size(); i++)
+            {
+                result += _sigmaParams[i][0] * pow(s, _sigmaParams[i][1]);
+            }
+            return result;
+        };
+
+        inline std::complex<double> xi(double t)
+        {
+            std::complex<double> signature_factor, gamma_factor;
+            signature_factor = 0.5 * (1. + double(_trajectory->_signature) * exp(XI * PI * _trajectory->eval(t)));
+            gamma_factor = cgamma(double(_trajectory->_minJ) - _trajectory->eval(t));
+
+            return signature_factor * gamma_factor;
+        };
+        
+        inline std::complex<double> coupling(double t)
+        {
+            std::complex<double> result = 0.; 
+            for (int i = 0; i < _couplings.size(); i++)
+            {
+                double power = (double) std::get<0>(_couplings[i]);
+                double beta  = std::get<1>(_couplings[i]);
+
+                if (power == 0) result += beta;
+                else if (std::abs(t) < 1.E-4 && power != 0) return 0.;
+                else result += beta * pow(sqrt(XR * -t), power);
+            };
+
+            return result;
         };
     };
 };
