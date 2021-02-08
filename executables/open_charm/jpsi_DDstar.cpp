@@ -11,12 +11,12 @@
 // ---------------------------------------------------------------------------
 
 #include "constants.hpp"
-#include "reaction_kinematics.hpp"
+#include "amplitudes/reaction_kinematics.hpp"
 #include "amplitudes/pseudoscalar_exchange.hpp"
 #include "amplitudes/vector_exchange.hpp"
 #include "amplitudes/dirac_exchange.hpp"
 #include "amplitudes/amplitude_sum.hpp"
-#include "amplitudes/charm_loop.hpp"
+#include "box_amplitude/charm_loop.hpp"
 
 #include "photoPlotter.hpp"
 
@@ -36,12 +36,11 @@ int main( int argc, char** argv )
     // ---------------------------------------------------------------------------
 
     // Set up Kinematics for Dbar LambdaC in final state
-    auto kD = new reaction_kinematics(M_D, M_LAMBDAC, M_PROTON);
-    kD->set_JP(0, -1);
+    auto kPsi = new reaction_kinematics(M_JPSI, M_PROTON);
+    kPsi->set_JP(1, -1);
 
-    auto d_dstarEx = new vector_exchange(kD, M_DSTAR, "D^{*} exchange");
-    d_dstarEx->set_params({0.134, -13.2, 0.});
-    d_dstarEx->set_formfactor(2, M_DSTAR + eta * 0.250);
+    auto loop = new charm_loop(kPsi, "test");
+    loop->set_params({1., 1.});
 
     // ---------------------------------------------------------------------------
     // Plotting options
@@ -49,7 +48,7 @@ int main( int argc, char** argv )
 
     // which amps to plot
     std::vector<amplitude*> amps;
-    amps.push_back(d_dstarEx);
+    amps.push_back(loop);
 
     auto plotter = new photoPlotter(amps);
 
@@ -61,7 +60,7 @@ int main( int argc, char** argv )
     plotter->xmax = 10.5;
 
     plotter->ymin = 0.;
-    plotter->ymax = 250.;
+    plotter->ymax = 10.;
 
     plotter->SHOW_LEGEND = false;
     plotter->xlegend = 0.2;
@@ -71,9 +70,7 @@ int main( int argc, char** argv )
     plotter->ylabel    = "#it{#sigma(#gamma p #rightarrow #bar{D} #Lambda_{c}^{+})}  [nb]";
     plotter->xlabel    = "#it{E_{#gamma}}  [GeV]";
 
-    plotter->Plot("integrated_xsection");
-
-    delete kD;
+    plotter->Plot("differential_xsection", 0.);
 
     return 1;
 };

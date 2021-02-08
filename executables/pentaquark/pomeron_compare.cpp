@@ -1,5 +1,5 @@
 #include "constants.hpp"
-#include "reaction_kinematics.hpp"
+#include "amplitudes/reaction_kinematics.hpp"
 #include "amplitudes/pomeron_exchange.hpp"
 
 #include "photoPlotter.hpp"
