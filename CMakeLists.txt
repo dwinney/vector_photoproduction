@@ -36,6 +36,16 @@ else()
     message(SEND_ERROR "-- ROOT not found!")
 endif()
 
+# BUILD CUBATURE LIBRARY
+if (EXISTS  ${CMAKE_CURRENT_SOURCE_DIR}/cubature)
+    include_directories("cubature")
+    file(GLOB CUB_INC "cubature/cubature.h")
+    file(GLOB CUB_SRC "cubature/*cubature.c")
+    add_library(cubature SHARED ${CUB_INC} ${CUB_SRC})
+else()
+    message(SEND_ERROR "-- cubature not found! Make sure to clone with '--recusive' flag to download submodules!")
+endif()
+
 # BUILD LIBRARY FROM LOCAL FiLES
 include_directories("include")
 include_directories("src")
@@ -43,7 +53,7 @@ file(GLOB_RECURSE INC "include/*.hpp")
 file(GLOB_RECURSE SRC "src/*.cpp")
 
 add_library( jpacPhoto SHARED ${INC} ${SRC} )
-target_link_libraries( jpacPhoto ${ROOT_LIBRARIES})
+target_link_libraries( jpacPhoto cubature ${ROOT_LIBRARIES})
 
 # Find the jpacStyle library
 find_library(JSTYLELIB NAMES jpacStyle libjpacStyle 
