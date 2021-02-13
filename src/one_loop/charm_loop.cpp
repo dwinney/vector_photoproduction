@@ -5,7 +5,7 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#include "box_amplitude/charm_loop.hpp"
+#include "one_loop/charm_loop.hpp"
 
 // ---------------------------------------------------------------------------
 // Evaluate the entire loop diagram in terms of external helicites and invariant mass / momentum transfer of the gamma p -> jpsi p process
@@ -66,7 +66,7 @@ std::complex<double> jpacPhoto::loop_discontinuity::eval_d(double sp, double the
     double thetaPsi = TMath::ACos(costhetaPsi);
     _tPsi   = kpsiD.t_man(sp, thetaPsi);
 
-    std::complex<double> phase_space = kgamD._initial_state->momentum(_s) / (8.*PI*sqrt(_s));
+    std::complex<double> phase_space = kgamD._initial_state->momentum(sp) / (64.*PI*PI*sqrt(sp));
 
     std::complex<double> result = 0.;
 
