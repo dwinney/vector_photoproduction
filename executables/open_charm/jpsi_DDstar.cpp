@@ -12,11 +12,9 @@
 
 #include "constants.hpp"
 #include "amplitudes/reaction_kinematics.hpp"
-#include "amplitudes/pseudoscalar_exchange.hpp"
 #include "amplitudes/vector_exchange.hpp"
-#include "amplitudes/dirac_exchange.hpp"
 #include "amplitudes/amplitude_sum.hpp"
-#include "box_amplitude/charm_loop.hpp"
+#include "one_loop/box_amplitude.hpp"
 
 #include "photoPlotter.hpp"
 
@@ -29,18 +27,44 @@ using namespace jpacPhoto;
 int main( int argc, char** argv )
 {
     // Form factor parameter
-    double eta = 1.;
+    double eta  = 1.;
+    double qmax = 1.;
 
     // ---------------------------------------------------------------------------
     // D phototproduction
     // ---------------------------------------------------------------------------
 
-    // Set up Kinematics for Dbar LambdaC in final state
+    // Set up Kinematics for the overall process gamma p -> jpsi p
     auto kPsi = new reaction_kinematics(M_JPSI, M_PROTON);
-    kPsi->set_JP(1, -1);
+    kPsi->set_JP(1, -1); // Vector production
 
-    auto loop = new charm_loop(kPsi, "test");
-    loop->set_params({1., 1.});
+    // Kinematics for the sub-processes (gamma / psi) p -> Lam D
+    auto kgamD = new reaction_kinematics(M_D, M_LAMBDAC, M_PROTON);
+    kgamD->set_JP(0, -1);  // Pseudo-scalar production
+
+    auto kpsiD = new reaction_kinematics(M_D, M_LAMBDAC, M_PROTON, M_JPSI);
+    kpsiD->set_JP(0, -1);  // Pseudo-scalar production
+
+    // Couplings
+    double lambdaQCD  = 0.250, e = sqrt(4. * PI * ALPHA);
+    double gGamDDstar = 0.134, gGamDstarDstar = 0.641;
+    double gDNLam     = -4.3,  gDstarNLam     = -13.2;
+    double gPsiDD     = 7.44;
+    double gPsiDDstar = gPsiDD / sqrt(M_D * M_DSTAR);
+
+    // Vector exchange loop
+    auto gamDDstarEx = new vector_exchange(kgamD, M_DSTAR); 
+    gamDDstarEx->set_params({gGamDDstar, gDstarNLam, 0.});
+    gamDDstarEx->set_formfactor(2, M_DSTAR + lambdaQCD * eta);
+
+    auto psiDDstarEx = new vector_exchange(kpsiD, M_DSTAR);
+    psiDDstarEx->set_params({gPsiDDstar, gDstarNLam, 0.});
+    psiDDstarEx->set_formfactor(2, M_DSTAR + lambdaQCD * eta);
+
+    // Combine sub-processes in a box_loop
+    auto ddstar_box = new box_amplitude(kPsi, gamDDstarEx, psiDDstarEx);
+    double s_cut = sqrt(qmax*qmax + M2_LAMBDAC) + sqrt(qmax*qmax + M2_D);
+    ddstar_box->set_cutoff(s_cut);
 
     // ---------------------------------------------------------------------------
     // Plotting options
@@ -48,11 +72,11 @@ int main( int argc, char** argv )
 
     // which amps to plot
     std::vector<amplitude*> amps;
-    amps.push_back(loop);
+    amps.push_back(ddstar_box);
 
     auto plotter = new photoPlotter(amps);
 
-    plotter->N = 30;
+    plotter->N = 10;
     plotter->PRINT_TO_COMMANDLINE = true;
     plotter->LAB_ENERGY = true;
 
