@@ -177,8 +177,8 @@ namespace jpacPhoto
             std::complex<double> qdotqp = _initial_state->momentum(s) * _final_state->momentum(s);
             std::complex<double> E1E3   = _initial_state->energy_V(s) * _final_state->energy_V(s);
 
-            double result = t - _mX2 - _mB2 + 2.*abs(E1E3);
-            result /= 2. * abs(qdotqp);
+            double result = t - _mX2 - _mB2 + 2.*real(E1E3);
+            result /= 2. * real(qdotqp);
 
             return result;
         };
@@ -196,7 +196,7 @@ namespace jpacPhoto
             std::complex<double> qdotqp = _initial_state->momentum(s) * _final_state->momentum(s);
             std::complex<double> E1E3   = _initial_state->energy_V(s) * _final_state->energy_V(s);
 
-            return _mX2 + _mB2 - 2. * abs(E1E3) + 2. * abs(qdotqp) * cos(theta);
+            return _mX2 + _mB2 - 2. * real(E1E3) + 2. * real(qdotqp) * cos(theta);
         };
 
         inline double u_man(double s, double theta)
