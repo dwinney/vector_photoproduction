@@ -63,8 +63,8 @@ int main( int argc, char** argv )
 
     // Combine sub-processes in a box_loop
     auto ddstar_box = new box_amplitude(kPsi, gamDDstarEx, psiDDstarEx);
-    double s_cut = sqrt(qmax*qmax + M2_LAMBDAC) + sqrt(qmax*qmax + M2_D);
-    ddstar_box->set_cutoff(s_cut);
+    double W_cut = sqrt(qmax*qmax + M2_LAMBDAC) + sqrt(qmax*qmax + M2_D);
+    ddstar_box->set_cutoff(W_cut * W_cut);
 
     // ---------------------------------------------------------------------------
     // Plotting options
@@ -76,7 +76,7 @@ int main( int argc, char** argv )
 
     auto plotter = new photoPlotter(amps);
 
-    plotter->N = 10;
+    plotter->N = 30;
     plotter->PRINT_TO_COMMANDLINE = true;
     plotter->LAB_ENERGY = true;
 
