@@ -11,39 +11,28 @@
 // Evaluate the entire loop diagram in terms of external helicites and invariant mass / momentum transfer of the gamma p -> jpsi p process
 std::complex<double> jpacPhoto::box_amplitude::helicity_amplitude(std::array<int,4> helicities, double s, double t)
 {
-    // Store external helicites
-    _helicities = helicities;
-
     // Store the invariant energies to avoid having to pass them around 
     _s = s; _t = t, _theta = _kinematics->theta_s(s, t);
 
-    // Pass 
-    _discontinuity->set_externals(helicities, _s, _theta);
+    // Pass external values to the discontinuity
+    _disc->set_externals(helicities, _theta);
 
-    // Integrate from threshold to cutoff
-    double val[2], err[2];
-    double min[1] = {_s_thr + EPS};
-    double max[1] = {_s_cut};
-    hcubature(2, wrapped_integrand, _discontinuity, 1, min, max, 2E4, 0, 1e-3, ERROR_INDIVIDUAL, val, err);
+    // Compute both parts of the integral
+    ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kDEFAULT);
+    
+    auto F = [&](double sp)
+    {
+        double result = _disc->eval(sp);
+        return result;
+    };
 
-    return (val[0] + XI * val[1]) / PI;
+    ROOT::Math::Functor1D wF(F);
+    ig.SetFunction(wF);
+
+    double real = ig.IntegralCauchy(_s_thr + EPS, _s_cut, _s);
+    double imag = - M_PI * _disc->eval(_s);
+
+    std::complex<double> result =  (real + XI * imag) / M_PI;
+
+    return result;
 };
-
-// Static wrapper to pass all the necessary data to the integrater
-int jpacPhoto::box_amplitude::wrapped_integrand(unsigned ndim, const double *in, void *fdata, unsigned fdim, double *fval)
-{
-    box_discontinuity * integrand = (box_discontinuity *) fdata;
-
-    double sp = in[0];
-    double s  = integrand->s();
-
-    std::complex<double> result;
-    result  = integrand->eval(sp);
-    result /= (sp - s - IEPS);
-
-    fval[0] = std::real(result);
-    fval[1] = std::imag(result);
-
-    return 0;
-};
-

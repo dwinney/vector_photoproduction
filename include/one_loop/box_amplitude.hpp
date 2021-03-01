@@ -13,7 +13,9 @@
 #include "amplitudes/reaction_kinematics.hpp"
 #include "one_loop/box_discontinuity.hpp"
 
-#include "cubature.h"
+#include "Math/GSLIntegrator.h"
+#include "Math/IntegrationTypes.h"
+#include "Math/Functor.h"
 
 namespace jpacPhoto
 {
@@ -26,13 +28,13 @@ namespace jpacPhoto
         : amplitude(xkinem, id)
         {
             _s_thr = left->_kinematics->sth();
-            _discontinuity = new box_discontinuity(left, right);
+            _disc = new box_discontinuity(left, right);
         };
 
-        // Destructor, delete the only new pointer
+        // Destructor
         ~box_amplitude()
         {
-            delete _discontinuity;
+            delete _disc;
         };
 
         // Setter for max cutoff in dispersion relation
@@ -50,18 +52,13 @@ namespace jpacPhoto
         // Evaluate the helicity amplitude by dispersing
         std::complex<double> helicity_amplitude(std::array<int, 4> helicities, double s, double t);
 
-        private:
-
-        // The two sub-amplitudes that contribute to the discontinuity 
-        box_discontinuity * _discontinuity;
-        static int wrapped_integrand(unsigned ndim, const double *in, void *fdata, unsigned fdim, double *fval);
-    
-        // External helicites
-        std::array<int,4> _helicities;
+        private:        
         
+        // Discontinutity given in terms of the two tree amplitudes
+        box_discontinuity * _disc;
+
         // Integration momentum cutoff. Defaults to 2 GeV (an arbitrary but sensible value)
-        double _s_cut = 2.;
-        double _s_thr; 
+        double _s_cut = 2., _s_thr;
     };
 };
 

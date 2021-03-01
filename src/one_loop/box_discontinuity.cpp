@@ -15,6 +15,9 @@ double jpacPhoto::box_discontinuity::eval(double s)
     // Check the intermediate state matched
     if (_matchError) return 0.;
 
+    // if below threshold return 0
+    if (s < _initialAmp->_kinematics->sth()) return 0.;
+    
     // make sure the external helicites get passed correctly
     int lam_gam = _external_helicities[0];
     int lam_tar = _external_helicities[1];
@@ -45,7 +48,6 @@ double jpacPhoto::box_discontinuity::eval(double s)
             right = _finalAmp->helicity_amplitude(  {lam_vec, lam_rec, lam_meson, lam_baryon}, s, t_vec);
             result += left * right;
         };
-
         return real(result);
     };
 
