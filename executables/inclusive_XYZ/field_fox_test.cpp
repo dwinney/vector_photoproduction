@@ -2,6 +2,8 @@
 #include "regge_trajectory.hpp"
 #include "inclusive/inclusive_kinematics.hpp"
 #include "inclusive/triple_regge.hpp"
+#include "inclusive/sigma_tot.hpp"
+#include "inclusive/field_fox_couplings.hpp"
 
 #include "jpacGraph1D.hpp"
 #include "jpacUtils.hpp"
@@ -17,31 +19,35 @@ int main( int argc, char** argv )
     // Amplitudes
     // ---------------------------------------------------------------------------
 
-    auto kTest = new inclusive_kinematics(M_PION);
-
     // ---------------------------------------------
     // Phenomenological fiits from Field and Fox with exponential couplings
-    auto field_and_fox = new triple_regge(kTest, "Field & Fox");
+    auto field_and_fox = new triple_regge(M_PION, "Field & Fox");
 
     // trajectories
     auto alphaPom = new linear_trajectory(+1,  1., 0.37, "Pomeron");
     auto alphaReg = new linear_trajectory(+1, 0.5,   1., "Reggeon");
 
     // Triple Reggeon
-    field_and_fox->add_term({alphaReg, alphaReg, alphaReg}, {18.1, 12});
+    field_and_fox->add_term({alphaReg, alphaReg, alphaReg}, G_RRR);
     
     // Reggeon-Reggeon-Pomeron
-    field_and_fox->add_term({alphaReg, alphaReg, alphaPom}, {{26.81, 7.26}, {4.80, -1.83}});
+    field_and_fox->add_term({alphaReg, alphaReg, alphaPom}, G_RRP);
 
     // ---------------------------------------------
     // Compare with Vincent's parameterization normalized to the total cross-section
-    auto vincent = new triple_regge(kTest, "Vincent");
+    auto vincent = new triple_regge(M_PION, "Vincent");
 
     auto alphaRho = new linear_trajectory(+1, 0.5, 0.9, "Rho");
     alphaRho->set_minimum_spin(1);
 
     // Reggeon exchange
-    vincent->add_term(alphaRho, {0, 12.20}, {{13.63, 0.0808}, {(36.02 + 27.56)/2., -0.4525}});
+    // Coupling is a constant!
+    auto beta = [=](double t)
+    {
+        return 12.20 * 1.E-3;
+    };
+
+    vincent->add_term(alphaRho, beta, sigmatot_pi);
 
     // ---------------------------------------------------------------------------
     // Plotting options
@@ -66,6 +72,7 @@ int main( int argc, char** argv )
     std::string filename = "FF.pdf";
     std::string xlabel   = "#it{-t} [GeV^{2}]";
     std::string ylabel   = "E #frac{d#sigma}{d^{3}p}      [mb]";
+    bool PRINT_TO_CMD    = true;
 
     // ---------------------------------------------------------------------------
     // You shouldnt need to change anything below this line
@@ -86,7 +93,7 @@ int main( int argc, char** argv )
         };
 
         std::array<std::vector<double>, 2> x_fx; 
-        x_fx = vec_fill(N, F, xmin, xmax, true);
+        x_fx = vec_fill(N, F, xmin, xmax, PRINT_TO_CMD);
 
         plotter->AddEntry(x_fx[0], x_fx[1], amps[n]->_identifier);
     }
@@ -110,7 +117,6 @@ int main( int argc, char** argv )
     delete field_and_fox;
     delete alphaRho;
     delete vincent;
-    delete kTest;
 
     return 1.;
 };
