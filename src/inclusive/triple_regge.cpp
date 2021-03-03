@@ -20,5 +20,31 @@ double jpacPhoto::triple_regge::invariant_xsection(double s, double t, double M2
         result += _termsJPAC[i]->eval(s, t, M2);
     }
 
+    // result /= 64. * PI * PI * s * pow(_kinematics->pGamma_CM(s), 2.);
+    return result;
+};
+
+double jpacPhoto::triple_regge::integrated_xsection(double s)
+{
+    auto dSigma = [&](const double * in)
+    {
+        double M2 = _kinematics->M2(s, in[1]);
+        double t  = _kinematics->t_man(s, in[0], M2);
+        
+        double result = invariant_xsection(s, t, M2);
+        debug(t, in[0], in[1]);
+        return result;
+    };
+
+    // Integrate over costheta = [-1, 1] and x = [0., 1]   
+    double min[2] = {-1., 0.1};
+    double max[2] = { 1., 1.};
+    
+    ROOT::Math::IntegratorMultiDim ig(ROOT::Math::IntegrationMultiDim::kDEFAULT);
+    ROOT::Math::Functor wF(dSigma, 2);
+    ig.SetFunction(wF, 2);
+
+    double result = ig.Integral(min, max);
+
     return result;
 };

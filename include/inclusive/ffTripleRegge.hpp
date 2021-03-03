@@ -13,6 +13,7 @@
 #include "inclusive_kinematics.hpp"
 #include "regge_trajectory.hpp"
 
+#include <functional>
 #include <vector>
 
 namespace jpacPhoto
@@ -20,28 +21,17 @@ namespace jpacPhoto
     class ffTripleRegge
     {
         public:
-        ffTripleRegge(inclusive_kinematics * xkinem, std::array<regge_trajectory*, 3> trajectories, std::vector<std::array<double, 2>> couplings)
-        : _kinematics(xkinem), _trajectories(trajectories), _couplings(couplings)
+        ffTripleRegge(inclusive_kinematics * xkinem, std::array<regge_trajectory*, 3> trajectories, const std::function<double(double)>& coupling)
+        : _kinematics(xkinem), _trajectories(trajectories), _coupling(coupling)
         {};
         
         std::array<regge_trajectory*, 3> _trajectories;
-        std::vector<std::array<double, 2>> _couplings;
 
         inclusive_kinematics * _kinematics;
 
+        std::function<double(double)> _coupling;
+
         constexpr static double _scale = 1.0;
-
-        inline double coupling(double t)
-        {
-            double result = 0.;
-
-            for (int i = 0; i < _couplings.size(); i++)
-            {
-                result += _couplings[i][0] * exp(_couplings[i][1] * t);
-            };
-
-            return result;
-        };
         
         inline double eval(double s, double t, double M2)
         {
@@ -54,7 +44,7 @@ namespace jpacPhoto
             double result;
             result  = pow((s / nu), alpha_i + alpha_j); 
             result *= pow((nu / _scale), alpha_k0);
-            result *= coupling(t) / (PI * _scale * s);
+            result *= _coupling(t) / (PI * _scale * s);
 
             return result;
         };

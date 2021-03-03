@@ -5,14 +5,18 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#ifndef _TRIP_REGGE_
-#define _TRIP_REGGE_
+#ifndef TRIP_REGGE
+#define TRIP_REGGE
 
 #include "inclusive_kinematics.hpp"
 #include "ffTripleRegge.hpp"
 #include "jpacTripleRegge.hpp"
 #include "regge_trajectory.hpp"
 
+#include "Math/IntegratorMultiDim.h"
+#include "Math/Functor.h"
+
+#include <functional>
 #include <vector>
 #include <tuple>
 
@@ -22,13 +26,17 @@ namespace jpacPhoto
     {
         public:
         // Constructor only needs a kinematics object
-        triple_regge(inclusive_kinematics * xkinem, std::string id = "")
-        : _kinematics(xkinem), _identifier(id)
-        {};
+        triple_regge(double mass, std::string id = "")
+        : _identifier(id)
+        {
+            _kinematics = new inclusive_kinematics(mass);
+        };
 
         // Destructor to clean up pointers
         ~triple_regge()
         {
+            delete _kinematics;
+
             for (int i = 0; i < _termsFF.size(); i++)
             {
                 delete _termsFF[i];
@@ -41,59 +49,31 @@ namespace jpacPhoto
 
         //--------------------------------------------------------------------
         // Methods to add field and fox like terms
-
-        // If only one term in the coupling
-        inline void add_term(std::array<regge_trajectory*, 3> trajectories, std::array<double,2> couplings)
+        inline void add_term(std::array<regge_trajectory*, 3> trajectories, std::function<double(double)> coupling)
         {
-            auto new_term = new ffTripleRegge(_kinematics, trajectories, {couplings});
+            auto new_term = new ffTripleRegge(_kinematics, trajectories, coupling);
             _termsFF.push_back(new_term);
         };
 
-        // If many (passing a vector)
-        inline void add_term(std::array<regge_trajectory*, 3> trajectories,std::vector<std::array<double,2>> couplings)
-        {
-            auto new_term = new ffTripleRegge(_kinematics, trajectories, couplings);
-            _termsFF.push_back(new_term);
-        };
-        
         //--------------------------------------------------------------------
         // Methods to add terms following Vincent's normalization
-
-        // Only one coupling and one sigma term
-        inline void add_term(regge_trajectory* trajectory, std::tuple<int,double> coupling, std::array<double,2> sigmaparams)
+        inline void add_term(regge_trajectory* trajectory, const std::function<double(double)>& coupling, const std::function<double(double)>& sigmatot)
         {
-            auto new_term = new jpacTripleRegge(_kinematics, trajectory, {coupling}, {sigmaparams});
+            auto new_term = new jpacTripleRegge(_kinematics, trajectory, coupling, sigmatot);
             _termsJPAC.push_back(new_term);
         };
 
-        // One coupling but many sigma
-        inline void add_term(regge_trajectory* trajectory, std::tuple<int,double> coupling, std::vector<std::array<double,2>> sigmaparams)
-        {
-            auto new_term = new jpacTripleRegge(_kinematics, trajectory, {coupling}, sigmaparams);
-            _termsJPAC.push_back(new_term);
-        };
-
-        // Many coupling one sigma
-        inline void add_term(regge_trajectory* trajectory, std::vector<std::tuple<int,double>> coupling, std::array<double,2> sigmaparams)
-        {
-            auto new_term = new jpacTripleRegge(_kinematics, trajectory, coupling, {sigmaparams});
-            _termsJPAC.push_back(new_term);
-        };
-        
-        // Passing multiple coupling and sigma terms
-        inline void add_term(regge_trajectory* trajectory, std::vector<std::tuple<int,double>> coupling, std::vector<std::array<double,2>> sigmaparams)
-        {
-            auto new_term = new jpacTripleRegge(_kinematics, trajectory, coupling, sigmaparams);
-            _termsJPAC.push_back(new_term);
-        };
-
-        // E d sigma / d^3p
+        //--------------------------------------------------------------------
+        // dsigma / dt dM2
         double invariant_xsection(double s, double t, double M2);
+        double integrated_xsection(double s);
 
-        std::string _identifier;
-        
-        protected:
         inclusive_kinematics * _kinematics;
+        std::string _identifier;
+
+
+        //--------------------------------------------------------------------
+        protected:
         
         // Cross-section build out of sum of triple regge interaction terms
         std::vector<ffTripleRegge*> _termsFF;
