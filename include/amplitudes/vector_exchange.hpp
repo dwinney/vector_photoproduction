@@ -5,8 +5,8 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#ifndef _AXIAL_
-#define _AXIAL_
+#ifndef AXIAL
+#define AXIAL
 
 #include "amplitude.hpp"
 #include "regge_trajectory.hpp"

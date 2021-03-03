@@ -6,8 +6,8 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#ifndef _SUM_
-#define _SUM_
+#ifndef SUM
+#define SUM
 
 #include "amplitudes/amplitude.hpp"
 

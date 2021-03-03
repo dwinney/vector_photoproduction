@@ -5,8 +5,8 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#ifndef _POLVEC_
-#define _POLVEC_
+#ifndef POLVEC
+#define POLVEC
 
 #include <iostream>
 #include "constants.hpp"

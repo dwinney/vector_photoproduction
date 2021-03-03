@@ -7,8 +7,8 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#ifndef _REGGE_TRAJ_
-#define _REGGE_TRAJ_
+#ifndef REGGE_TRAJ
+#define REGGE_TRAJ
 
 #include <complex>
 #include <string>

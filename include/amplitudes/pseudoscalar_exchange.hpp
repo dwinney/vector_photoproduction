@@ -8,8 +8,8 @@
 // [1] arXiv:1503.02125 [hep-ph]
 // ---------------------------------------------------------------------------
 
-#ifndef _PSCALAR_
-#define _PSCALAR_
+#ifndef PSCALAR
+#define PSCALAR
 
 #include "amplitude.hpp"
 #include "regge_trajectory.hpp"

@@ -6,8 +6,8 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#ifndef _INC_KINEM_
-#define _INC_KINEM_
+#ifndef INC_KINEM
+#define INC_KINEM
 
 #include "constants.hpp"
 #include "misc_math.hpp"

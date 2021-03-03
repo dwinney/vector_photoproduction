@@ -10,8 +10,8 @@
 // ---------------------------------------------------------------------------
 
 
-#ifndef _KINEMATICS_
-#define _KINEMATICS_
+#ifndef KINEMATICS
+#define KINEMATICS
 
 #include "constants.hpp"
 #include "misc_math.hpp"

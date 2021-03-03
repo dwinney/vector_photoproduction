@@ -10,8 +10,8 @@
 // [3] 1904.11706
 // ---------------------------------------------------------------------------
 
-#ifndef _POMERON_
-#define _POMERON_
+#ifndef POMERON
+#define POMERON
 
 #include "amplitude.hpp"
 #include "regge_trajectory.hpp"

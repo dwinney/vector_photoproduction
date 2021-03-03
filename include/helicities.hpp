@@ -6,8 +6,8 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#ifndef _HELIC_COMBO_
-#define _HELIC_COMBO_
+#ifndef HELIC_COMBO
+#define HELIC_COMBO
 
 #include <iostream>
 #include <vector>

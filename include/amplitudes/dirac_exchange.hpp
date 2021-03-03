@@ -5,8 +5,8 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#ifndef _PROTON_
-#define _PROTON_
+#ifndef PROTON
+#define PROTON
 
 #include <string>
 #include <vector>

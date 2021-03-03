@@ -5,8 +5,8 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#ifndef _RARITA_SCHWINGER_
-#define _RARITA_SCHWINGER_
+#ifndef RARITA_SCHWINGER
+#define RARITA_SCHWINGER
 
 #include "dirac_exchange.hpp"
 

@@ -7,8 +7,8 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#ifndef _FIELD_FOX_
-#define _FIELD_FOX_
+#ifndef FIELD_FOX
+#define FIELD_FOX
 
 #include "inclusive_kinematics.hpp"
 #include "regge_trajectory.hpp"

@@ -5,8 +5,8 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#ifndef _MATH_
-#define _MATH_
+#ifndef MATH
+#define MATH
 
 #include "constants.hpp"
 #include <iostream>

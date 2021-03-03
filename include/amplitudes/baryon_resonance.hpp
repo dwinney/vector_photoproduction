@@ -5,8 +5,8 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#ifndef _RESONANCE_
-#define _RESONANCE_
+#ifndef RESONANCE
+#define RESONANCE
 
 #include "amplitude.hpp"
 

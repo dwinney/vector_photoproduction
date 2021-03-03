@@ -5,8 +5,8 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#ifndef _PRIMAKOFF_
-#define _PRIMAKOFF_
+#ifndef PRIMAKOFF
+#define PRIMAKOFF
 
 #include "amplitude.hpp"
 

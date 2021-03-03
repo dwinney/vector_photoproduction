@@ -6,8 +6,8 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#ifndef _DEBUG_
-#define _DEBUG_
+#ifndef DEBUG
+#define DEBUG
 
 #include <iostream>
 #include <iomanip>

@@ -5,8 +5,8 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#ifndef _TWO_BODY_
-#define _TWO_BODY_
+#ifndef TWO_BODY
+#define TWO_BODY
 
 #include <string>
 #include <complex>

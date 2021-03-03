@@ -5,8 +5,8 @@
 // Email:        dwinney@iu.edu
 // ---------------------------------------------------------------------------
 
-#ifndef _SPINOR_
-#define _SPINOR_
+#ifndef SPINOR
+#define SPINOR
 
 #include <cmath>
 #include <complex>
